@@ -9,6 +9,17 @@
                             <x-layouts.sidebar-link href="{{ route('dashboard') }}" icon='fas-house'
                                 :active="request()->routeIs('dashboard*')">Dashboard</x-layouts.sidebar-link>
 
+                            <!-- Settings -->
+                            <x-layouts.sidebar-two-level-link-parent title="Settings" icon="fas-gear"
+                                :active="request()->routeIs('settings*')">
+                                <x-layouts.sidebar-two-level-link href="{{ route('settings.profile.edit') }}" icon='fas-user'
+                                    :active="request()->routeIs('settings.profile.*')">Profile</x-layouts.sidebar-two-level-link>
+                                <x-layouts.sidebar-two-level-link href="{{ route('settings.password.edit') }}" icon='fas-key'
+                                    :active="request()->routeIs('settings.password.*')">Password</x-layouts.sidebar-two-level-link>
+                                <x-layouts.sidebar-two-level-link href="{{ route('settings.appearance.edit') }}" icon='fas-palette'
+                                    :active="request()->routeIs('settings.appearance.*')">Appearance</x-layouts.sidebar-two-level-link>
+                            </x-layouts.sidebar-two-level-link-parent>
+
                             <!-- Example two level -->
                             <x-layouts.sidebar-two-level-link-parent title="Example two level" icon="fas-house"
                                 :active="request()->routeIs('two-level*')">

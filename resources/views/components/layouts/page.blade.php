@@ -24,7 +24,7 @@
                 @if($eventUrl)
                     <p class="mt-2">
                         <a href="{{ $eventUrl }}" target="_blank" rel="noopener noreferrer"
-                           class="inline-flex items-center gap-1 text-sm text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 underline decoration-blue-300/60">
+                           class="inline-flex items-center gap-1 text-sm text-primary hover:opacity-90 underline">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="h-4 w-4">
                                 <path d="M13.5 3a1.5 1.5 0 000 3H17.3l-6.14 6.14a1.5 1.5 0 102.12 2.12L19.4 8.21V12a1.5 1.5 0 003 0V4.5A1.5 1.5 0 0020.9 3H13.5z" />
                                 <path d="M6.75 5.25A2.25 2.25 0 004.5 7.5v10.5A2.25 2.25 0 006.75 20.25h10.5a2.25 2.25 0 002.25-2.25V13.5a1.5 1.5 0 10-3 0v3.75a.75.75 0 01-.75.75H7.5a.75.75 0 01-.75-.75V7.5a.75.75 0 01.75-.75H11.25a1.5 1.5 0 000-3H6.75z" />
