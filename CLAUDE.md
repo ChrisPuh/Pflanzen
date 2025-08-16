@@ -1,4 +1,3 @@
-<laravel-boost-guidelines>
 === foundation rules ===
 
 # Laravel Boost Guidelines
@@ -399,4 +398,6 @@ it('has emails', function (string $email) {
 
 - Every change must be programmatically tested. Write a new test or update an existing test, then run the affected tests to make sure they pass.
 - Run the minimum number of tests needed to ensure code quality and speed. Use `php artisan test` with a specific filename or filter.
+- use pest php for testing, not PHPUnit.
+- chain Pest assertions to ensure the test is readable and concise.
 </laravel-boost-guidelines>

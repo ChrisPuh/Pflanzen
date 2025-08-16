@@ -3,14 +3,12 @@
     "name": "laraveldaily/starter-kit",
     "type": "project",
     "description": "LaravelDaily Starter Kit for the Laravel framework.",
-    "keywords": [
-        "laravel",
-        "framework"
-    ],
+    "keywords": ["laravel", "framework"],
     "license": "MIT",
     "require": {
         "php": "^8.4",
         "blade-ui-kit/blade-icons": "^1.8",
+        "filament/filament": "^4.0",
         "laravel/framework": "^12.24",
         "laravel/tinker": "^2.10.1",
         "livewire/livewire": "^3.6",
@@ -47,7 +45,8 @@
     "scripts": {
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
-            "@php artisan package:discover --ansi"
+            "@php artisan package:discover --ansi",
+            "@php artisan filament:upgrade"
         ],
         "post-update-cmd": [
             "@php artisan vendor:publish --tag=laravel-assets --ansi --force"
@@ -86,17 +85,17 @@
             "@test"
         ],
         "pre-commit": [
-            "echo '🔍 Running pre-commit checks...'",
+            "echo '\ud83d\udd0d Running pre-commit checks...'",
             "@test:lint",
             "@test",
-            "echo '✅ All checks passed! Ready for commit.'"
+            "echo '\u2705 All checks passed! Ready for commit.'"
         ],
         "pre-push": [
-            "echo '🚀 Running pre-push checks...'",
+            "echo '\ud83d\ude80 Running pre-push checks...'",
             "@format",
             "@test:type-coverage",
             "npm run build",
-            "echo '✅ All checks passed! Ready for push.'"
+            "echo '\u2705 All checks passed! Ready for push.'"
         ],
         "refactor": "rector",
         "test:type-coverage": "pest --type-coverage --min=100",
@@ -118,11 +117,11 @@
             "@php artisan route:cache",
             "@php artisan view:cache",
             "@php artisan event:cache",
-            "echo '⚡ Application optimized for production!'"
+            "echo '\u26a1 Application optimized for production!'"
         ],
         "build": [
             "npm run build",
-            "echo '📦 Assets built successfully!'"
+            "echo '\ud83d\udce6 Assets built successfully!'"
         ]
     },
     "extra": {

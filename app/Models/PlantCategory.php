@@ -1,0 +1,32 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Models;
+
+use App\Enums\PlantCategory as PlantCategoryEnum;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+
+final class PlantCategory extends Model
+{
+    use HasFactory;
+
+    protected $fillable = [
+        'name',
+        'description',
+    ];
+
+    public function plants(): BelongsToMany
+    {
+        return $this->belongsToMany(Plant::class, 'category_plant');
+    }
+
+    protected function casts(): array
+    {
+        return [
+            'name' => PlantCategoryEnum::class,
+        ];
+    }
+}
