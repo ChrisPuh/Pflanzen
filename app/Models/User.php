@@ -11,11 +11,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
+use Spatie\Permission\Traits\HasRoles;
 
 final class User extends Authenticatable implements FilamentUser
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory, HasRoles, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -49,6 +50,11 @@ final class User extends Authenticatable implements FilamentUser
             ->implode('');
     }
 
+    public function canAccessPanel(Panel $panel): bool
+    {
+        return $this->can('access', $panel);
+    }
+
     /**
      * Get the attributes that should be cast.
      *
@@ -60,11 +66,5 @@ final class User extends Authenticatable implements FilamentUser
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
-    }
-
-    public function canAccessPanel(Panel $panel): bool
-    {
-        // implement policy that we can do something like $this->can('access', $panel)
-        // TODO: Implement canAccessPanel() method.
     }
 }
