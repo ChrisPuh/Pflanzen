@@ -69,12 +69,12 @@ final class PlantsTable
             ->filters([
                 SelectFilter::make('plantType.name')
                     ->label('Plant Type')
-                    ->options(\App\Enums\PlantType::class),
+                    ->options(\App\Enums\PlantTypeEnum::class),
                 /*
                 SelectFilter::make('plantCategories')
                      ->label('Categories')
                      ->relationship('plantCategories', 'name')
-                     ->options(\App\Enums\PlantCategory::class)
+                     ->options(\App\Enums\PlantCategoryEnum::class)
                      ->multiple(),
                 */
 

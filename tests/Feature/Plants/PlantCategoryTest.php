@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Enums\PlantCategory as PlantCategoryEnum;
+use App\Enums\PlantCategoryEnum;
 use App\Models\PlantCategory;
 
 test('plant category can be created with factory', function () {

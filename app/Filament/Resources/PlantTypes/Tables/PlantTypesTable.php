@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\PlantTypes\Tables;
 
-use App\Enums\PlantType as PlantTypeEnum;
+use App\Enums\PlantTypeEnum;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\PlantCategories\Schemas;
 
-use App\Enums\PlantCategory as PlantCategoryEnum;
+use App\Enums\PlantCategoryEnum;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Schemas\Schema;

@@ -95,6 +95,7 @@
             "echo '\ud83d\ude80 Running pre-push checks...'",
             "@format",
             "@test:type-coverage",
+            "@test:coverage",
             "npm run build",
             "echo '\u2705 All checks passed! Ready for push.'"
         ],
@@ -107,14 +108,14 @@
         "test:unit": "pest --parallel",
         "test:types": "phpstan",
         "test:refactor": "rector --dry-run",
-        "test-coverage": [
+        "test:coverage": [
             "pest --coverage --min=78.4"
         ],
         "test": [
             "@test:type-coverage",
             "@test:lint",
             "@test:refactor",
-            "@test-coverage"
+            "@test:coverage"
         ],
         "optimize": [
             "@php artisan config:cache",

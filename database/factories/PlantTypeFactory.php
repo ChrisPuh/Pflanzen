@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Database\Factories;
 
-use App\Enums\PlantType as PlantTypeEnum;
+use App\Enums\PlantTypeEnum;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**

@@ -36,7 +36,7 @@ final class PlantFactory extends Factory
             if ($categoryEnums === []) {
                 // If no specific categories provided, create random ones
                 $categoryEnums = fake()->randomElements(
-                    \App\Enums\PlantCategory::cases(),
+                    \App\Enums\PlantCategoryEnum::cases(),
                     fake()->numberBetween(1, 3)
                 );
             }

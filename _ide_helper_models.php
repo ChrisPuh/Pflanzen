@@ -41,7 +41,7 @@ namespace App\Models{
 namespace App\Models{
 /**
  * @property int $id
- * @property \App\Enums\PlantCategory $name
+ * @property \App\Enums\PlantCategoryEnum $name
  * @property string|null $description
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
@@ -63,7 +63,7 @@ namespace App\Models{
 namespace App\Models{
 /**
  * @property int $id
- * @property \App\Enums\PlantType $name
+ * @property \App\Enums\PlantTypeEnum $name
  * @property string|null $description
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at

@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use App\Enums\PlantCategory as PlantCategoryEnum;
-use App\Enums\PlantType as PlantTypeEnum;
+use App\Enums\PlantCategoryEnum;
+use App\Enums\PlantTypeEnum;
 use App\Models\Plant;
 use App\Models\PlantCategory;
 use App\Models\PlantType;

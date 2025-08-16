@@ -8,7 +8,7 @@ use App\Traits\HasValues;
 use Filament\Support\Contracts\HasLabel;
 use Illuminate\Contracts\Support\Htmlable;
 
-enum PlantType: string implements HasLabel
+enum PlantTypeEnum: string implements HasLabel
 {
     use HasValues;
 

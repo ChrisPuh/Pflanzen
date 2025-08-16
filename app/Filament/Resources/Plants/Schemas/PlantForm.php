@@ -34,7 +34,7 @@ final class PlantForm
                         Select::make('plant_type_id')
                             ->label('Plant Type')
                             ->relationship('plantType', 'name')
-                            ->options(\App\Enums\PlantType::class)->required()
+                            ->options(\App\Enums\PlantTypeEnum::class)->required()
                             ->searchable()
                             ->preload(),
 
@@ -52,7 +52,7 @@ final class PlantForm
                         CheckboxList::make('plantCategories')
                             ->label('Plant Categories')
                             ->relationship('plantCategories', 'name')
-                            ->options(\App\Enums\PlantCategory::class)
+                            ->options(\App\Enums\PlantCategoryEnum::class)
                             ->searchable()
                             ->bulkToggleable()
                             ->columns(3),
