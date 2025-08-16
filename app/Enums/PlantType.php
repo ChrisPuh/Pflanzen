@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace App\Enums;
 
 use App\Traits\HasValues;
-use Filament\Models\Contracts\FilamentUser;
-use Filament\Panel;
 use Filament\Support\Contracts\HasLabel;
 use Illuminate\Contracts\Support\Htmlable;
 

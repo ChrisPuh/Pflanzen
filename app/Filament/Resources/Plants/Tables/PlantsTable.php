@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\Plants\Tables;
 
-use App\Models\Plant;
-use App\Models\PlantCategory;
-use App\Models\PlantType;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;

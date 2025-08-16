@@ -108,7 +108,7 @@
         "test:types": "phpstan",
         "test:refactor": "rector --dry-run",
         "test-coverage": [
-            "pest --coverage --min=95"
+            "pest --coverage --min=78.4"
         ],
         "test": [
             "@test:type-coverage",

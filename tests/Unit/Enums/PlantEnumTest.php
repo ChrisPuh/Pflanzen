@@ -22,17 +22,17 @@ test('plant category enum has values method', function () {
 });
 
 test('plant type enum has label method', function () {
-    expect(PlantType::Herb->label())->toBe('Kräuter')
-        ->and(PlantType::Flower->label())->toBe('Blumen')
-        ->and(PlantType::Tree->label())->toBe('Bäume')
-        ->and(PlantType::Succulent->label())->toBe('Sukkulenten')
-        ->and(PlantType::Aquatic->label())->toBe('Wasserpflanzen');
+    expect(PlantType::Herb->getLabel())->toBe('Kräuter')
+        ->and(PlantType::Flower->getLabel())->toBe('Blumen')
+        ->and(PlantType::Tree->getLabel())->toBe('Bäume')
+        ->and(PlantType::Succulent->getLabel())->toBe('Sukkulenten')
+        ->and(PlantType::Aquatic->getLabel())->toBe('Wasserpflanzen');
 });
 
 test('plant category enum has label method', function () {
-    expect(PlantCategory::Indoor->label())->toBe('Zimmerpflanzen')
-        ->and(PlantCategory::Outdoor->label())->toBe('Gartenpflanzen')
-        ->and(PlantCategory::Medicinal->label())->toBe('Heilpflanzen')
-        ->and(PlantCategory::Ornamental->label())->toBe('Zierpflanzen')
-        ->and(PlantCategory::Toxic->label())->toBe('Giftige Pflanzen');
+    expect(PlantCategory::Indoor->getLabel())->toBe('Zimmerpflanzen')
+        ->and(PlantCategory::Outdoor->getLabel())->toBe('Gartenpflanzen')
+        ->and(PlantCategory::Medicinal->getLabel())->toBe('Heilpflanzen')
+        ->and(PlantCategory::Ornamental->getLabel())->toBe('Zierpflanzen')
+        ->and(PlantCategory::Toxic->getLabel())->toBe('Giftige Pflanzen');
 });

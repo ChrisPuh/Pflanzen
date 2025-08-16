@@ -20,7 +20,7 @@ final class PlantTypesTable
             ->columns([
                 TextColumn::make('name')
                     ->label('Plant Type')
-                    ->formatStateUsing(fn (PlantTypeEnum $state): string => $state->label())
+
                     ->badge()
                     ->searchable()
                     ->sortable(),
@@ -61,7 +61,7 @@ final class PlantTypesTable
                 SelectFilter::make('name')
                     ->label('Plant Type')
                     ->options(collect(PlantTypeEnum::cases())->mapWithKeys(
-                        fn (PlantTypeEnum $type) => [$type->value => $type->label()]
+                        fn (PlantTypeEnum $type) => [$type->value => $type->getLabel()]
                     )),
             ])
             ->recordActions([

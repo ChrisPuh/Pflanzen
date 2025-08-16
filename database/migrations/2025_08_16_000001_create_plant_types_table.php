@@ -26,7 +26,7 @@ return new class extends Migration
         foreach (PlantTypeEnum::cases() as $type) {
             DB::table('plant_types')->insert([
                 'name' => $type->value,
-                'description' => 'Default description for '.$type->label(),
+                'description' => 'Default description for '.$type->getLabel(),
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);

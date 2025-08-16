@@ -20,7 +20,7 @@ final class PlantCategoriesTable
             ->columns([
                 TextColumn::make('name')
                     ->label('Plant Category')
-                    ->formatStateUsing(fn (PlantCategoryEnum $state): string => $state->label())
+                    ->formatStateUsing(fn (PlantCategoryEnum $state): string => $state->getLabel())
                     ->badge()
                     ->color('info')
                     ->searchable()
@@ -62,7 +62,7 @@ final class PlantCategoriesTable
                 SelectFilter::make('name')
                     ->label('Plant Category')
                     ->options(collect(PlantCategoryEnum::cases())->mapWithKeys(
-                        fn (PlantCategoryEnum $category) => [$category->value => $category->label()]
+                        fn (PlantCategoryEnum $category) => [$category->value => $category->getLabel()]
                     )),
             ])
             ->recordActions([

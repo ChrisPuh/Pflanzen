@@ -18,7 +18,7 @@ final class PlantCategoryForm
                 Select::make('name')
                     ->label('Plant Category')
                     ->options(collect(PlantCategoryEnum::cases())->mapWithKeys(
-                        fn (PlantCategoryEnum $category) => [$category->value => $category->label()]
+                        fn (PlantCategoryEnum $category) => [$category->value => $category->getLabel()]
                     ))
                     ->required()
                     ->unique(ignoreRecord: true)

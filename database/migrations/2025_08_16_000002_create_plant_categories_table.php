@@ -26,7 +26,7 @@ return new class extends Migration
         foreach (PlantCategoryEnum::cases() as $category) {
             DB::table('plant_categories')->insert([
                 'name' => $category->value,
-                'description' => 'Default description for '.$category->label(),
+                'description' => 'Default description for '.$category->getLabel(),
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);

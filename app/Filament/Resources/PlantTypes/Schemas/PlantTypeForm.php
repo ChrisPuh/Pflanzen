@@ -18,7 +18,7 @@ final class PlantTypeForm
                 Select::make('name')
                     ->label('Plant Type')
                     ->options(collect(PlantTypeEnum::cases())->mapWithKeys(
-                        fn (PlantTypeEnum $type) => [$type->value => $type->label()]
+                        fn (PlantTypeEnum $type) => [$type->value => $type->getLabel()]
                     ))
                     ->required()
                     ->unique(ignoreRecord: true)

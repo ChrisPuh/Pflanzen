@@ -36,5 +36,6 @@ enum PlantCategory: string implements HasLabel
             self::Native => 'Einheimische Pflanzen',
             self::Exotic => 'Exotische Pflanzen',
             self::Rare => 'Seltene Pflanzen',
-        };    }
+        };
+    }
 }
