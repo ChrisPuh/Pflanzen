@@ -7,8 +7,10 @@ namespace App\Enums;
 use App\Traits\HasValues;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
+use Filament\Support\Contracts\HasLabel;
+use Illuminate\Contracts\Support\Htmlable;
 
-enum PlantType: string implements FilamentUser
+enum PlantType: string implements HasLabel
 {
     use HasValues;
 
@@ -23,7 +25,7 @@ enum PlantType: string implements FilamentUser
     case Fruit = 'fruit';
     case Aquatic = 'aquatic';
 
-    public function label(): string
+    public function getLabel(): string|Htmlable|null
     {
         return match ($this) {
             self::Herb => 'Kräuter',
@@ -37,14 +39,5 @@ enum PlantType: string implements FilamentUser
             self::Fruit => 'Obst',
             self::Aquatic => 'Wasserpflanzen',
         };
-    }
-
-    public function canAccessPanel(Panel $panel): bool
-    {
-        // TODO Adjust this logic based on your access control needs
-        // maybe check user roles or permissions
-        // schould be a policy that we can do something like this:
-        // return auth()->user()->can('access', $panel);
-        return true;
     }
 }

@@ -34,16 +34,12 @@ final class PlantsTable
 
                 TextColumn::make('plantType.name')
                     ->label('Type')
-                    ->formatStateUsing(fn (Plant $record): string => $record->plantType->name->label())
                     ->badge()
                     ->sortable(),
 
                 TextColumn::make('plantCategories.name')
                     ->label('Categories')
-                    ->formatStateUsing(fn (Plant $record): string => $record->plantCategories
-                        ->map(fn (PlantCategory $category): string => $category->name->label())
-                        ->join(', ')
-                    )
+                    ->badge()
                     ->wrap()
                     ->limit(50),
 
@@ -74,16 +70,17 @@ final class PlantsTable
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                SelectFilter::make('plant_type_id')
+                SelectFilter::make('plantType.name')
                     ->label('Plant Type')
-                    ->relationship('plantType', 'name')
-                    ->getOptionLabelFromRecordUsing(fn (PlantType $record): string => $record->name->label()),
-
+                    ->options(\App\Enums\PlantType::class),
+                /*
                 SelectFilter::make('plantCategories')
-                    ->label('Categories')
-                    ->relationship('plantCategories', 'name')
-                    ->getOptionLabelFromRecordUsing(fn (PlantCategory $record): string => $record->name->label())
-                    ->multiple(),
+                     ->label('Categories')
+                     ->relationship('plantCategories', 'name')
+                     ->options(\App\Enums\PlantCategory::class)
+                     ->multiple(),
+                */
+
             ])
             ->recordActions([
                 EditAction::make(),

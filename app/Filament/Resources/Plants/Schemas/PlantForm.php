@@ -7,10 +7,10 @@ namespace App\Filament\Resources\Plants\Schemas;
 use App\Models\PlantCategory;
 use App\Models\PlantType;
 use Filament\Forms\Components\CheckboxList;
-use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 
 final class PlantForm
@@ -36,8 +36,7 @@ final class PlantForm
                         Select::make('plant_type_id')
                             ->label('Plant Type')
                             ->relationship('plantType', 'name')
-                            ->getOptionLabelFromRecordUsing(fn (PlantType $record): string => $record->name->label())
-                            ->required()
+                            ->options(\App\Enums\PlantType::class)->required()
                             ->searchable()
                             ->preload(),
 
@@ -55,7 +54,7 @@ final class PlantForm
                         CheckboxList::make('plantCategories')
                             ->label('Plant Categories')
                             ->relationship('plantCategories', 'name')
-                            ->getOptionLabelFromRecordUsing(fn (PlantCategory $record): string => $record->name->label())
+                            ->options(\App\Enums\PlantCategory::class)
                             ->searchable()
                             ->bulkToggleable()
                             ->columns(3),

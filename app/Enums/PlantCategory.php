@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace App\Enums;
 
 use App\Traits\HasValues;
+use Filament\Support\Contracts\HasLabel;
+use Illuminate\Contracts\Support\Htmlable;
 
-enum PlantCategory: string
+enum PlantCategory: string implements HasLabel
 {
     use HasValues;
 
@@ -21,7 +23,7 @@ enum PlantCategory: string
     case Exotic = 'exotic';
     case Rare = 'rare';
 
-    public function label(): string
+    public function getLabel(): string|Htmlable|null
     {
         return match ($this) {
             self::Indoor => 'Zimmerpflanzen',
@@ -34,6 +36,5 @@ enum PlantCategory: string
             self::Native => 'Einheimische Pflanzen',
             self::Exotic => 'Exotische Pflanzen',
             self::Rare => 'Seltene Pflanzen',
-        };
-    }
+        };    }
 }
