@@ -9,22 +9,26 @@
     ],
     "license": "MIT",
     "require": {
-        "php": "^8.2",
+        "php": "^8.4",
         "blade-ui-kit/blade-icons": "^1.8",
-        "laravel/framework": "^12.0",
+        "laravel/framework": "^12.24",
         "laravel/tinker": "^2.10.1",
-        "owenvoke/blade-fontawesome": "^2.9"
+        "owenvoke/blade-fontawesome": "^2.9.1"
     },
     "require-dev": {
-        "fakerphp/faker": "^1.23",
-        "larastan/larastan": "^3.0",
-        "laravel/pail": "^1.2.2",
-        "laravel/pint": "^1.13",
-        "laravel/sail": "^1.41",
-        "mockery/mockery": "^1.6",
-        "nunomaduro/collision": "^8.6",
-        "pestphp/pest": "^3.8",
-        "pestphp/pest-plugin-laravel": "^3.2"
+        "barryvdh/laravel-debugbar": "^3.16",
+        "barryvdh/laravel-ide-helper": "^3.6",
+        "fakerphp/faker": "^1.24.1",
+        "larastan/larastan": "^3.6",
+        "laravel/pail": "^1.2.3",
+        "laravel/pint": "^1.24",
+        "laravel/sail": "^1.44",
+        "mockery/mockery": "^1.6.12",
+        "nunomaduro/collision": "^8.8.2",
+        "pestphp/pest": "^3.8.2",
+        "pestphp/pest-plugin-laravel": "^3.2",
+        "pestphp/pest-plugin-type-coverage": "^3.6.1",
+        "rector/rector": "^2.1.4"
     },
     "autoload": {
         "psr-4": {
@@ -56,11 +60,67 @@
         ],
         "dev": [
             "Composer\\Config::disableProcessTimeout",
-            "npx concurrently -c \"#93c5fd,#c4b5fd,#fb7185,#fdba74\" \"php artisan serve\" \"php artisan queue:listen --tries=1\" \"php artisan pail --timeout=0\" \"npm run dev\" --names=server,queue,logs,vite"
+            "npx concurrently -c \"#93c5fd,#c4b5fd,#fb7185,#fdba74\" \"php artisan queue:listen --tries=1\" \"php artisan pail --timeout=0\" \"npm run dev\" --names=server,queue,logs,vite"
         ],
+        "ide-helper": [
+            "@php artisan clear-compiled",
+            "@php artisan ide-helper:generate",
+            "@php artisan ide-helper:meta",
+            "@php artisan ide-helper:models --nowrite"
+        ],
+        "lint": [
+            "pint",
+            "@refactor"
+        ],
+        "fresh": [
+            "@php artisan migrate:fresh --seed"
+        ],
+        "format": [
+            "./vendor/bin/pint"
+        ],
+        "quality": [
+            "@ide-helper",
+            "@lint",
+            "@test"
+        ],
+        "pre-commit": [
+            "echo '🔍 Running pre-commit checks...'",
+            "@test:lint",
+            "@test",
+            "echo '✅ All checks passed! Ready for commit.'"
+        ],
+        "pre-push": [
+            "echo '🚀 Running pre-push checks...'",
+            "@format",
+            "@test:type-coverage",
+            "npm run build",
+            "echo '✅ All checks passed! Ready for push.'"
+        ],
+        "refactor": "rector",
+        "test:type-coverage": "pest --type-coverage --min=100",
+        "test:lint": [
+            "pint --test",
+            "@test:refactor"
+        ],
+        "test:unit": "pest --parallel",
+        "test:types": "phpstan",
+        "test:refactor": "rector --dry-run",
         "test": [
-            "@php artisan config:clear --ansi",
-            "@php artisan test"
+            "@test:type-coverage",
+            "@test:unit",
+            "@test:lint",
+            "@test:refactor"
+        ],
+        "optimize": [
+            "@php artisan config:cache",
+            "@php artisan route:cache",
+            "@php artisan view:cache",
+            "@php artisan event:cache",
+            "echo '⚡ Application optimized for production!'"
+        ],
+        "build": [
+            "npm run build",
+            "echo '📦 Assets built successfully!'"
         ]
     },
     "extra": {
