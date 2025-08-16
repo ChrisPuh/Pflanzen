@@ -107,11 +107,14 @@
         "test:unit": "pest --parallel",
         "test:types": "phpstan",
         "test:refactor": "rector --dry-run",
+        "test-coverage": [
+            "pest --coverage --min=95"
+        ],
         "test": [
             "@test:type-coverage",
-            "@test:unit",
             "@test:lint",
-            "@test:refactor"
+            "@test:refactor",
+            "@test-coverage"
         ],
         "optimize": [
             "@php artisan config:cache",
