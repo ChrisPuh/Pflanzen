@@ -20,7 +20,7 @@ final class PlantCategoryFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => fake()->randomElement(PlantCategoryEnum::cases()),
+            'name' => fake()->unique()->randomElement(PlantCategoryEnum::cases()),
             'description' => fake()->optional(0.8)->paragraph(),
         ];
     }

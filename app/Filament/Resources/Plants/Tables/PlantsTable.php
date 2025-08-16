@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\Plants\Tables;
 
+use App\Models\Plant;
 use App\Models\PlantCategory;
 use App\Models\PlantType;
 use Filament\Actions\BulkActionGroup;
@@ -33,14 +34,14 @@ final class PlantsTable
 
                 TextColumn::make('plantType.name')
                     ->label('Type')
-                    ->formatStateUsing(fn ($record) => $record->plantType->name->label())
+                    ->formatStateUsing(fn (Plant $record): string => $record->plantType->name->label())
                     ->badge()
                     ->sortable(),
 
                 TextColumn::make('plantCategories.name')
                     ->label('Categories')
-                    ->formatStateUsing(fn ($record) => $record->plantCategories
-                        ->map(fn ($category) => $category->name->label())
+                    ->formatStateUsing(fn (Plant $record): string => $record->plantCategories
+                        ->map(fn (PlantCategory $category): string => $category->name->label())
                         ->join(', ')
                     )
                     ->wrap()

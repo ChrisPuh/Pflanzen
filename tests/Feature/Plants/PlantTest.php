@@ -22,9 +22,9 @@ test('plant can be created with factory', function () {
 });
 
 test('plant attributes are fillable', function () {
-    $plantType = PlantType::factory()->create(['name' => PlantTypeEnum::Herb]);
-    $medicinalCategory = PlantCategory::factory()->create(['name' => PlantCategoryEnum::Medicinal]);
-    $indoorCategory = PlantCategory::factory()->create(['name' => PlantCategoryEnum::Indoor]);
+    $plantType = PlantType::firstOrCreate(['name' => PlantTypeEnum::Herb], PlantType::factory()->make(['name' => PlantTypeEnum::Herb])->toArray());
+    $medicinalCategory = PlantCategory::firstOrCreate(['name' => PlantCategoryEnum::Medicinal], PlantCategory::factory()->make(['name' => PlantCategoryEnum::Medicinal])->toArray());
+    $indoorCategory = PlantCategory::firstOrCreate(['name' => PlantCategoryEnum::Indoor], PlantCategory::factory()->make(['name' => PlantCategoryEnum::Indoor])->toArray());
 
     $data = [
         'name' => 'Test Plant',
@@ -73,18 +73,19 @@ test('plant has many-to-many category relationship', function () {
 });
 
 test('plant type relationship works', function () {
-    $plantType = PlantType::factory()->create(['name' => PlantTypeEnum::Flower]);
+    $plantType = PlantType::firstOrCreate(['name' => PlantTypeEnum::Flower], PlantType::factory()->make(['name' => PlantTypeEnum::Flower])->toArray());
     $plant = Plant::factory()->create(['plant_type_id' => $plantType->id]);
 
     expect($plant->plantType->name)->toBe(PlantTypeEnum::Flower);
 });
 
 test('plant can have multiple categories', function () {
-    $indoorCategory = PlantCategory::factory()->create(['name' => PlantCategoryEnum::Indoor]);
-    $medicinalCategory = PlantCategory::factory()->create(['name' => PlantCategoryEnum::Medicinal]);
-    $aromaticCategory = PlantCategory::factory()->create(['name' => PlantCategoryEnum::Aromatic]);
+    $indoorCategory = PlantCategory::query()->where('name', PlantCategoryEnum::Indoor)->first();
+    $medicinalCategory = PlantCategory::query()->where('name', PlantCategoryEnum::Medicinal)->first();
+    $aromaticCategory = PlantCategory::query()->where('name', PlantCategoryEnum::Aromatic)->first();
 
     $plant = Plant::factory()->create();
+
     $plant->plantCategories()->attach([
         $indoorCategory->id,
         $medicinalCategory->id,

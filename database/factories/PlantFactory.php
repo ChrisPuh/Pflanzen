@@ -20,11 +20,13 @@ final class PlantFactory extends Factory
      */
     public function definition(): array
     {
+        $plantType = PlantType::pluck('id')->toArray();
+
         return [
             'name' => fake()->words(2, true),
             'latin_name' => fake()->optional(0.8)->words(2, true),
             'description' => fake()->optional(0.9)->paragraph(),
-            'plant_type_id' => PlantType::factory(),
+            'plant_type_id' => fake()->randomElement($plantType),
         ];
     }
 

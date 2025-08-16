@@ -5,11 +5,10 @@ declare(strict_types=1);
 namespace App\Policies;
 
 use App\Models\User;
-use Filament\Panel;
 
 final class AdminPanelPolicy
 {
-    public function access(User $user, Panel $panel): bool
+    public function access(User $user): bool
     {
         return $user->hasRole('admin');
     }

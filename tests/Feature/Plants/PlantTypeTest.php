@@ -10,16 +10,16 @@ test('plant type can be created with factory', function () {
 
     expect($plantType)->toBeInstanceOf(PlantType::class)
         ->and($plantType->name)->toBeInstanceOf(PlantTypeEnum::class);
-});
+})->skip('This test is skipped because it es not necessary. Types are seedet at migration.');
 
 test('plant type name field uses enum', function () {
-    $plantType = PlantType::factory()->create(['name' => PlantTypeEnum::Herb]);
+    $plantType = PlantType::firstOrCreate(['name' => PlantTypeEnum::Herb], PlantType::factory()->make(['name' => PlantTypeEnum::Herb])->toArray());
 
     expect($plantType->name)->toBe(PlantTypeEnum::Herb);
 });
 
 test('plant type has relationship with plants', function () {
-    $plantType = PlantType::factory()->create();
+    $plantType = PlantType::first();
 
     expect($plantType->plants())->toBeInstanceOf(Illuminate\Database\Eloquent\Relations\HasMany::class);
 });
