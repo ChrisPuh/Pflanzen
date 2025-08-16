@@ -5,6 +5,7 @@ declare(strict_types=1);
 use App\Enums\PlantCategory as PlantCategoryEnum;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -20,6 +21,16 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->timestamps();
         });
+
+        // Seed all plant categories
+        foreach (PlantCategoryEnum::cases() as $category) {
+            DB::table('plant_categories')->insert([
+                'name' => $category->value,
+                'description' => 'Default description for '.$category->label(),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+        }
     }
 
     /**

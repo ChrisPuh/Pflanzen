@@ -5,6 +5,7 @@ declare(strict_types=1);
 use App\Enums\PlantType as PlantTypeEnum;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -20,6 +21,16 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->timestamps();
         });
+
+        // Seed all plant types
+        foreach (PlantTypeEnum::cases() as $type) {
+            DB::table('plant_types')->insert([
+                'name' => $type->value,
+                'description' => 'Default description for '.$type->label(),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+        }
     }
 
     /**
