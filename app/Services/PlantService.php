@@ -1,0 +1,135 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Services;
+
+use App\Enums\PlantCategoryEnum;
+use App\Enums\PlantTypeEnum;
+use App\Models\Plant;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Builder;
+
+final class PlantService
+{
+    /**
+     * Get filtered and paginated plants based on the provided filters.
+     *
+     * @param  array<string>  $categories
+     */
+    public function getFilteredPlants(
+        ?string $search = null,
+        ?string $type = null,
+        array $categories = [],
+        int $perPage = 12
+    ): LengthAwarePaginator {
+        return Plant::query()
+            ->with(['plantType', 'categories'])
+            ->when($search, fn (Builder $query, string $search): Builder => $this->applySearchFilter($query, $search))
+            ->when($type, fn (Builder $query, string $type): Builder => $this->applyTypeFilter($query, $type))
+            ->when($categories !== [], fn (Builder $query): Builder => $this->applyCategoryFilter($query, $categories))
+            ->orderBy('name')
+            ->paginate($perPage)
+            ->withQueryString();
+    }
+
+    /**
+     * Get all available plant types for the filter dropdown.
+     *
+     * @return array<PlantTypeEnum>
+     */
+    public function getAvailablePlantTypes(): array
+    {
+        return PlantTypeEnum::cases();
+    }
+
+    /**
+     * Get all available plant categories for the filter dropdown.
+     *
+     * @return array<PlantCategoryEnum>
+     */
+    public function getAvailablePlantCategories(): array
+    {
+        return PlantCategoryEnum::cases();
+    }
+
+    /**
+     * Get plant statistics for the index page.
+     *
+     * @return array{total: int, by_type: array<string, int>, by_category: array<string, int>}
+     */
+    public function getPlantStatistics(): array
+    {
+        $total = Plant::count();
+
+        $byType = Plant::query()
+            ->select('plant_type_id')
+            ->selectRaw('COUNT(*) as count')
+            ->with('plantType')
+            ->groupBy('plant_type_id')
+            ->get()
+            ->mapWithKeys(fn (object $item): array => [
+                $item->plantType->name->getLabel() => $item->count,
+            ])
+            ->toArray();
+
+        $byCategory = Plant::query()
+            ->join('category_plant', 'plants.id', '=', 'category_plant.plant_id')
+            ->join('categories', 'category_plant.category_id', '=', 'categories.id')
+            ->select('categories.name')
+            ->selectRaw('COUNT(*) as count')
+            ->groupBy('categories.name')
+            ->get()
+            ->mapWithKeys(fn (object $item): array => [
+                PlantCategoryEnum::from($item->name)->getLabel() => $item->count,
+            ])
+            ->toArray();
+
+        return [
+            'total' => $total,
+            'by_type' => $byType,
+            'by_category' => $byCategory,
+        ];
+    }
+
+    /**
+     * Apply search filter to the query.
+     */
+    private function applySearchFilter(Builder $query, string $search): Builder
+    {
+        return $query->where(fn (Builder $query): Builder => $query
+            ->where('name', 'like', "%{$search}%")
+            ->orWhere('latin_name', 'like', "%{$search}%")
+            ->orWhere('description', 'like', "%{$search}%")
+        );
+    }
+
+    /**
+     * Apply type filter to the query.
+     */
+    private function applyTypeFilter(Builder $query, string $type): Builder
+    {
+        return $query->whereHas('plantType', function (Builder $query) use ($type): Builder {
+            $enumValue = PlantTypeEnum::from($type);
+
+            return $query->where('name', $enumValue);
+        });
+    }
+
+    /**
+     * Apply category filter to the query.
+     *
+     * @param  array<string>  $categories
+     */
+    private function applyCategoryFilter(Builder $query, array $categories): Builder
+    {
+        return $query->whereHas('categories', function (Builder $query) use ($categories): Builder {
+            $enumValues = array_map(
+                fn (string $value): PlantCategoryEnum => PlantCategoryEnum::from($value),
+                $categories
+            );
+
+            return $query->whereIn('name', $enumValues);
+        });
+    }
+}

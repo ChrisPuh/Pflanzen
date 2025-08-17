@@ -11,8 +11,9 @@ use App\Models\Plant;
 use App\Models\PlantType;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\File;
+use ValueError;
 
-class PlantDataSeeder extends Seeder
+final class PlantDataSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -22,6 +23,7 @@ class PlantDataSeeder extends Seeder
         // Only run in non-production environments
         if (app()->environment('production')) {
             $this->command->info('Skipping PlantDataSeeder in production environment.');
+
             return;
         }
 
@@ -45,8 +47,9 @@ class PlantDataSeeder extends Seeder
         $typeName = $plantTypeEnum->value;
         $jsonFile = database_path("seeders/data/{$typeName}.json");
 
-        if (!File::exists($jsonFile)) {
+        if (! File::exists($jsonFile)) {
             $this->command->warn("JSON file not found: {$jsonFile}");
+
             return;
         }
 
@@ -54,16 +57,18 @@ class PlantDataSeeder extends Seeder
 
         // Get the plant type model
         $plantType = PlantType::where('name', $plantTypeEnum)->first();
-        if (!$plantType) {
+        if (! $plantType) {
             $this->command->error("PlantType not found: {$plantTypeEnum->value}");
+
             return;
         }
 
         // Read and decode JSON file
         $plantsData = json_decode(File::get($jsonFile), true);
 
-        if (!is_array($plantsData)) {
+        if (! is_array($plantsData)) {
             $this->command->error("Invalid JSON format in file: {$jsonFile}");
+
             return;
         }
 
@@ -78,8 +83,9 @@ class PlantDataSeeder extends Seeder
     private function createPlant(array $plantData, PlantType $plantType): void
     {
         // Validate required fields
-        if (!isset($plantData['name'])) {
+        if (! isset($plantData['name'])) {
             $this->command->warn('Plant data missing name field, skipping...');
+
             return;
         }
 
@@ -90,6 +96,7 @@ class PlantDataSeeder extends Seeder
 
         if ($existingPlant) {
             $this->command->line("Plant already exists: {$plantData['name']}");
+
             return;
         }
 
@@ -120,23 +127,23 @@ class PlantDataSeeder extends Seeder
             try {
                 // Convert string to enum
                 $categoryEnum = PlantCategoryEnum::from($categoryName);
-                
+
                 // Find the category model
                 $category = Category::where('name', $categoryEnum)->first();
-                
+
                 if ($category) {
                     $categoryIds[] = $category->id;
                 } else {
                     $this->command->warn("Category not found: {$categoryName}");
                 }
-            } catch (\ValueError $e) {
+            } catch (ValueError) {
                 $this->command->warn("Invalid category: {$categoryName}");
             }
         }
 
-        if (!empty($categoryIds)) {
+        if ($categoryIds !== []) {
             $plant->categories()->attach($categoryIds);
-            $this->command->line("  → Attached " . count($categoryIds) . " categories to {$plant->name}");
+            $this->command->line('  → Attached '.count($categoryIds)." categories to {$plant->name}");
         }
     }
 }
