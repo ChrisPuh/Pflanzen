@@ -1,0 +1,32 @@
+[
+    {
+        "name": "Frauenhaarfarn",
+        "latin_name": "Adiantum capillus-veneris",
+        "description": "Der Frauenhaarfarn ist ein zierlicher Farn mit fein gefiederten Wedeln und schwarzen Stielen. Er gedeiht am besten in feuchten, schattigen Umgebungen und ist eine beliebte Zimmerpflanze.",
+        "categories": ["indoor", "ornamental"]
+    },
+    {
+        "name": "Königsfarn",
+        "latin_name": "Osmunda regalis",
+        "description": "Der Königsfarn ist einer der größten einheimischen Farne mit majestätischen, gefiederten Wedeln. Er bevorzugt feuchte Standorte und kann bis zu 2 Meter hoch werden.",
+        "categories": ["outdoor", "native"]
+    },
+    {
+        "name": "Schwertfarn",
+        "latin_name": "Nephrolepis exaltata",
+        "description": "Der Schwertfarn ist ein robuster Zimmerfarn mit langen, schwertförmigen Wedeln. Er ist pflegeleicht und eignet sich hervorragend als hängende oder stehende Zimmerpflanze.",
+        "categories": ["indoor", "ornamental"]
+    },
+    {
+        "name": "Wurmfarn",
+        "latin_name": "Dryopteris filix-mas",
+        "description": "Der Wurmfarn ist ein weit verbreiteter einheimischer Farn mit robusten, dunkelgrünen Wedeln. Er gedeiht in schattigen Waldgebieten und ist sehr winterhart.",
+        "categories": ["outdoor", "native"]
+    },
+    {
+        "name": "Tüpfelfarn",
+        "latin_name": "Polypodium vulgare",
+        "description": "Der Tüpfelfarn ist ein kleiner, immergrüner Farn, der oft auf Baumstämmen und Felsen wächst. Seine ledrigen Wedel bleiben auch im Winter grün.",
+        "categories": ["outdoor", "native"]
+    }
+]

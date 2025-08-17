@@ -1,0 +1,32 @@
+[
+    {
+        "name": "Erdbeere",
+        "latin_name": "Fragaria x ananassa",
+        "description": "Erdbeeren sind beliebte, süße Früchte, die bereits im Frühjahr geerntet werden können. Die Pflanzen bilden Ausläufer und sind ideal für Beete, Töpfe oder Hängeampeln.",
+        "categories": ["outdoor", "edible"]
+    },
+    {
+        "name": "Himbeere",
+        "latin_name": "Rubus idaeus",
+        "description": "Himbeeren sind köstliche rote Früchte, die an dornigen Sträuchern wachsen. Sie sind reich an Vitaminen und Antioxidantien und relativ einfach zu kultivieren.",
+        "categories": ["outdoor", "edible"]
+    },
+    {
+        "name": "Weintraube",
+        "latin_name": "Vitis vinifera",
+        "description": "Weintrauben wachsen an kletternden Reben und können sowohl für den Frischverzehr als auch zur Weinherstellung verwendet werden. Sie benötigen warme, sonnige Standorte.",
+        "categories": ["outdoor", "edible"]
+    },
+    {
+        "name": "Zitrone",
+        "latin_name": "Citrus limon",
+        "description": "Zitronen sind saure Zitrusfrüchte, die in warmen Klimazonen oder als Kübelpflanzen kultiviert werden. Die Früchte sind reich an Vitamin C und vielseitig verwendbar.",
+        "categories": ["indoor", "outdoor", "edible", "exotic"]
+    },
+    {
+        "name": "Feige",
+        "latin_name": "Ficus carica",
+        "description": "Feigen sind süße, fleischige Früchte, die an kleinen Bäumen oder großen Sträuchern wachsen. In milden Klimazonen können sie auch im Freiland kultiviert werden.",
+        "categories": ["outdoor", "edible", "exotic"]
+    }
+]

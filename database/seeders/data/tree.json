@@ -1,0 +1,32 @@
+[
+    {
+        "name": "Eiche",
+        "latin_name": "Quercus robur",
+        "description": "Die Stieleiche ist ein majestätischer Laubbaum, der bis zu 1000 Jahre alt werden kann. Mit ihrem ausladenden Kronendach bietet sie Lebensraum für zahlreiche Tierarten und ist ein Symbol für Stärke und Beständigkeit.",
+        "categories": ["outdoor", "native"]
+    },
+    {
+        "name": "Apfelbaum",
+        "latin_name": "Malus domestica",
+        "description": "Der Apfelbaum ist einer der wichtigsten Obstbäume in gemäßigten Klimazonen. Er produziert nicht nur köstliche Früchte, sondern schmückt den Garten auch mit seinen weißen bis rosafarbenen Blüten im Frühjahr.",
+        "categories": ["outdoor", "edible", "ornamental"]
+    },
+    {
+        "name": "Birke",
+        "latin_name": "Betula pendula",
+        "description": "Die Hängebirke ist bekannt für ihre charakteristische weiße Rinde und ihre hängenden Zweige. Sie ist ein schnell wachsender Pionier-Baum, der auch auf kargen Böden gedeiht.",
+        "categories": ["outdoor", "native"]
+    },
+    {
+        "name": "Ahorn",
+        "latin_name": "Acer platanoides",
+        "description": "Der Spitzahorn ist ein beliebter Parkbaum mit handförmigen Blättern, die sich im Herbst in leuchtende Gelb- und Rottöne verwandeln. Seine Früchte sind die charakteristischen geflügelten Samen.",
+        "categories": ["outdoor", "ornamental", "native"]
+    },
+    {
+        "name": "Linde",
+        "latin_name": "Tilia cordata",
+        "description": "Die Winterlinde ist ein traditioneller deutscher Baum mit herzförmigen Blättern und duftenden Blüten. Lindenblütentee wird seit Jahrhunderten als beruhigendes Heilmittel verwendet.",
+        "categories": ["outdoor", "medicinal", "aromatic", "native"]
+    }
+]

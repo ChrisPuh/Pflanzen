@@ -1,0 +1,32 @@
+[
+    {
+        "name": "Rose",
+        "latin_name": "Rosa gallica",
+        "description": "Die Rose ist die Königin der Blumen und ein Symbol für Liebe und Schönheit. Mit ihren samtigen Blütenblättern und dem betörenden Duft ist sie eine der beliebtesten Gartenpflanzen weltweit.",
+        "categories": ["outdoor", "ornamental", "aromatic"]
+    },
+    {
+        "name": "Sonnenblume",
+        "latin_name": "Helianthus annuus",
+        "description": "Die Sonnenblume ist bekannt für ihre imposanten gelben Blütenstände, die der Sonne folgen. Diese einjährige Pflanze kann bis zu 3 Meter hoch werden und produziert nahrhafte Kerne.",
+        "categories": ["outdoor", "ornamental", "edible"]
+    },
+    {
+        "name": "Tulpe",
+        "latin_name": "Tulipa gesneriana",
+        "description": "Tulpen sind klassische Frühlingsblumen mit becherförmigen Blüten in vielen Farben. Diese Zwiebelblumen stammen ursprünglich aus Zentralasien und sind ein Symbol für den Frühling.",
+        "categories": ["outdoor", "ornamental"]
+    },
+    {
+        "name": "Gerbera",
+        "latin_name": "Gerbera jamesonii",
+        "description": "Gerbera sind fröhliche Gänseblümchen-ähnliche Blumen in lebendigen Farben. Sie sind beliebte Schnittblumen und können sowohl im Garten als auch als Zimmerpflanze kultiviert werden.",
+        "categories": ["indoor", "outdoor", "ornamental"]
+    },
+    {
+        "name": "Lavendel",
+        "latin_name": "Lavandula angustifolia",
+        "description": "Lavendel besticht durch seine violetten Blütenähren und seinen charakteristischen Duft. Die Pflanze ist nicht nur schön anzusehen, sondern auch nützlich für Aromatherapie und als natürlicher Insektenschutz.",
+        "categories": ["outdoor", "aromatic", "medicinal", "ornamental"]
+    }
+]

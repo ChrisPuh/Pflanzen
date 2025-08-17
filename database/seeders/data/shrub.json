@@ -1,0 +1,32 @@
+[
+    {
+        "name": "Hortensie",
+        "latin_name": "Hydrangea macrophylla",
+        "description": "Hortensien sind beliebte Ziersträucher mit großen, kugelförmigen Blütenständen in verschiedenen Farben. Die Blütenfarbe kann je nach Bodenbeschaffenheit von blau über rosa bis weiß variieren.",
+        "categories": ["outdoor", "ornamental"]
+    },
+    {
+        "name": "Rhododendron",
+        "latin_name": "Rhododendron ponticum",
+        "description": "Rhododendren sind immergrüne Sträucher mit spektakulären Blüten in leuchtenden Farben. Sie bevorzugen saure Böden und halbschattige Standorte und sind ein Highlight in jedem Garten.",
+        "categories": ["outdoor", "ornamental"]
+    },
+    {
+        "name": "Flieder",
+        "latin_name": "Syringa vulgaris",
+        "description": "Flieder ist ein duftender Frühlingsstrauch mit kegelförmigen Blütenrispen in lila, weiß oder rosa. Der intensive Duft macht ihn zu einem beliebten Strauch für Gärten und Parks.",
+        "categories": ["outdoor", "aromatic", "ornamental"]
+    },
+    {
+        "name": "Heidelbeere",
+        "latin_name": "Vaccinium myrtillus",
+        "description": "Die Heidelbeere ist ein niedriger Strauch, der köstliche blaue Beeren produziert. Die Früchte sind reich an Antioxidantien und die Pflanze gedeiht am besten in sauren, humusreichen Böden.",
+        "categories": ["outdoor", "edible", "native"]
+    },
+    {
+        "name": "Forsythie",
+        "latin_name": "Forsythia x intermedia",
+        "description": "Die Forsythie ist einer der ersten Sträucher, die im Frühjahr blühen. Ihre leuchtend gelben Blüten erscheinen vor den Blättern und kündigen das Ende des Winters an.",
+        "categories": ["outdoor", "ornamental"]
+    }
+]

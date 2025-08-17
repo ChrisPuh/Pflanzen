@@ -1,0 +1,32 @@
+[
+    {
+        "name": "Tomate",
+        "latin_name": "Solanum lycopersicum",
+        "description": "Die Tomate ist eines der beliebtesten Gemüse im Garten. Sie benötigt viel Wärme und Sonne und produziert saftige, nährstoffreiche Früchte in verschiedenen Größen und Farben.",
+        "categories": ["outdoor", "edible"]
+    },
+    {
+        "name": "Gurke",
+        "latin_name": "Cucumis sativus",
+        "description": "Gurken sind erfrischende Sommergemüse mit hohem Wassergehalt. Sie wachsen an rankenden Pflanzen und benötigen viel Wasser und warme Temperaturen.",
+        "categories": ["outdoor", "edible"]
+    },
+    {
+        "name": "Paprika",
+        "latin_name": "Capsicum annuum",
+        "description": "Paprika sind farbenfrohe Gemüse mit süßem oder würzigem Geschmack. Sie sind reich an Vitamin C und gedeihen am besten in warmen, sonnigen Standorten.",
+        "categories": ["outdoor", "edible"]
+    },
+    {
+        "name": "Karotte",
+        "latin_name": "Daucus carota",
+        "description": "Karotten sind Wurzelgemüse mit hohem Beta-Carotin-Gehalt. Sie sind einfach zu züchten und können in lockeren, tiefgründigen Böden kultiviert werden.",
+        "categories": ["outdoor", "edible"]
+    },
+    {
+        "name": "Salat",
+        "latin_name": "Lactuca sativa",
+        "description": "Kopfsalat ist ein schnell wachsendes Blattgemüse, das in den kühleren Monaten angebaut wird. Er ist reich an Vitaminen und Mineralstoffen.",
+        "categories": ["outdoor", "edible"]
+    }
+]

@@ -1,0 +1,32 @@
+[
+    {
+        "name": "Basilikum",
+        "latin_name": "Ocimum basilicum",
+        "description": "Basilikum ist ein aromatisches Kraut, das in der mediterranen Küche weit verbreitet ist. Die grünen Blätter haben einen süßen, pfefferigen Geschmack und sind reich an ätherischen Ölen. Basilikum gedeiht am besten in warmen, sonnigen Standorten.",
+        "categories": ["indoor", "aromatic", "edible"]
+    },
+    {
+        "name": "Rosmarin",
+        "latin_name": "Rosmarinus officinalis",
+        "description": "Rosmarin ist ein immergrüner Strauch mit nadelartigen Blättern und einem intensiven, harzigen Duft. Diese mediterrane Pflanze ist nicht nur ein beliebtes Küchengewürz, sondern auch für ihre medizinischen Eigenschaften bekannt.",
+        "categories": ["outdoor", "aromatic", "medicinal", "edible"]
+    },
+    {
+        "name": "Lavendel",
+        "latin_name": "Lavandula angustifolia",
+        "description": "Echter Lavendel ist bekannt für seine violetten Blütenähren und seinen beruhigenden Duft. Die Pflanze wird seit Jahrhunderten in der Parfüm- und Aromatherapie verwendet und zieht Bienen und Schmetterlinge an.",
+        "categories": ["outdoor", "aromatic", "medicinal", "ornamental"]
+    },
+    {
+        "name": "Thymian",
+        "latin_name": "Thymus vulgaris",
+        "description": "Thymian ist ein niedrig wachsendes, mehrjähriges Kraut mit kleinen, aromatischen Blättern. Es ist ein Grundnahrungsmittel in der französischen und mediterranen Küche und hat starke antimikrobielle Eigenschaften.",
+        "categories": ["outdoor", "aromatic", "medicinal", "edible"]
+    },
+    {
+        "name": "Petersilie",
+        "latin_name": "Petroselinum crispum",
+        "description": "Petersilie ist eines der am häufigsten verwendeten Küchenkräuter. Die krausen oder glatten Blätter sind reich an Vitamin C und verleihen vielen Gerichten einen frischen, würzigen Geschmack.",
+        "categories": ["indoor", "outdoor", "edible"]
+    }
+]

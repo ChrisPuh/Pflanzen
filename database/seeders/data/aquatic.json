@@ -1,0 +1,32 @@
+[
+    {
+        "name": "Seerose",
+        "latin_name": "Nymphaea alba",
+        "description": "Seerosen sind elegante Wasserpflanzen mit schwimmenden Blättern und duftenden Blüten. Sie sind ein klassisches Element in Gartenteichen und symbolisieren Reinheit und Schönheit.",
+        "categories": ["outdoor", "ornamental"]
+    },
+    {
+        "name": "Lotus",
+        "latin_name": "Nelumbo nucifera",
+        "description": "Der Lotus ist eine heilige Wasserpflanze mit großen, runden Blättern und spektakulären Blüten. In vielen Kulturen gilt er als Symbol für Erleuchtung und Wiedergeburt.",
+        "categories": ["outdoor", "exotic", "ornamental"]
+    },
+    {
+        "name": "Wasserhyazinthe",
+        "latin_name": "Eichhornia crassipes",
+        "description": "Die Wasserhyazinthe ist eine schwimmende Wasserpflanze mit violetten Blüten und aufgeblähten Blattstielen. Sie kann schnell wachsen und Teiche bedecken.",
+        "categories": ["outdoor", "ornamental", "exotic"]
+    },
+    {
+        "name": "Hornkraut",
+        "latin_name": "Ceratophyllum demersum",
+        "description": "Hornkraut ist eine untergetauchte Wasserpflanze, die als natürlicher Filter in Teichen fungiert. Sie produziert Sauerstoff und bietet Fischen Versteckmöglichkeiten.",
+        "categories": ["outdoor"]
+    },
+    {
+        "name": "Wasserpest",
+        "latin_name": "Elodea canadensis",
+        "description": "Wasserpest ist eine schnell wachsende Unterwasserpflanze, die zur Sauerstoffanreicherung in Aquarien und Gartenteichen verwendet wird. Sie ist sehr pflegeleicht.",
+        "categories": ["outdoor"]
+    }
+]

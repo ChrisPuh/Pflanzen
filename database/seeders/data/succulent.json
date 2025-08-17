@@ -1,0 +1,32 @@
+[
+    {
+        "name": "Aloe Vera",
+        "latin_name": "Aloe barbadensis",
+        "description": "Aloe Vera ist eine sukkulente Heilpflanze mit fleischigen Blättern, die ein beruhigendes Gel enthalten. Sie ist pflegeleicht und wird häufig zur Behandlung von Hautproblemen und Verbrennungen verwendet.",
+        "categories": ["indoor", "medicinal"]
+    },
+    {
+        "name": "Echeveria",
+        "latin_name": "Echeveria elegans",
+        "description": "Echeveria ist eine rosettenförmige Sukkulente mit bläulich-grünen Blättern und einem wachsartigen Überzug. Diese attraktive Pflanze ist ideal für Steingärten und Töpfe.",
+        "categories": ["indoor", "outdoor", "ornamental"]
+    },
+    {
+        "name": "Kaktusfeige",
+        "latin_name": "Opuntia ficus-indica",
+        "description": "Die Kaktusfeige ist ein großer Kaktus mit flachen, paddelförmigen Segmenten und essbaren Früchten. Sie ist extrem trockenheitsresistent und in warmen Klimazonen weit verbreitet.",
+        "categories": ["outdoor", "edible", "exotic"]
+    },
+    {
+        "name": "Jade-Pflanze",
+        "latin_name": "Crassula ovata",
+        "description": "Die Jade-Pflanze, auch Geldbaum genannt, ist eine beliebte Zimmerpflanze mit dicken, ovalen Blättern. Sie gilt als Glückssymbol und ist sehr pflegeleicht.",
+        "categories": ["indoor", "ornamental"]
+    },
+    {
+        "name": "Sedum",
+        "latin_name": "Sedum acre",
+        "description": "Sedum ist eine niedrig wachsende Sukkulente mit kleinen, fleischigen Blättern und gelben Blüten. Sie eignet sich hervorragend als Bodendecker und für extensive Dachbegrünungen.",
+        "categories": ["outdoor", "ornamental"]
+    }
+]

@@ -1,0 +1,32 @@
+[
+    {
+        "name": "Pampasgras",
+        "latin_name": "Cortaderia selloana",
+        "description": "Pampasgras ist ein imposantes Ziergras mit hohen, federartigen Blütenrispen. Es kann bis zu 3 Meter hoch werden und ist ein beliebtes Element in modernen Gartengestaltungen.",
+        "categories": ["outdoor", "ornamental"]
+    },
+    {
+        "name": "Bambus",
+        "latin_name": "Bambusa vulgaris",
+        "description": "Bambus ist ein schnell wachsendes Gras mit hohlen Halmen, das als Sichtschutz und Zierpflanze verwendet wird. Einige Arten sind essbar und werden in der asiatischen Küche verwendet.",
+        "categories": ["outdoor", "edible", "exotic"]
+    },
+    {
+        "name": "Lampenputzergras",
+        "latin_name": "Pennisetum alopecuroides",
+        "description": "Das Lampenputzergras ist ein elegantes Ziergras mit bürstenartigen Blütenständen. Es ist sehr pflegeleicht und bietet im Herbst eine schöne goldene Färbung.",
+        "categories": ["outdoor", "ornamental"]
+    },
+    {
+        "name": "Chinaschilf",
+        "latin_name": "Miscanthus sinensis",
+        "description": "Chinaschilf ist ein hohes Ziergras mit schmalen Blättern und federartigen Blütenrispen. Es ist sehr winterhart und eignet sich hervorragend als Sichtschutz.",
+        "categories": ["outdoor", "ornamental"]
+    },
+    {
+        "name": "Segge",
+        "latin_name": "Carex morrowii",
+        "description": "Seggen sind vielseitige Gräser mit schmalen Blättern, die oft in verschiedenen Grün- und Gelbtönen variegiert sind. Sie eignen sich für schattige bis halbschattige Standorte.",
+        "categories": ["outdoor", "ornamental"]
+    }
+]
