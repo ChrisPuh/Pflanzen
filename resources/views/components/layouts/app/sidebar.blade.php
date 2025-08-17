@@ -9,6 +9,10 @@
                             <x-layouts.sidebar-link href="{{ route('dashboard') }}" icon='fas-house'
                                 :active="request()->routeIs('dashboard*')">Dashboard</x-layouts.sidebar-link>
 
+                            <!-- Plants -->
+                            <x-layouts.sidebar-link href="{{ route('plants.index') }}" icon='fas-seedling'
+                                :active="request()->routeIs('plants*')">Pflanzen entdecken</x-layouts.sidebar-link>
+
                             <!-- Settings -->
                             <x-layouts.sidebar-two-level-link-parent title="Settings" icon="fas-gear"
                                 :active="request()->routeIs('settings*')">
