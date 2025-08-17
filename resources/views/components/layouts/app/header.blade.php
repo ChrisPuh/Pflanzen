@@ -4,7 +4,7 @@
         <!-- Left side: Logo and toggle -->
         <div class="flex items-center">
             <button @click="toggleSidebar"
-                class="p-2 rounded-md text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 focus:outline-none">
+                class="p-2 rounded-md text-muted hover:text-hover-foreground hover:bg-hover focus:outline-none transition-colors">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
                     stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
@@ -17,7 +17,7 @@
         <div class="flex items-center space-x-4">
             <!-- Profile -->
             <div x-data="{ open: false }" class="relative">
-                <button @click="open = !open" class="flex items-center focus:outline-none">
+                <button @click="open = !open" class="flex items-center focus:outline-none text-foreground hover:text-primary transition-colors">
                     <span class="relative flex h-8 w-8 shrink-0 overflow-hidden rounded-lg">
                         <span
                             class="flex h-full w-full items-center justify-center rounded-lg bg-surface-2 text-foreground">
@@ -35,7 +35,7 @@
                     class="hidden absolute right-0 mt-2 w-48 bg-surface-2 rounded-md shadow-lg py-1 z-50 border border-default">
                     @if(Auth::user()->hasRole('admin'))
                         <a href="{{ url('/admin') }}"
-                            class="block px-4 py-2 text-sm text-muted hover:bg-surface-2">
+                            class="block px-4 py-2 text-sm text-muted hover:bg-hover hover:text-hover-foreground transition-colors">
                             <div class="flex items-center">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none"
                                     viewBox="0 0 24 24" stroke="currentColor">
@@ -47,7 +47,7 @@
                         </a>
                     @endif
                     <a href="{{ route('settings.profile.edit') }}"
-                        class="block px-4 py-2 text-sm text-muted hover:bg-surface-2">
+                        class="block px-4 py-2 text-sm text-muted hover:bg-hover hover:text-hover-foreground transition-colors">
                         <div class="flex items-center">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none"
                                 viewBox="0 0 24 24" stroke="currentColor">
@@ -60,10 +60,10 @@
                         </div>
                     </a>
                     <div class="border-t border-default"></div>
-                    <form method="POST" action="{{ route('logout') }}" class="w-full">
+                    <form method="POST" action="{{ route('logout') }}" clas s="w-full">
                         @csrf
                         <button type="submit"
-                            class="block w-full px-4 py-2 text-sm text-muted hover:bg-surface-2">
+                            class="block w-full px-4 py-2 text-sm text-muted hover:bg-hover hover:text-hover-foreground transition-colors text-left">
                             <div class="flex items-center">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none"
                                     viewBox="0 0 24 24" stroke="currentColor">

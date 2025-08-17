@@ -9,12 +9,12 @@
             open = true;
         }
     " @class([
-        'flex items-center justify-between w-full px-3 py-2 text-sm rounded-md hover:bg-sidebar-accent hover:text-sidebar-accent-foreground',
-        'bg-sidebar-accent text-sidebar-accent-foreground font-medium' => $active,
-        'hover:bg-sidebar-accent hover:text-sidebar-accent-foreground text-sidebar-foreground' => !$active,
+        'flex items-center justify-between w-full px-3 py-2 text-sm rounded-md transition-colors',
+        'bg-hover text-hover-foreground font-medium' => $active,
+        'hover:bg-hover hover:text-hover-foreground text-sidebar-foreground' => !$active,
     ])>
         <div class="flex items-center">
-            @svg($icon, $active ? 'w-5 h-5 text-white dark:text-gray-800' : 'w-5 h-5 text-gray-500')
+            @svg($icon, $active ? 'w-5 h-5 text-hover-foreground' : 'w-5 h-5 text-sidebar-foreground opacity-70')
             <span :class="{ 'opacity-0 hidden ml-0': !sidebarOpen, 'ml-3': sidebarOpen }"
                 class="transition-opacity duration-300">{{ $title }}</span>
         </div>

@@ -2,11 +2,11 @@
 
 <a href="{{ $href }}" @class([
     'flex items-center px-3 py-2 text-sm rounded-md transition-colors duration-200',
-    'bg-sidebar-accent text-sidebar-accent-foreground font-medium' => $active,
-    'hover:bg-sidebar-accent hover:text-sidebar-accent-foreground text-sidebar-foreground' => !$active,
+    'bg-hover text-hover-foreground font-medium' => $active,
+    'hover:bg-hover hover:text-hover-foreground text-sidebar-foreground' => !$active,
 ])>
     <div class="flex items-center">
-        @svg($icon, $active ? 'w-5 h-5 mr-3 text-white' : 'w-5 h-5 mr-3 text-gray-500')
+        @svg($icon, $active ? 'w-5 h-5 mr-3 text-hover-foreground' : 'w-5 h-5 mr-3 text-sidebar-foreground opacity-70')
         <span x-data="{}" :class="{ 'opacity-0 hidden': !sidebarOpen }">{{ $slot }}</span>
     </div>
 </a>

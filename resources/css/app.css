@@ -16,6 +16,8 @@
     --sidebar-accent-foreground: hsl(var(--sidebar-accent-foreground));
     --sidebar-border: hsl(var(--sidebar-border));
     --sidebar-ring: hsl(var(--sidebar-ring));
+    --hover: hsl(var(--hover));
+    --hover-foreground: hsl(var(--hover-foreground));
 }
 
 @custom-variant dark (&:where(.dark, .dark *));
@@ -40,6 +42,23 @@
 
     .hover\:text-sidebar-accent-foreground:hover {
         color: hsl(var(--sidebar-accent-foreground));
+    }
+
+    /* Generic hover utilities */
+    .bg-hover {
+        background-color: hsl(var(--hover));
+    }
+
+    .text-hover-foreground {
+        color: hsl(var(--hover-foreground));
+    }
+
+    .hover\:bg-hover:hover {
+        background-color: hsl(var(--hover));
+    }
+
+    .hover\:text-hover-foreground:hover {
+        color: hsl(var(--hover-foreground));
     }
 
     /* App-wide semantic theme utilities */
@@ -111,6 +130,9 @@
         --warning: 32 90% 50%;         /* amber sunlight */
         --danger: 0 72% 50%;           /* tomato red */
         --info: 188 74% 42%;           /* teal-blue water */
+
+        --hover: 142 50% 45%;          /* primary green hover (lighter) */
+        --hover-foreground: 210 40% 98%; /* light hover text */
     }
 
     .dark {
@@ -134,6 +156,9 @@
         --warning: 35 92% 62%;
         --danger: 0 75% 60%;
         --info: 190 80% 55%;
+
+        --hover: 142 55% 55%;          /* primary green hover (brighter for dark mode) */
+        --hover-foreground: 210 40% 98%; /* light hover text */
     }
 }
 

@@ -1,30 +1,24 @@
 <div class="w-full md:w-64 shrink-0 border-r border-default pr-4">
-    <nav class="bg-surface-2 rounded-lg overflow-hidden">
-        <ul class="divide-y divide-default">
-            <li>
-                <a href="{{ route('settings.profile.edit') }}" @class([
-                    'block px-4 py-3 text-muted hover:bg-surface-2' => !request()->routeIs('settings.profile.*'),
-                    'bg-surface-2 block px-4 py-3 text-foreground font-medium' => request()->routeIs('settings.profile.*'),
-                ])>
-                    {{ __('Profile') }}
-                </a>
-            </li>
-            <li>
-                <a href="{{ route('settings.password.edit') }}" @class([
-                    'block px-4 py-3 text-muted hover:bg-surface-2' => !request()->routeIs('settings.password.*'),
-                    'bg-surface-2 block px-4 py-3 text-foreground font-medium' => request()->routeIs('settings.password.*'),
-                ])>
-                    {{ __('Password') }}
-                </a>
-            </li>
-            <li>
-                <a href="{{ route('settings.appearance.edit') }}" @class([
-                    'block px-4 py-3 text-muted hover:bg-surface-2' => !request()->routeIs('settings.appearance.*'),
-                    'bg-surface-2 block px-4 py-3 text-foreground font-medium' => request()->routeIs('settings.appearance.*'),
-                ])>
-                    {{ __('Appearance') }}
-                </a>
-            </li>
+    <nav class="rounded-lg overflow-hidden">
+        <ul class="">
+            @php
+            $navItems = [
+                ['route' => 'settings.profile.*', 'url' => route('settings.profile.edit'), 'label' => __('Profile')],
+                ['route' => 'settings.password.*', 'url' => route('settings.password.edit'), 'label' => __('Password')],
+                ['route' => 'settings.appearance.*', 'url' => route('settings.appearance.edit'), 'label' => __('Appearance')],
+            ];
+            @endphp
+
+            @foreach($navItems as $item)
+                <li>
+                    <a href="{{ $item['url'] }}" @class([
+                        'block px-4 py-3 text-muted hover:bg-hover hover:text-hover-foreground transition-colors' => !request()->routeIs($item['route']),
+                        'text-hover-foreground block px-4 py-3 font-medium' => request()->routeIs($item['route']),
+                    ])>
+                        {{ $item['label'] }}
+                    </a>
+                </li>
+            @endforeach
         </ul>
     </nav>
 </div>
