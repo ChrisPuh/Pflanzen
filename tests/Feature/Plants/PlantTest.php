@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 use App\Enums\PlantCategoryEnum;
 use App\Enums\PlantTypeEnum;
+use App\Models\Category;
 use App\Models\Plant;
-use App\Models\PlantCategory;
 use App\Models\PlantType;
 
 test('plant can be created with factory', function () {
@@ -17,14 +17,14 @@ test('plant can be created with factory', function () {
     expect($plant)->toBeInstanceOf(Plant::class)
         ->and($plant->name)->toBeString()
         ->and($plant->plantType)->toBeInstanceOf(PlantType::class)
-        ->and($plant->plantCategories)->toBeInstanceOf(Illuminate\Database\Eloquent\Collection::class)
-        ->and($plant->plantCategories->count())->toBe(2);
+        ->and($plant->categories)->toBeInstanceOf(Illuminate\Database\Eloquent\Collection::class)
+        ->and($plant->categories->count())->toBe(2);
 });
 
 test('plant attributes are fillable', function () {
     $plantType = PlantType::firstOrCreate(['name' => PlantTypeEnum::Herb], PlantType::factory()->make(['name' => PlantTypeEnum::Herb])->toArray());
-    $medicinalCategory = PlantCategory::firstOrCreate(['name' => PlantCategoryEnum::Medicinal], PlantCategory::factory()->make(['name' => PlantCategoryEnum::Medicinal])->toArray());
-    $indoorCategory = PlantCategory::firstOrCreate(['name' => PlantCategoryEnum::Indoor], PlantCategory::factory()->make(['name' => PlantCategoryEnum::Indoor])->toArray());
+    $medicinalCategory = Category::firstOrCreate(['name' => PlantCategoryEnum::Medicinal], Category::factory()->make(['name' => PlantCategoryEnum::Medicinal])->toArray());
+    $indoorCategory = Category::firstOrCreate(['name' => PlantCategoryEnum::Indoor], Category::factory()->make(['name' => PlantCategoryEnum::Indoor])->toArray());
 
     $data = [
         'name' => 'Test Plant',
@@ -34,14 +34,14 @@ test('plant attributes are fillable', function () {
     ];
 
     $plant = Plant::create($data);
-    $plant->plantCategories()->attach([$medicinalCategory->id, $indoorCategory->id]);
+    $plant->categories()->attach([$medicinalCategory->id, $indoorCategory->id]);
 
     expect($plant->name)->toBe('Test Plant')
         ->and($plant->latin_name)->toBe('Testus plantus')
         ->and($plant->description)->toBe('A test plant for testing purposes')
         ->and($plant->plantType->name)->toBe(PlantTypeEnum::Herb)
-        ->and($plant->plantCategories->count())->toBe(2)
-        ->and($plant->plantCategories->pluck('name')->toArray())->toContain(PlantCategoryEnum::Medicinal, PlantCategoryEnum::Indoor);
+        ->and($plant->categories->count())->toBe(2)
+        ->and($plant->categories->pluck('name')->toArray())->toContain(PlantCategoryEnum::Medicinal, PlantCategoryEnum::Indoor);
 });
 
 test('plant latin_name can be null', function () {
@@ -63,11 +63,11 @@ test('plant has many-to-many category relationship', function () {
     ])->create();
 
     expect($plant->plantType)->toBeInstanceOf(PlantType::class)
-        ->and($plant->plantCategories)->toBeInstanceOf(Illuminate\Database\Eloquent\Collection::class)
+        ->and($plant->categories)->toBeInstanceOf(Illuminate\Database\Eloquent\Collection::class)
         ->and($plant->plantType->name)->toBeInstanceOf(PlantTypeEnum::class)
-        ->and($plant->plantCategories->count())->toBe(2);
+        ->and($plant->categories->count())->toBe(2);
 
-    $plant->plantCategories->each(function ($category) {
+    $plant->categories->each(function ($category) {
         expect($category->name)->toBeInstanceOf(PlantCategoryEnum::class);
     });
 });
@@ -80,20 +80,20 @@ test('plant type relationship works', function () {
 });
 
 test('plant can have multiple categories', function () {
-    $indoorCategory = PlantCategory::query()->where('name', PlantCategoryEnum::Indoor)->first();
-    $medicinalCategory = PlantCategory::query()->where('name', PlantCategoryEnum::Medicinal)->first();
-    $aromaticCategory = PlantCategory::query()->where('name', PlantCategoryEnum::Aromatic)->first();
+    $indoorCategory = Category::query()->where('name', PlantCategoryEnum::Indoor)->first();
+    $medicinalCategory = Category::query()->where('name', PlantCategoryEnum::Medicinal)->first();
+    $aromaticCategory = Category::query()->where('name', PlantCategoryEnum::Aromatic)->first();
 
     $plant = Plant::factory()->create();
 
-    $plant->plantCategories()->attach([
+    $plant->categories()->attach([
         $indoorCategory->id,
         $medicinalCategory->id,
         $aromaticCategory->id,
     ]);
 
-    expect($plant->plantCategories->count())->toBe(3)
-        ->and($plant->plantCategories->pluck('name')->toArray())->toContain(
+    expect($plant->categories->count())->toBe(3)
+        ->and($plant->categories->pluck('name')->toArray())->toContain(
             PlantCategoryEnum::Indoor,
             PlantCategoryEnum::Medicinal,
             PlantCategoryEnum::Aromatic

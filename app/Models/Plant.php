@@ -25,8 +25,8 @@ final class Plant extends Model
         return $this->belongsTo(PlantType::class);
     }
 
-    public function plantCategories(): BelongsToMany
+    public function categories(): BelongsToMany
     {
-        return $this->belongsToMany(PlantCategory::class, 'category_plant');
+        return $this->belongsToMany(Category::class)->withTimestamps();
     }
 }

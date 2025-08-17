@@ -15,7 +15,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('plant_categories', function (Blueprint $table): void {
+        Schema::create('categories', function (Blueprint $table): void {
             $table->id();
             $table->enum('name', PlantCategoryEnum::values())->unique();
             $table->text('description')->nullable();
@@ -24,7 +24,7 @@ return new class extends Migration
 
         // Seed all plant categories
         foreach (PlantCategoryEnum::cases() as $category) {
-            DB::table('plant_categories')->insert([
+            DB::table('categories')->insert([
                 'name' => $category->value,
                 'description' => 'Default description for '.$category->getLabel(),
                 'created_at' => now(),
@@ -38,6 +38,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('plant_categories');
+        Schema::dropIfExists('categories');
     }
 };

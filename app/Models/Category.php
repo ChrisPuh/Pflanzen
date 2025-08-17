@@ -9,19 +9,18 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
-final class PlantCategory extends Model
+final class Category extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'id',
         'name',
         'description',
     ];
 
     public function plants(): BelongsToMany
     {
-        return $this->belongsToMany(Plant::class, 'category_plant');
+        return $this->belongsToMany(Plant::class)->withTimestamps();
     }
 
     protected function casts(): array

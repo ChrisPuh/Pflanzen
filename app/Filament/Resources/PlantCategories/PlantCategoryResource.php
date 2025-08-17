@@ -9,7 +9,7 @@ use App\Filament\Resources\PlantCategories\Pages\EditPlantCategory;
 use App\Filament\Resources\PlantCategories\Pages\ListPlantCategories;
 use App\Filament\Resources\PlantCategories\Schemas\PlantCategoryForm;
 use App\Filament\Resources\PlantCategories\Tables\PlantCategoriesTable;
-use App\Models\PlantCategory;
+use App\Models\Category;
 use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
@@ -18,7 +18,7 @@ use Filament\Tables\Table;
 
 final class PlantCategoryResource extends Resource
 {
-    protected static ?string $model = PlantCategory::class;
+    protected static ?string $model = Category::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedTag;
 

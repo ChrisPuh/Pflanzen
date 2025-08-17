@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 use App\Enums\PlantCategoryEnum;
 use App\Enums\PlantTypeEnum;
+use App\Models\Category;
 use App\Models\Plant;
-use App\Models\PlantCategory;
 use App\Models\PlantType;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -42,7 +42,7 @@ it('can access plants resource as admin', function (): void {
 it('shows plant resources exist in database with seeded data', function (): void {
     // PlantTypes and PlantCategories are now seeded via migration
     $plantType = PlantType::where('name', PlantTypeEnum::Tree)->first();
-    $plantCategory = PlantCategory::where('name', PlantCategoryEnum::Indoor)->first();
+    $plantCategory = Category::where('name', PlantCategoryEnum::Indoor)->first();
 
     expect($plantType)->not->toBeNull();
     expect($plantCategory)->not->toBeNull();
@@ -51,12 +51,12 @@ it('shows plant resources exist in database with seeded data', function (): void
         'plant_type_id' => $plantType->id,
     ]);
 
-    $plant->plantCategories()->attach($plantCategory);
+    $plant->categories()->attach($plantCategory);
 
     expect($plant->plantType)->not->toBeNull();
-    expect($plant->plantCategories)->toHaveCount(1);
+    expect($plant->categories)->toHaveCount(1);
 
     $this->assertDatabaseHas('plants', ['name' => $plant->name]);
     $this->assertDatabaseHas('plant_types', ['name' => PlantTypeEnum::Tree->value]);
-    $this->assertDatabaseHas('plant_categories', ['name' => PlantCategoryEnum::Indoor->value]);
+    $this->assertDatabaseHas('categories', ['name' => PlantCategoryEnum::Indoor->value]);
 });

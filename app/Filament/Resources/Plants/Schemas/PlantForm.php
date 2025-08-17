@@ -33,8 +33,13 @@ final class PlantForm
 
                         Select::make('plant_type_id')
                             ->label('Plant Type')
-                            ->relationship('plantType', 'name')
-                            ->options(\App\Enums\PlantTypeEnum::class)->required()
+                            ->relationship(
+                                name: 'plantType',
+                                titleAttribute: 'name',
+                                modifyQueryUsing: fn (\Illuminate\Database\Eloquent\Builder $query) => $query->orderBy('name')
+                            )
+                            ->getOptionLabelFromRecordUsing(fn (\App\Models\PlantType $record): string => $record->name->getLabel())
+                            ->required()
                             ->searchable()
                             ->preload(),
 
@@ -49,10 +54,14 @@ final class PlantForm
                 Section::make('Categories')
                     ->description('Select categories that apply to this plant')
                     ->schema([
-                        CheckboxList::make('plantCategories')
+                        CheckboxList::make('categories')
                             ->label('Plant Categories')
-                            ->relationship('plantCategories', 'name')
-                            ->options(\App\Enums\PlantCategoryEnum::class)
+                            ->relationship(
+                                name: 'categories',
+                                titleAttribute: 'name',
+                                modifyQueryUsing: fn (\Illuminate\Database\Eloquent\Builder $query) => $query->orderBy('name')
+                            )
+                            ->getOptionLabelFromRecordUsing(fn (\App\Models\Category $record): string => $record->name->getLabel())
                             ->searchable()
                             ->bulkToggleable()
                             ->columns(3),

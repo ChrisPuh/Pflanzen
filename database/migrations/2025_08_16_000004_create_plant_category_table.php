@@ -15,11 +15,11 @@ return new class extends Migration
     {
         Schema::create('category_plant', function (Blueprint $table): void {
             $table->id();
+            $table->foreignId('category_id')->constrained()->cascadeOnDelete();
             $table->foreignId('plant_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('plant_category_id')->constrained()->cascadeOnDelete();
             $table->timestamps();
 
-            $table->unique(['plant_id', 'plant_category_id']);
+            $table->unique(['category_id', 'plant_id']);
         });
     }
 

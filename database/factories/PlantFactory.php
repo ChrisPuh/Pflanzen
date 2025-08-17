@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Database\Factories;
 
-use App\Models\PlantCategory;
+use App\Models\Category;
 use App\Models\PlantType;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -43,7 +43,7 @@ final class PlantFactory extends Factory
 
             $categoryIds = [];
             foreach ($categoryEnums as $categoryEnum) {
-                $category = PlantCategory::firstOrCreate([
+                $category = Category::firstOrCreate([
                     'name' => $categoryEnum,
                 ], [
                     'description' => fake()->optional(0.8)->paragraph(),
@@ -51,7 +51,7 @@ final class PlantFactory extends Factory
                 $categoryIds[] = $category->id;
             }
 
-            $plant->plantCategories()->attach($categoryIds);
+            $plant->categories()->attach($categoryIds);
         });
     }
 }

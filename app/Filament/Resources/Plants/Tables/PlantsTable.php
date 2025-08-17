@@ -4,11 +4,15 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\Plants\Tables;
 
+use App\Enums\PlantTypeEnum;
+use App\Models\PlantType;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Filters\Filter;
+use Filament\Forms\Components\CheckboxList;
 use Filament\Tables\Table;
 
 final class PlantsTable
@@ -31,11 +35,13 @@ final class PlantsTable
 
                 TextColumn::make('plantType.name')
                     ->label('Type')
+                    ->formatStateUsing(fn(\App\Enums\PlantTypeEnum $state): string => $state->getLabel())
                     ->badge()
                     ->sortable(),
 
-                TextColumn::make('plantCategories.name')
+                TextColumn::make('categories.name')
                     ->label('Categories')
+                    ->formatStateUsing(fn(\App\Enums\PlantCategoryEnum $state): string => $state->getLabel())
                     ->badge()
                     ->wrap()
                     ->limit(50),
@@ -67,16 +73,35 @@ final class PlantsTable
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                SelectFilter::make('plantType.name')
+                SelectFilter::make('plant_type_id')
                     ->label('Plant Type')
-                    ->options(\App\Enums\PlantTypeEnum::class),
-                /*
-                SelectFilter::make('plantCategories')
-                     ->label('Categories')
-                     ->relationship('plantCategories', 'name')
-                     ->options(\App\Enums\PlantCategoryEnum::class)
-                     ->multiple(),
-                */
+                    ->options(
+                        \App\Models\PlantType::all()->mapWithKeys(function ($plantType) {
+                            return [$plantType->id => $plantType->name->getLabel()];
+                        })
+                    ),
+                Filter::make('categories')
+                    ->label('Categories')
+                    ->schema([
+                        CheckboxList::make('category_ids')
+                            ->label('Select Categories')
+                            ->options(
+                                \App\Models\Category::all()->mapWithKeys(function ($category) {
+                                    return [$category->id => $category->name->getLabel()];
+                                })
+                            )
+                            ->columns(2)
+                            ->bulkToggleable()
+                    ])
+                    ->query(function (\Illuminate\Database\Eloquent\Builder $query, array $data): \Illuminate\Database\Eloquent\Builder {
+                        return $query->when(
+                            $data['category_ids'] ?? null,
+                            fn (\Illuminate\Database\Eloquent\Builder $query, $categoryIds): \Illuminate\Database\Eloquent\Builder => 
+                                $query->whereHas('categories', fn (\Illuminate\Database\Eloquent\Builder $query) => 
+                                    $query->whereIn('categories.id', $categoryIds)
+                                )
+                        );
+                    }),
 
             ])
             ->recordActions([

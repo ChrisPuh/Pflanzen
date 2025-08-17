@@ -3,23 +3,23 @@
 declare(strict_types=1);
 
 use App\Enums\PlantCategoryEnum;
-use App\Models\PlantCategory;
+use App\Models\Category;
 
-test('plant category can be created with factory', function () {
-    $plantCategory = PlantCategory::first();
+test('category can be created with factory', function () {
+    $category = Category::first();
 
-    expect($plantCategory)->toBeInstanceOf(PlantCategory::class)
-        ->and($plantCategory->name)->toBeInstanceOf(PlantCategoryEnum::class);
+    expect($category)->toBeInstanceOf(Category::class)
+        ->and($category->name)->toBeInstanceOf(PlantCategoryEnum::class);
 });
 
-test('plant category name field uses enum', function () {
-    $plantCategory = PlantCategory::firstOrCreate(['name' => PlantCategoryEnum::Indoor], PlantCategory::factory()->make(['name' => PlantCategoryEnum::Indoor])->toArray());
+test('category name field uses enum', function () {
+    $category = Category::firstOrCreate(['name' => PlantCategoryEnum::Indoor], Category::factory()->make(['name' => PlantCategoryEnum::Indoor])->toArray());
 
-    expect($plantCategory->name)->toBe(PlantCategoryEnum::Indoor);
+    expect($category->name)->toBe(PlantCategoryEnum::Indoor);
 });
 
-test('plant category has many-to-many relationship with plants', function () {
-    $plantCategory = PlantCategory::first();
+test('category has many-to-many relationship with plants', function () {
+    $category = Category::first();
 
-    expect($plantCategory->plants())->toBeInstanceOf(Illuminate\Database\Eloquent\Relations\BelongsToMany::class);
+    expect($category->plants())->toBeInstanceOf(Illuminate\Database\Eloquent\Relations\BelongsToMany::class);
 });
