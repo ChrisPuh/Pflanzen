@@ -1,0 +1,44 @@
+@import '../../../../vendor/filament/filament/resources/css/theme.css';
+
+@source '../../../../app/Filament/**/*';
+@source '../../../../resources/views/filament/**/*';
+
+/* Import our plant theme variables */
+@import '../../app.css';
+
+@layer base {
+    /* Override Filament's default colors with our plant theme */
+    :root {
+        /* Use our existing plant theme colors for Filament */
+        --primary-50: theme(colors.green.50);
+        --primary-100: theme(colors.green.100);
+        --primary-200: theme(colors.green.200);
+        --primary-300: theme(colors.green.300);
+        --primary-400: theme(colors.green.400);
+        --primary-500: theme(colors.green.500);
+        --primary-600: theme(colors.green.600);
+        --primary-700: theme(colors.green.700);
+        --primary-800: theme(colors.green.800);
+        --primary-900: theme(colors.green.900);
+        --primary-950: theme(colors.green.950);
+        
+        /* Background should match our app */
+        --sidebar-bg: hsl(var(--sidebar-background));
+        --content-bg: hsl(var(--surface));
+    }
+    
+    .dark {
+        /* Dark mode overrides */
+        --primary-50: theme(colors.green.950);
+        --primary-100: theme(colors.green.900);
+        --primary-200: theme(colors.green.800);
+        --primary-300: theme(colors.green.700);
+        --primary-400: theme(colors.green.600);
+        --primary-500: theme(colors.green.500);
+        --primary-600: theme(colors.green.400);
+        --primary-700: theme(colors.green.300);
+        --primary-800: theme(colors.green.200);
+        --primary-900: theme(colors.green.100);
+        --primary-950: theme(colors.green.50);
+    }
+}
