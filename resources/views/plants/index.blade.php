@@ -115,10 +115,13 @@
         @if($plants->count() > 0)
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 @foreach($plants as $plant)
-                    <div class="bg-card rounded-xl border border-border overflow-hidden shadow-sm hover:shadow-md transition-shadow group">
+                    <a 
+                        href="{{ route('plants.show', $plant) }}" 
+                        class="bg-card rounded-xl border border-border overflow-hidden shadow-sm hover:shadow-md transition-all group cursor-pointer transform hover:scale-[1.02]"
+                    >
                         <!-- Plant Image Placeholder -->
                         <div class="aspect-square bg-gradient-to-br from-primary/10 to-primary/20 flex items-center justify-center">
-                            <svg class="h-16 w-16 text-primary/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="h-16 w-16 text-primary/60 group-hover:text-primary transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zM21 5a2 2 0 00-2-2h-4a2 2 0 00-2 2v6.5l3 3V21a2 2 0 002-2V5z"></path>
                             </svg>
                         </div>
@@ -165,8 +168,15 @@
                                     {{ $plant->description }}
                                 </p>
                             @endif
+
+                            <!-- View Details Link -->
+                            <div class="pt-2">
+                                <span class="text-sm font-medium text-primary group-hover:underline">
+                                    Details anzeigen →
+                                </span>
+                            </div>
                         </div>
-                    </div>
+                    </a>
                 @endforeach
             </div>
 
