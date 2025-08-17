@@ -54,6 +54,40 @@ final class PlantService
     }
 
     /**
+     * Get a plant with its relationships loaded for display.
+     */
+    public function getPlantForDisplay(Plant $plant): Plant
+    {
+        return $plant->load(['plantType', 'categories']);
+    }
+
+    /**
+     * Get related plants based on the given plant's type and categories.
+     *
+     * @return \Illuminate\Database\Eloquent\Collection<int, Plant>
+     */
+    public function getRelatedPlants(Plant $plant, int $limit = 4): \Illuminate\Database\Eloquent\Collection
+    {
+        return Plant::query()
+            ->with(['plantType', 'categories'])
+            ->where('id', '!=', $plant->id)
+            ->where(function (Builder $query) use ($plant): void {
+                // Same type
+                $query->where('plant_type_id', $plant->plant_type_id);
+
+                // Or shares categories
+                if ($plant->categories->isNotEmpty()) {
+                    $categoryIds = $plant->categories->pluck('id')->toArray();
+                    $query->orWhereHas('categories', function (Builder $query) use ($categoryIds): void {
+                        $query->whereIn('categories.id', $categoryIds);
+                    });
+                }
+            })
+            ->limit($limit)
+            ->get();
+    }
+
+    /**
      * Get plant statistics for the index page.
      *
      * @return array{total: int, by_type: array<string, int>, by_category: array<string, int>}

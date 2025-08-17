@@ -114,3 +114,54 @@ it('gets plant statistics correctly', function (): void {
         ->and($stats['by_category'][PlantCategoryEnum::Outdoor->getLabel()])->toBe(2)
         ->and($stats['by_category'][PlantCategoryEnum::Indoor->getLabel()])->toBe(1);
 });
+
+it('loads plant relationships for display', function (): void {
+    $plant = Plant::factory()->create(['plant_type_id' => $this->herbType->id]);
+    $plant->categories()->attach([$this->outdoorCategory->id, $this->indoorCategory->id]);
+
+    $result = $this->plantService->getPlantForDisplay($plant);
+
+    expect($result->relationLoaded('plantType'))->toBeTrue()
+        ->and($result->relationLoaded('categories'))->toBeTrue()
+        ->and($result->plantType)->toBeInstanceOf(PlantType::class)
+        ->and($result->categories)->toHaveCount(2);
+});
+
+it('gets related plants by type and categories', function (): void {
+    // Create main plant
+    $mainPlant = Plant::factory()->create(['plant_type_id' => $this->herbType->id]);
+    $mainPlant->categories()->attach($this->outdoorCategory->id);
+
+    // Create related plants
+    $relatedByType = Plant::factory()->create(['plant_type_id' => $this->herbType->id]);
+    $relatedByCategory = Plant::factory()->create(['plant_type_id' => $this->flowerType->id]);
+    $relatedByCategory->categories()->attach($this->outdoorCategory->id);
+    $unrelated = Plant::factory()->create(['plant_type_id' => $this->flowerType->id]);
+
+    $related = $this->plantService->getRelatedPlants($mainPlant, 10);
+
+    expect($related)->toHaveCount(2)
+        ->and($related->pluck('id')->toArray())->toContain($relatedByType->id)
+        ->and($related->pluck('id')->toArray())->toContain($relatedByCategory->id)
+        ->and($related->pluck('id')->toArray())->not->toContain($unrelated->id)
+        ->and($related->pluck('id')->toArray())->not->toContain($mainPlant->id);
+});
+
+it('respects limit for related plants', function (): void {
+    $mainPlant = Plant::factory()->create(['plant_type_id' => $this->herbType->id]);
+
+    // Create many related plants
+    Plant::factory()->count(10)->create(['plant_type_id' => $this->herbType->id]);
+
+    $related = $this->plantService->getRelatedPlants($mainPlant, 3);
+
+    expect($related)->toHaveCount(3);
+});
+
+it('returns empty collection when no related plants exist', function (): void {
+    $mainPlant = Plant::factory()->create(['plant_type_id' => $this->herbType->id]);
+
+    $related = $this->plantService->getRelatedPlants($mainPlant);
+
+    expect($related)->toHaveCount(0);
+});
