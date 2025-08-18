@@ -13,6 +13,12 @@
                             <x-layouts.sidebar-link href="{{ route('plants.index') }}" icon='fas-seedling'
                                 :active="request()->routeIs('plants*')">Pflanzen entdecken</x-layouts.sidebar-link>
 
+                            <!-- Gardens -->
+                            @can('viewAny', App\Models\Garden::class)
+                                <x-layouts.sidebar-link href="{{ route('gardens.index') }}" icon='fas-tree'
+                                    :active="request()->routeIs('gardens*')">Meine Gärten</x-layouts.sidebar-link>
+                            @endcan
+
                             <!-- Settings -->
                             <x-layouts.sidebar-two-level-link-parent title="Settings" icon="fas-gear"
                                 :active="request()->routeIs('settings*')">

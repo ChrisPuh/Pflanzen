@@ -28,6 +28,7 @@ final class GardenPolicy
      */
     public function viewAny(): Response
     {
+        // Only authenticated users can view gardens list
         return Response::allow();
     }
 
