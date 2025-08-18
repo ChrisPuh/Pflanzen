@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
  * @property int $id
@@ -72,9 +72,11 @@ final class Garden extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function plants(): HasMany
+    public function plants(): BelongsToMany
     {
-        return $this->hasMany(Plant::class);
+        return $this->belongsToMany(Plant::class)
+            ->withPivot(['planted_at', 'notes'])
+            ->withTimestamps();
     }
 
     public function scopeActive(Builder $query): Builder

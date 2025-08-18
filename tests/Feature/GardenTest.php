@@ -55,7 +55,7 @@ describe('Garden Model', function () {
         it('can have many plants', function () {
             $garden = Garden::factory()->create();
 
-            expect($garden->plants())->toBeInstanceOf(Illuminate\Database\Eloquent\Relations\HasMany::class);
+            expect($garden->plants())->toBeInstanceOf(Illuminate\Database\Eloquent\Relations\BelongsToMany::class);
         });
     });
 
@@ -86,8 +86,11 @@ describe('Garden Model', function () {
         });
 
         it('filters gardens by type', function () {
+            // Clear any existing test data to isolate this test
+            Garden::query()->delete();
+
             $vegetableGarden = Garden::factory()->vegetableGarden()->create();
-            $flowerGarden = Garden::factory()->flowerGarden()->create();
+            Garden::factory()->flowerGarden()->create(); // Create but don't store - just for testing filtering
 
             $vegetableGardens = Garden::byType(GardenTypeEnum::VegetableGarden)->get();
 

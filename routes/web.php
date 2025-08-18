@@ -5,6 +5,7 @@ declare(strict_types=1);
 use App\Http\Controllers\Plants\PlantShowController;
 use App\Http\Controllers\Plants\PlantsIndexController;
 use App\Http\Controllers\Settings;
+use App\Http\Controllers\ShowGarden;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -18,7 +19,9 @@ Route::view('dashboard', 'dashboard')
 Route::get('plants', PlantsIndexController::class)->middleware(['auth', 'verified'])->name('plants.index');
 Route::get('plants/{plant}', PlantShowController::class)->middleware(['auth', 'verified'])->name('plants.show');
 
-Route::middleware(['auth'])->group(function () {
+Route::get('gardens/{garden}', ShowGarden::class)->middleware(['auth', 'verified'])->name('gardens.show');
+
+Route::middleware('auth')->group(function () {
     Route::get('settings/profile', [Settings\ProfileController::class, 'edit'])->name('settings.profile.edit');
     Route::put('settings/profile', [Settings\ProfileController::class, 'update'])->name('settings.profile.update');
     Route::delete('settings/profile', [Settings\ProfileController::class, 'destroy'])->name('settings.profile.destroy');
