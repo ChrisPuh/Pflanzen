@@ -7,13 +7,17 @@ namespace App\Http\Controllers\Garden;
 use App\Http\Controllers\Controller;
 use App\Models\Garden;
 use App\Models\User;
-use Illuminate\Database\Eloquent\Builder;
+use App\Services\GardenService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
 
 final class GardensIndexController extends Controller
 {
+    public function __construct(
+        private readonly GardenService $gardenService
+    ) {}
+
     /**
      * Handle the incoming request.
      */
@@ -23,21 +27,17 @@ final class GardensIndexController extends Controller
 
         /** @var User $user */
         $user = $request->user();
+        $isAdmin = $user->hasRole('admin');
 
-        // Get user's gardens with filtering and pagination
-        $gardens = Garden::query()
-
-            ->when(! $user->hasRole('admin'), function (Builder $query) use ($user): void {
-                // Non-admin users only see their own gardens
-                $query->forUser($user);
-            })
-            ->with(['user', 'plants'])
-            ->latest()
-            ->paginate(12);
+        $gardens = $this->gardenService->getGardensForUser(
+            user: $user,
+            isAdmin: $isAdmin,
+            perPage: 12
+        );
 
         return view('gardens.index', [
             'gardens' => $gardens,
-            'isAdmin' => $user->hasRole('admin'),
+            'isAdmin' => $isAdmin,
         ]);
     }
 }
