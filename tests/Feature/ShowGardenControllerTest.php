@@ -7,7 +7,7 @@ use App\Models\Plant;
 use App\Models\User;
 use Spatie\Permission\Models\Role;
 
-describe('ShowGarden Controller', function () {
+describe('GardenShowController Controller', function () {
     beforeEach(function () {
         $this->user = User::factory()->create();
         $this->otherUser = User::factory()->create();

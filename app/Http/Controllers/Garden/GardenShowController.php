@@ -2,14 +2,15 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Garden;
 
+use App\Http\Controllers\Controller;
 use App\Models\Garden;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
 
-final class ShowGarden extends Controller
+final class GardenShowController extends Controller
 {
     /**
      * Handle the incoming request.
