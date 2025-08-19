@@ -103,7 +103,7 @@ describe('GardenService', function () {
             Garden::factory()->for($this->user)->count(1)->create(['is_active' => false]);
 
             // Create plants and attach to gardens
-            $garden1 = Garden::factory()->for($this->user)->create();
+            $garden1 = Garden::factory()->for($this->user)->create(['is_active' => true]);
             $plant1 = Plant::factory()->create();
             $plant2 = Plant::factory()->create();
             $garden1->plants()->attach([$plant1->id, $plant2->id]);
@@ -315,7 +315,7 @@ describe('GardenService', function () {
             Garden::factory()->for($this->user)->create(['is_active' => false, 'size_sqm' => 0]);
 
             // Create garden with size for largest garden test
-            $largestGarden = Garden::factory()->for($this->user)->create(['size_sqm' => 100.5]);
+            $largestGarden = Garden::factory()->for($this->user)->create(['size_sqm' => 100.5, 'is_active' => true]);
 
             // Add plants to garden
             $plant1 = Plant::factory()->create();

@@ -10,7 +10,7 @@ use App\Models\Plant;
 uses(Illuminate\Foundation\Testing\RefreshDatabase::class);
 
 it('can create an area', function (): void {
-    $area = Area::factory()->create();
+    $area = Area::factory()->active()->create();
 
     expect($area)
         ->toBeInstanceOf(Area::class)
