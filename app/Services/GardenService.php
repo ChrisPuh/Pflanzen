@@ -205,6 +205,50 @@ final class GardenService
     }
 
     /**
+     * Archive (soft delete) a garden.
+     */
+    public function archiveGarden(Garden $garden): bool
+    {
+        // Set garden as inactive before archiving
+        $garden->update(['is_active' => false]);
+
+        // Soft delete the garden
+        return $garden->delete();
+    }
+
+    /**
+     * Restore an archived garden.
+     */
+    public function restoreGarden(Garden $garden): bool
+    {
+        // Restore the garden
+        $restored = $garden->restore();
+
+        if ($restored) {
+            // Reactivate the garden
+            $garden->update(['is_active' => true]);
+        }
+
+        return $restored;
+    }
+
+    /**
+     * Get archived gardens for a user.
+     *
+     * @return \Illuminate\Database\Eloquent\Collection<int, Garden>
+     */
+    public function getArchivedGardensForUser(User $user, bool $isAdmin = false): \Illuminate\Database\Eloquent\Collection
+    {
+        return Garden::onlyTrashed()
+            ->when(! $isAdmin, function (Builder $query) use ($user): void {
+                $query->forUser($user);
+            })
+            ->with(['user', 'plants'])
+            ->latest('deleted_at')
+            ->get();
+    }
+
+    /**
      * Search gardens by name or description.
      *
      * @return \Illuminate\Database\Eloquent\Collection<int, Garden>

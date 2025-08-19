@@ -52,6 +52,7 @@ namespace App\Models{
  * @property Carbon $updated_at
  * @property-read User $user
  * @property-read Plant[] $plants
+ * @property \Illuminate\Support\Carbon|null $deleted_at
  * @property-read int|null $age_in_years
  * @property-read string $formatted_size
  * @property-read string $full_location
@@ -63,11 +64,13 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Garden forUser(\App\Models\User $user)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Garden newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Garden newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Garden onlyTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Garden query()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Garden whereCity($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Garden whereCoordinates($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Garden whereCountry($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Garden whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Garden whereDeletedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Garden whereDescription($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Garden whereEstablishedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Garden whereId($value)
@@ -79,6 +82,8 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Garden whereType($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Garden whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Garden whereUserId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Garden withTrashed(bool $withTrashed = true)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Garden withoutTrashed()
  */
 	final class Garden extends \Eloquent {}
 }
