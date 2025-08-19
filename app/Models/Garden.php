@@ -7,11 +7,13 @@ namespace App\Models;
 use App\Enums\Garden\GardenTypeEnum;
 use Carbon\Carbon;
 use Database\Factories\GardenFactory;
+use Dyrynda\Database\Support\CascadeSoftDeletes;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
@@ -32,11 +34,14 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property Carbon $updated_at
  * @property-read User $user
  * @property-read Plant[] $plants
+ * @property-read Area[] $areas
  */
 final class Garden extends Model
 {
     /** @use HasFactory<GardenFactory> */
-    use HasFactory, SoftDeletes;
+    use CascadeSoftDeletes, HasFactory, SoftDeletes;
+
+    protected array $cascadeDeletes = ['areas'];
 
     protected $table = 'gardens';
 
@@ -78,6 +83,11 @@ final class Garden extends Model
         return $this->belongsToMany(Plant::class)
             ->withPivot(['planted_at', 'notes'])
             ->withTimestamps();
+    }
+
+    public function areas(): HasMany
+    {
+        return $this->hasMany(Area::class);
     }
 
     public function scopeActive(Builder $query): Builder
@@ -156,5 +166,12 @@ final class Garden extends Model
         ]);
 
         return in_array(implode(', ', $parts), ['', '0'], true) ? 'Standort nicht angegeben' : implode(', ', $parts);
+    }
+
+    protected static function booted(): void
+    {
+        self::restored(function (Garden $garden): void {
+            $garden->areas()->withTrashed()->restore();
+        });
     }
 }

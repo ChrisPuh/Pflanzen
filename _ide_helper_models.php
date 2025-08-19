@@ -14,6 +14,55 @@
 namespace App\Models{
 /**
  * @property int $id
+ * @property int $garden_id
+ * @property string $name
+ * @property AreaTypeEnum $type
+ * @property string|null $description
+ * @property float|null $size_sqm
+ * @property array|null $coordinates
+ * @property array|null $dimensions
+ * @property string|null $color
+ * @property array|null $metadata
+ * @property bool $is_active
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
+ * @property Carbon|null $deleted_at
+ * @property-read Garden $garden
+ * @property-read Plant[] $plants
+ * @property-read string $formatted_size
+ * @property-read int|null $plants_count
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Area active()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Area byCategory(string $category)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Area byType(\App\Enums\Area\AreaTypeEnum $type)
+ * @method static \Database\Factories\AreaFactory factory($count = null, $state = [])
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Area forGarden(\App\Models\Garden $garden)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Area newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Area newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Area onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Area query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Area whereColor($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Area whereCoordinates($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Area whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Area whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Area whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Area whereDimensions($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Area whereGardenId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Area whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Area whereIsActive($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Area whereMetadata($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Area whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Area whereSizeSqm($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Area whereType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Area whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Area withTrashed(bool $withTrashed = true)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Area withoutTrashed()
+ */
+	final class Area extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * @property int $id
  * @property \App\Enums\PlantCategoryEnum $name
  * @property string|null $description
  * @property \Illuminate\Support\Carbon|null $created_at
@@ -52,7 +101,9 @@ namespace App\Models{
  * @property Carbon $updated_at
  * @property-read User $user
  * @property-read Plant[] $plants
+ * @property-read Area[] $areas
  * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @property-read int|null $areas_count
  * @property-read int|null $age_in_years
  * @property-read string $formatted_size
  * @property-read string $full_location
