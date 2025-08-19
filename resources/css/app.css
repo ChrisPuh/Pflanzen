@@ -18,6 +18,17 @@
     --sidebar-ring: hsl(var(--sidebar-ring));
     --hover: hsl(var(--hover));
     --hover-foreground: hsl(var(--hover-foreground));
+    
+    /* Map custom color tokens to Tailwind */
+    --color-primary: hsl(var(--primary));
+    --color-primary-foreground: hsl(210 40% 98%);
+    --color-surface: hsl(var(--surface));
+    --color-surface-2: hsl(var(--surface-2));
+    --color-foreground: hsl(var(--foreground));
+    --color-muted: hsl(var(--muted));
+    --color-muted-foreground: hsl(var(--muted));
+    --color-border: hsl(var(--border));
+    --color-background: hsl(var(--surface));
 }
 
 @custom-variant dark (&:where(.dark, .dark *));

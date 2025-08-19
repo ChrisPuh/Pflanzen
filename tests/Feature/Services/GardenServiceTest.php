@@ -29,7 +29,7 @@ describe('GardenService', function () {
 
             expect($result->total())->toBe(3);
             expect($result->items())->toHaveCount(3);
-            
+
             $resultIds = $result->pluck('id')->toArray();
             foreach ($userGardens as $garden) {
                 expect($resultIds)->toContain($garden->id);
@@ -47,7 +47,7 @@ describe('GardenService', function () {
 
         it('loads required relationships', function () {
             Garden::factory()->for($this->user)->create();
-            
+
             $result = $this->service->getGardensForUser($this->user, false, 10);
             $garden = $result->items()[0];
 
@@ -101,7 +101,7 @@ describe('GardenService', function () {
             // Create gardens for the user
             Garden::factory()->for($this->user)->count(2)->create(['is_active' => true]);
             Garden::factory()->for($this->user)->count(1)->create(['is_active' => false]);
-            
+
             // Create plants and attach to gardens
             $garden1 = Garden::factory()->for($this->user)->create();
             $plant1 = Plant::factory()->create();
@@ -149,9 +149,9 @@ describe('GardenService', function () {
 
             expect($types)->toBeArray();
             expect($types)->not->toBeEmpty();
-            
+
             foreach ($types as $type) {
-                expect($type)->toBeInstanceOf(\App\Enums\Garden\GardenTypeEnum::class);
+                expect($type)->toBeInstanceOf(App\Enums\Garden\GardenTypeEnum::class);
             }
         });
     });
@@ -167,10 +167,10 @@ describe('GardenService', function () {
                 'is_active' => true,
                 'updated_at' => now()->subDays(2),
             ]);
-            
+
             // Create inactive garden (should not be returned)
             Garden::factory()->for($this->user)->create(['is_active' => false]);
-            
+
             // Create other user's gardens (should not be returned)
             Garden::factory()->create(['is_active' => true]);
 
@@ -236,10 +236,10 @@ describe('GardenService', function () {
             // Create gardens with different states
             Garden::factory()->for($this->user)->count(2)->create(['is_active' => true, 'size_sqm' => 0]);
             Garden::factory()->for($this->user)->create(['is_active' => false, 'size_sqm' => 0]);
-            
+
             // Create garden with size for largest garden test
             $largestGarden = Garden::factory()->for($this->user)->create(['size_sqm' => 100.5]);
-            
+
             // Add plants to garden
             $plant1 = Plant::factory()->create();
             $plant2 = Plant::factory()->create();
@@ -301,7 +301,7 @@ describe('GardenService', function () {
 
             expect($locationResult)->toHaveCount(1);
             expect($locationResult->first()->id)->toBe($locationMatch->id);
-            
+
             expect($cityResult)->toHaveCount(1);
             expect($cityResult->first()->id)->toBe($cityMatch->id);
         });

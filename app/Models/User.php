@@ -8,6 +8,7 @@ namespace App\Models;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
@@ -53,6 +54,14 @@ final class User extends Authenticatable implements FilamentUser
     public function canAccessPanel(Panel $panel): bool
     {
         return $this->can('access', $panel);
+    }
+
+    /**
+     * Get all gardens for this user.
+     */
+    public function gardens(): HasMany
+    {
+        return $this->hasMany(\App\Models\Garden::class);
     }
 
     /**

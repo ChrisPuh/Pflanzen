@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\Garden\GardenCreateController;
 use App\Http\Controllers\Garden\GardenShowController;
 use App\Http\Controllers\Garden\GardensIndexController;
 use App\Http\Controllers\Plants\PlantShowController;
@@ -21,6 +22,8 @@ Route::get('plants', PlantsIndexController::class)->middleware(['auth', 'verifie
 Route::get('plants/{plant}', PlantShowController::class)->middleware(['auth', 'verified'])->name('plants.show');
 
 Route::get('gardens', GardensIndexController::class)->middleware(['auth', 'verified'])->name('gardens.index');
+Route::get('gardens/create', [GardenCreateController::class, 'create'])->middleware(['auth', 'verified'])->name('gardens.create');
+Route::post('gardens', [GardenCreateController::class, 'store'])->middleware(['auth', 'verified'])->name('gardens.store');
 Route::get('gardens/{garden}', GardenShowController::class)->middleware(['auth', 'verified'])->name('gardens.show');
 
 Route::middleware('auth')->group(function () {

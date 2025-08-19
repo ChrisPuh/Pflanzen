@@ -21,7 +21,7 @@ final class GardenService
         int $perPage = 12
     ): LengthAwarePaginator {
         return Garden::query()
-            ->when(!$isAdmin, function (Builder $query) use ($user): void {
+            ->when(! $isAdmin, function (Builder $query) use ($user): void {
                 $query->forUser($user);
             })
             ->with(['user', 'plants'])
@@ -38,6 +38,33 @@ final class GardenService
     }
 
     /**
+     * Create a new garden for the user.
+     *
+     * @param array<string, mixed> $data
+     */
+    public function createGarden(User $user, array $data): Garden
+    {
+        // Process coordinates if provided
+        if (isset($data['coordinates']) && is_array($data['coordinates'])) {
+            $coordinates = [
+                'latitude' => $data['coordinates']['latitude'],
+                'longitude' => $data['coordinates']['longitude'],
+            ];
+            $data['coordinates'] = $coordinates;
+        } else {
+            $data['coordinates'] = null;
+        }
+
+        // Convert established_at to Carbon if provided
+        if (isset($data['established_at']) && !empty($data['established_at'])) {
+            $data['established_at'] = \Carbon\Carbon::parse($data['established_at']);
+        }
+
+        // Create the garden
+        return $user->gardens()->create($data);
+    }
+
+    /**
      * Get garden statistics for the index page.
      *
      * @return array{total: int, active: int, total_plants: int, by_type: array<string, int>}
@@ -45,7 +72,7 @@ final class GardenService
     public function getGardenStatistics(User $user, bool $isAdmin = false): array
     {
         $query = Garden::query()
-            ->when(!$isAdmin, function (Builder $query) use ($user): void {
+            ->when(! $isAdmin, function (Builder $query) use ($user): void {
                 $query->forUser($user);
             });
 
@@ -129,7 +156,7 @@ final class GardenService
 
         $gardensCount = $userGardens->count();
         $activeGardens = (clone $userGardens)->where('is_active', true)->count();
-        
+
         $totalPlants = (clone $userGardens)
             ->withCount('plants')
             ->get()
@@ -156,7 +183,7 @@ final class GardenService
     public function searchGardens(User $user, string $search, bool $isAdmin = false): \Illuminate\Database\Eloquent\Collection
     {
         return Garden::query()
-            ->when(!$isAdmin, function (Builder $query) use ($user): void {
+            ->when(! $isAdmin, function (Builder $query) use ($user): void {
                 $query->forUser($user);
             })
             ->with(['user', 'plants'])
