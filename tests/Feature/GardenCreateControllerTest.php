@@ -37,11 +37,11 @@ describe('GardenCreateController', function () {
             $response = $this->actingAs($this->user)->get(route('gardens.create'));
 
             $response->assertOk();
-            
+
             $gardenTypes = $response->viewData('gardenTypes');
             expect($gardenTypes)->toBeArray();
             expect($gardenTypes)->not->toBeEmpty();
-            
+
             foreach ($gardenTypes as $type) {
                 expect($type)->toBeInstanceOf(GardenTypeEnum::class);
             }
@@ -97,7 +97,7 @@ describe('GardenCreateController', function () {
             // Check redirect
             $garden = Garden::where('name', 'Mein Testgarten')->first();
             expect($garden)->not->toBeNull();
-            
+
             $response->assertRedirect(route('gardens.show', $garden))
                 ->assertSessionHas('success', 'Garten wurde erfolgreich erstellt!');
 
@@ -124,7 +124,7 @@ describe('GardenCreateController', function () {
 
             $garden = Garden::where('name', 'Minimal Garden')->first();
             expect($garden)->not->toBeNull();
-            
+
             $response->assertRedirect(route('gardens.show', $garden));
 
             expect($garden->name)->toBe('Minimal Garden');
@@ -154,7 +154,7 @@ describe('GardenCreateController', function () {
 
             $garden = Garden::where('name', 'Garden with GPS')->first();
             expect($garden)->not->toBeNull();
-            
+
             $response->assertRedirect(route('gardens.show', $garden));
 
             expect($garden->coordinates)->toBeArray();
@@ -176,7 +176,7 @@ describe('GardenCreateController', function () {
 
             $garden = Garden::where('name', 'Garden without GPS')->first();
             expect($garden)->not->toBeNull();
-            
+
             expect($garden->coordinates)->toBeNull();
         });
     });
@@ -373,7 +373,7 @@ describe('GardenCreateController', function () {
             ]);
 
             $garden = Garden::first();
-            expect($garden->established_at)->toBeInstanceOf(\Carbon\Carbon::class);
+            expect($garden->established_at)->toBeInstanceOf(Carbon\Carbon::class);
             expect($garden->established_at->format('Y-m-d'))->toBe('2023-06-15');
         });
     });

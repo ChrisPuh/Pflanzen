@@ -61,7 +61,7 @@ final class User extends Authenticatable implements FilamentUser
      */
     public function gardens(): HasMany
     {
-        return $this->hasMany(\App\Models\Garden::class);
+        return $this->hasMany(Garden::class);
     }
 
     /**

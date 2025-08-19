@@ -116,7 +116,7 @@ final class GardenCreateRequest extends FormRequest
         }
 
         // Set default value for is_active if not provided
-        if (!$this->has('is_active')) {
+        if (! $this->has('is_active')) {
             $this->merge([
                 'is_active' => true,
             ]);

@@ -39,7 +39,7 @@ final class GardenCreateController extends Controller
     public function store(GardenCreateRequest $request): RedirectResponse
     {
         // Authorization handled by GardenCreateRequest::authorize()
-        
+
         /** @var User $user */
         $user = $request->user();
 

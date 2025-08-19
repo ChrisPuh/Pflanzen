@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Http\Controllers\Garden\GardenCreateController;
+use App\Http\Controllers\Garden\GardenEditController;
 use App\Http\Controllers\Garden\GardenShowController;
 use App\Http\Controllers\Garden\GardensIndexController;
 use App\Http\Controllers\Plants\PlantShowController;
@@ -25,6 +26,8 @@ Route::get('gardens', GardensIndexController::class)->middleware(['auth', 'verif
 Route::get('gardens/create', [GardenCreateController::class, 'create'])->middleware(['auth', 'verified'])->name('gardens.create');
 Route::post('gardens', [GardenCreateController::class, 'store'])->middleware(['auth', 'verified'])->name('gardens.store');
 Route::get('gardens/{garden}', GardenShowController::class)->middleware(['auth', 'verified'])->name('gardens.show');
+Route::get('gardens/{garden}/edit', [GardenEditController::class, 'edit'])->middleware(['auth', 'verified'])->name('gardens.edit');
+Route::put('gardens/{garden}', [GardenEditController::class, 'update'])->middleware(['auth', 'verified'])->name('gardens.update');
 
 Route::middleware('auth')->group(function () {
     Route::get('settings/profile', [Settings\ProfileController::class, 'edit'])->name('settings.profile.edit');

@@ -40,7 +40,7 @@ final class GardenService
     /**
      * Create a new garden for the user.
      *
-     * @param array<string, mixed> $data
+     * @param  array<string, mixed>  $data
      */
     public function createGarden(User $user, array $data): Garden
     {
@@ -56,7 +56,7 @@ final class GardenService
         }
 
         // Convert established_at to Carbon if provided
-        if (isset($data['established_at']) && !empty($data['established_at'])) {
+        if (isset($data['established_at']) && ! empty($data['established_at'])) {
             $data['established_at'] = \Carbon\Carbon::parse($data['established_at']);
         }
 
@@ -102,6 +102,35 @@ final class GardenService
             'total_plants' => $totalPlants,
             'by_type' => $byType,
         ];
+    }
+
+    /**
+     * Update an existing garden.
+     *
+     * @param  array<string, mixed>  $data
+     */
+    public function updateGarden(Garden $garden, array $data): Garden
+    {
+        // Process coordinates if provided
+        if (isset($data['coordinates']) && is_array($data['coordinates'])) {
+            $coordinates = [
+                'latitude' => $data['coordinates']['latitude'],
+                'longitude' => $data['coordinates']['longitude'],
+            ];
+            $data['coordinates'] = $coordinates;
+        } else {
+            $data['coordinates'] = null;
+        }
+
+        // Convert established_at to Carbon if provided
+        if (isset($data['established_at']) && ! empty($data['established_at'])) {
+            $data['established_at'] = \Carbon\Carbon::parse($data['established_at']);
+        }
+
+        // Update the garden
+        $garden->update($data);
+
+        return $garden->fresh();
     }
 
     /**
