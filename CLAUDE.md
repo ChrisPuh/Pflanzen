@@ -40,6 +40,10 @@ This application is a Laravel application and its main Laravel ecosystems packag
 ## Documentation Files
 - You must only create documentation files if explicitly requested by the user.
 
+## View Layouts
+- **Create Pages**: Use a consistent CreatePage layout component for all create/edit forms. Never create centered forms directly in views.
+- **Form Consistency**: All create and edit forms should use the same layout structure and styling for consistency.
+
 
 === boost rules ===
 
@@ -143,6 +147,7 @@ protected function isAccessible(User $user, ?string $path = null): bool
 ### Controllers & Validation
 - Always create Form Request classes for validation rather than inline validation in controllers. Include both validation rules and custom error messages.
 - Check sibling Form Requests to see if the application uses array or string based validation rules.
+- **ALWAYS use Form Request classes** - create them for every controller action that receives data, including index actions with filters. This ensures consistent validation and keeps controllers clean.
 
 ### Queues
 - Use queued jobs for time-consuming operations with the `ShouldQueue` interface.

@@ -2,9 +2,13 @@
     use App\Enums\Garden\GardenTypeEnum;
 @endphp
 
-<x-layouts.page 
+<x-layouts.create-page 
     title="Garten bearbeiten" 
     subtitle="Bearbeite die Details deines Gartens"
+    :form-action="route('gardens.update', $garden)"
+    :cancel-route="route('gardens.show', $garden)"
+    method="PUT"
+    submit-text="Garten aktualisieren"
 >
     <x-slot:actions>
         <a
@@ -17,10 +21,6 @@
             Zurück zum Garten
         </a>
     </x-slot:actions>
-    <div class="max-w-2xl">
-        <form method="POST" action="{{ route('gardens.update', $garden) }}" class="space-y-6">
-            @csrf
-            @method('PUT')
             
             <!-- Garden Name -->
             <div>
@@ -252,22 +252,4 @@
                 @enderror
             </div>
 
-            <!-- Form Actions -->
-            <div class="flex items-center justify-between pt-6 border-t border-border">
-                <a 
-                    href="{{ route('gardens.show', $garden) }}" 
-                    class="px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
-                >
-                    Abbrechen
-                </a>
-                
-                <button 
-                    type="submit" 
-                    class="px-6 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 focus:ring-2 focus:ring-primary focus:ring-offset-2 transition-colors font-medium"
-                >
-                    Garten aktualisieren
-                </button>
-            </div>
-        </form>
-    </div>
-</x-layouts.page>
+</x-layouts.create-page>

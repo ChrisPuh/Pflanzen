@@ -40,6 +40,7 @@ final class Area extends Model
     protected $table = 'areas';
 
     protected $fillable = [
+        'garden_id',
         'name',
         'type',
         'description',

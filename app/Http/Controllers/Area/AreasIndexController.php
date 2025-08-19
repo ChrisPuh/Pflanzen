@@ -6,27 +6,26 @@ namespace App\Http\Controllers\Area;
 
 use App\Enums\Area\AreaTypeEnum;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Area\IndexAreaRequest;
 use App\Models\Area;
 use App\Models\Garden;
 use Illuminate\Contracts\View\View;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Gate;
 
 final class AreasIndexController extends Controller
 {
-    public function __invoke(Request $request): View
+    public function __invoke(IndexAreaRequest $request): View
     {
         $user = $request->user();
-        
+
         // Base query for areas belonging to user's gardens
         $areasQuery = Area::query()
             ->with(['garden:id,name,type', 'plants:id,name'])
-            ->whereHas('garden', function ($query) use ($user): void {
+            ->whereHas('garden', function (\Illuminate\Database\Eloquent\Builder $query) use ($user): void {
                 if ($user->hasRole('admin')) {
                     // Admin can see all areas
                     return;
                 }
-                
+
                 $query->where('user_id', $user->id);
             })
             ->latest();
@@ -46,7 +45,7 @@ final class AreasIndexController extends Controller
 
         if ($request->filled('search')) {
             $search = $request->string('search');
-            $areasQuery->where(function ($query) use ($search): void {
+            $areasQuery->where(function (\Illuminate\Database\Eloquent\Builder $query) use ($search): void {
                 $query->where('name', 'like', "%{$search}%")
                     ->orWhere('description', 'like', "%{$search}%");
             });
@@ -64,7 +63,7 @@ final class AreasIndexController extends Controller
 
         // Get user's gardens for filter dropdown
         $userGardens = Garden::query()
-            ->when(!$user->hasRole('admin'), function ($query) use ($user): void {
+            ->when(! $user->hasRole('admin'), function (\Illuminate\Database\Eloquent\Builder $query) use ($user): void {
                 $query->where('user_id', $user->id);
             })
             ->select('id', 'name', 'type')
@@ -73,8 +72,8 @@ final class AreasIndexController extends Controller
 
         // Get area statistics
         $totalAreas = Area::query()
-            ->whereHas('garden', function ($query) use ($user): void {
-                if (!$user->hasRole('admin')) {
+            ->whereHas('garden', function (\Illuminate\Database\Eloquent\Builder $query) use ($user): void {
+                if (! $user->hasRole('admin')) {
                     $query->where('user_id', $user->id);
                 }
             })
@@ -82,8 +81,8 @@ final class AreasIndexController extends Controller
 
         $activeAreas = Area::query()
             ->active()
-            ->whereHas('garden', function ($query) use ($user): void {
-                if (!$user->hasRole('admin')) {
+            ->whereHas('garden', function (\Illuminate\Database\Eloquent\Builder $query) use ($user): void {
+                if (! $user->hasRole('admin')) {
                     $query->where('user_id', $user->id);
                 }
             })
@@ -97,8 +96,8 @@ final class AreasIndexController extends Controller
                 AreaTypeEnum::Meadow->value,
                 AreaTypeEnum::TreeArea->value,
             ])
-            ->whereHas('garden', function ($query) use ($user): void {
-                if (!$user->hasRole('admin')) {
+            ->whereHas('garden', function (\Illuminate\Database\Eloquent\Builder $query) use ($user): void {
+                if (! $user->hasRole('admin')) {
                     $query->where('user_id', $user->id);
                 }
             })

@@ -8,7 +8,7 @@ use App\Models\Garden;
 use App\Models\User;
 use Spatie\Permission\Models\Role;
 
-uses(\Illuminate\Foundation\Testing\RefreshDatabase::class);
+uses(Illuminate\Foundation\Testing\RefreshDatabase::class);
 
 describe('AreasIndexController', function (): void {
     describe('Authentication and Authorization', function (): void {
@@ -59,7 +59,7 @@ describe('AreasIndexController', function (): void {
 
         it('shows all areas for admin users', function (): void {
             Role::create(['name' => 'admin']);
-            
+
             $admin = User::factory()->create();
             $admin->assignRole('admin');
             $user = User::factory()->create();
@@ -249,7 +249,7 @@ describe('AreasIndexController', function (): void {
         it('paginates areas correctly', function (): void {
             $user = User::factory()->create();
             $garden = Garden::factory()->for($user)->create();
-            
+
             Area::factory()->for($garden)->count(15)->create();
 
             $response = $this->actingAs($user)->get(route('areas.index'));
@@ -257,7 +257,7 @@ describe('AreasIndexController', function (): void {
             $response->assertSuccessful();
 
             $areas = $response->viewData('areas');
-            expect($areas)->toBeInstanceOf(\Illuminate\Pagination\LengthAwarePaginator::class)
+            expect($areas)->toBeInstanceOf(Illuminate\Pagination\LengthAwarePaginator::class)
                 ->and($areas->perPage())->toBe(12)
                 ->and($areas->count())->toBe(12); // First page should have 12 items
         });

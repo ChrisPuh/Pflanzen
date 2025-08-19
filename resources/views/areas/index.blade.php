@@ -4,7 +4,7 @@
 >
     <x-slot:actions>
         <a
-            href="#"
+            href="{{ route('areas.create') }}"
             class="inline-flex items-center px-4 py-2 text-sm font-medium text-primary-foreground bg-primary rounded-lg hover:bg-primary/90 focus:ring-2 focus:ring-primary focus:ring-offset-2 transition-colors"
         >
             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -133,8 +133,7 @@
         @if($areas->count() > 0)
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 @foreach($areas as $area)
-                    <a 
-                        href="{{ route('areas.show', $area) ?? '#' }}" 
+                    <div 
                         class="bg-card rounded-xl border border-border overflow-hidden shadow-sm hover:shadow-md transition-all group cursor-pointer transform hover:scale-[1.02] relative"
                     >
                         <!-- Area Header with Color -->
@@ -243,7 +242,7 @@
                                 </span>
                             </div>
                         </div>
-                    </a>
+                    </div>
                 @endforeach
             </div>
 
@@ -277,7 +276,7 @@
                         </a>
                     @else
                         <a 
-                            href="#" 
+                            href="{{ route('areas.create') }}" 
                             class="inline-flex items-center px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors"
                         >
                             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
