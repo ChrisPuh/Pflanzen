@@ -35,8 +35,36 @@ final class GardensIndexController extends Controller
             perPage: 12
         );
 
+        $hasArchivedGardens = $this->gardenService->getArchivedGardensForUser(
+            user: $user,
+            isAdmin: $isAdmin
+        )->isNotEmpty();
+
         return view('gardens.index', [
             'gardens' => $gardens,
+            'isAdmin' => $isAdmin,
+            'hasArchivedGardens' => $hasArchivedGardens,
+        ]);
+    }
+
+    /**
+     * Show archived gardens for the authenticated user.
+     */
+    public function archived(Request $request): View
+    {
+        Gate::authorize('viewAny', Garden::class);
+
+        /** @var User $user */
+        $user = $request->user();
+        $isAdmin = $user->hasRole('admin');
+
+        $archivedGardens = $this->gardenService->getArchivedGardensForUser(
+            user: $user,
+            isAdmin: $isAdmin
+        );
+
+        return view('gardens.archived', [
+            'gardens' => $archivedGardens,
             'isAdmin' => $isAdmin,
         ]);
     }

@@ -7,15 +7,29 @@
     subtitle="Verwalte und durchstöbere deine Gärten"
 >
     <x-slot:actions>
-        <a
-            href="{{ route('gardens.create') }}"
-            class="inline-flex items-center px-4 py-2 text-sm font-medium text-primary-foreground bg-primary rounded-lg hover:bg-primary/90 focus:ring-2 focus:ring-primary focus:ring-offset-2 transition-colors"
-        >
-            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-            </svg>
-            Neuen Garten erstellen
-        </a>
+        <div class="flex items-center gap-3">
+            @if($hasArchivedGardens)
+                <a
+                    href="{{ route('gardens.archived') }}"
+                    class="inline-flex items-center px-4 py-2 text-sm font-medium text-foreground bg-secondary rounded-lg hover:bg-secondary/80 focus:ring-2 focus:ring-secondary focus:ring-offset-2 transition-colors"
+                >
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8l4 4 4-4m0 0l4-4m-4 4v11"></path>
+                    </svg>
+                    Archivierte Gärten
+                </a>
+            @endif
+            
+            <a
+                href="{{ route('gardens.create') }}"
+                class="inline-flex items-center px-4 py-2 text-sm font-medium text-primary-foreground bg-primary rounded-lg hover:bg-primary/90 focus:ring-2 focus:ring-primary focus:ring-offset-2 transition-colors"
+            >
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                </svg>
+                Neuen Garten erstellen
+            </a>
+        </div>
     </x-slot:actions>
 
     <div class="space-y-6">
