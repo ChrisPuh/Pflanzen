@@ -6,14 +6,16 @@ namespace App\Http\Controllers\Garden;
 
 use App\Http\Controllers\Controller;
 use App\Models\Garden;
-use App\Models\User;
 use App\Services\GardenService;
+use App\Traits\AuthenticatedUser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
 
 final class GardensIndexController extends Controller
 {
+    use AuthenticatedUser;
+
     public function __construct(
         private readonly GardenService $gardenService
     ) {}
@@ -25,25 +27,20 @@ final class GardensIndexController extends Controller
     {
         Gate::authorize('viewAny', Garden::class);
 
-        /** @var User $user */
-        $user = $request->user();
-        $isAdmin = $user->hasRole('admin');
+        ['user' => $user, 'isAdmin' => $isAdmin] = $this->getUserAndAdminStatus();
 
-        $gardens = $this->gardenService->getGardensForUser(
+        // Get all data from service in one call
+        $data = $this->gardenService->getGardensIndexData(
             user: $user,
             isAdmin: $isAdmin,
             perPage: 12
         );
 
-        $hasArchivedGardens = $this->gardenService->getArchivedGardensForUser(
-            user: $user,
-            isAdmin: $isAdmin
-        )->isNotEmpty();
-
         return view('gardens.index', [
-            'gardens' => $gardens,
+            'gardens' => $data['gardens'],
+            'stats' => $data['stats'],
+            'hasArchivedGardens' => $data['hasArchivedGardens'],
             'isAdmin' => $isAdmin,
-            'hasArchivedGardens' => $hasArchivedGardens,
         ]);
     }
 
@@ -54,9 +51,7 @@ final class GardensIndexController extends Controller
     {
         Gate::authorize('viewAny', Garden::class);
 
-        /** @var User $user */
-        $user = $request->user();
-        $isAdmin = $user->hasRole('admin');
+        ['user' => $user, 'isAdmin' => $isAdmin] = $this->getUserAndAdminStatus();
 
         $archivedGardens = $this->gardenService->getArchivedGardensForUser(
             user: $user,

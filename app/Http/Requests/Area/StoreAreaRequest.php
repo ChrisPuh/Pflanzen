@@ -16,15 +16,6 @@ final class StoreAreaRequest extends FormRequest
         return true;
     }
 
-    protected function prepareForValidation(): void
-    {
-        \Log::info('StoreAreaRequest prepareForValidation called', $this->all());
-        
-        if ($this->filled('color') && $this->input('color') === '') {
-            $this->merge(['color' => null]);
-        }
-    }
-
     /**
      * @return array<string, mixed>
      */
@@ -69,18 +60,20 @@ final class StoreAreaRequest extends FormRequest
     public function withValidator(\Illuminate\Contracts\Validation\Validator $validator): void
     {
         $validator->after(function (\Illuminate\Contracts\Validation\Validator $validator): void {
-            \Log::info('StoreAreaRequest withValidator called', ['errors' => $validator->errors()->toArray()]);
-            
             if ($this->filled('garden_id')) {
                 $garden = Garden::find($this->integer('garden_id'));
 
                 if ($garden && ! $this->user()->hasRole('admin') && $garden->user_id !== $this->user()->id) {
-                    \Log::info('Garden permission denied', ['garden_id' => $garden->id, 'user_id' => $this->user()->id, 'garden_user_id' => $garden->user_id]);
                     $validator->errors()->add('garden_id', 'Sie haben keine Berechtigung, Bereiche zu diesem Garten hinzuzufügen.');
                 }
             }
-            
-            \Log::info('StoreAreaRequest final validation errors', $validator->errors()->toArray());
         });
+    }
+
+    protected function prepareForValidation(): void
+    {
+        if ($this->filled('color') && $this->input('color') === '') {
+            $this->merge(['color' => null]);
+        }
     }
 }

@@ -231,6 +231,83 @@ describe('GardenService', function () {
         });
     });
 
+    describe('getGardensIndexData', function () {
+        it('returns complete index data with gardens, stats and archived flag', function () {
+            // Create test data
+            Garden::factory()->for($this->user)->count(2)->create(['is_active' => true]);
+            Garden::factory()->for($this->user)->create(['is_active' => false]);
+
+            // Create archived garden
+            $archivedGarden = Garden::factory()->for($this->user)->create();
+            $archivedGarden->delete();
+
+            $result = $this->service->getGardensIndexData($this->user, false, 12);
+
+            expect($result)->toHaveKeys(['gardens', 'stats', 'hasArchivedGardens']);
+            expect($result['gardens'])->toBeInstanceOf(Illuminate\Contracts\Pagination\LengthAwarePaginator::class);
+            expect($result['gardens']->total())->toBe(3);
+            expect($result['stats'])->toBeArray();
+            expect($result['hasArchivedGardens'])->toBeTrue();
+        });
+
+        it('calculates correct statistics', function () {
+            // Create gardens with areas and plants
+            $activeGarden = Garden::factory()->for($this->user)->create(['is_active' => true]);
+            $inactiveGarden = Garden::factory()->for($this->user)->create(['is_active' => false]);
+
+            // Add areas
+            $activeArea = App\Models\Area::factory()->for($activeGarden, 'garden')->create(['is_active' => true]);
+            $inactiveArea = App\Models\Area::factory()->for($inactiveGarden, 'garden')->create(['is_active' => false]);
+
+            // Add plants
+            $plant1 = Plant::factory()->create();
+            $plant2 = Plant::factory()->create();
+            $activeGarden->plants()->attach([$plant1->id, $plant2->id]);
+
+            $result = $this->service->getGardensIndexData($this->user, false, 12);
+            $stats = $result['stats'];
+
+            expect($stats['total_gardens'])->toBe(2);
+            expect($stats['active_gardens'])->toBe(1);
+            expect($stats['inactive_gardens'])->toBe(1);
+            expect($stats['total_areas'])->toBe(2);
+            expect($stats['active_areas'])->toBe(1);
+            expect($stats['total_plants'])->toBe(2);
+        });
+
+        it('works for admin users', function () {
+            // Create gardens for different users
+            Garden::factory()->for($this->user)->count(2)->create();
+            Garden::factory()->count(3)->create();
+
+            $result = $this->service->getGardensIndexData($this->admin, true, 12);
+
+            expect($result['gardens']->total())->toBe(5);
+            expect($result['stats']['total_gardens'])->toBe(5);
+        });
+
+        it('respects pagination', function () {
+            Garden::factory()->for($this->user)->count(15)->create();
+
+            $result = $this->service->getGardensIndexData($this->user, false, 5);
+
+            expect($result['gardens']->perPage())->toBe(5);
+            expect($result['gardens']->items())->toHaveCount(5);
+            expect($result['gardens']->hasMorePages())->toBeTrue();
+        });
+
+        it('loads required relationships', function () {
+            Garden::factory()->for($this->user)->create();
+
+            $result = $this->service->getGardensIndexData($this->user, false, 12);
+            $garden = $result['gardens']->items()[0];
+
+            expect($garden->relationLoaded('user'))->toBeTrue();
+            expect($garden->relationLoaded('plants'))->toBeTrue();
+            expect($garden->relationLoaded('areas'))->toBeTrue();
+        });
+    });
+
     describe('getDashboardSummary', function () {
         it('returns correct dashboard summary', function () {
             // Create gardens with different states
@@ -289,15 +366,15 @@ describe('GardenService', function () {
         });
 
         it('searches gardens by location and city', function () {
-            $locationMatch = Garden::factory()->for($this->user)->create(['location' => 'Backyard']);
-            $cityMatch = Garden::factory()->for($this->user)->create(['city' => 'Berlin']);
+            $locationMatch = Garden::factory()->for($this->user)->create(['location' => 'UniqueBackyard123']);
+            $cityMatch = Garden::factory()->for($this->user)->create(['city' => 'UniqueBerlin456']);
             $noMatch = Garden::factory()->for($this->user)->create([
                 'location' => 'Front yard',
                 'city' => 'Hamburg',
             ]);
 
-            $locationResult = $this->service->searchGardens($this->user, 'Backyard');
-            $cityResult = $this->service->searchGardens($this->user, 'Berlin');
+            $locationResult = $this->service->searchGardens($this->user, 'UniqueBackyard123');
+            $cityResult = $this->service->searchGardens($this->user, 'UniqueBerlin456');
 
             expect($locationResult)->toHaveCount(1);
             expect($locationResult->first()->id)->toBe($locationMatch->id);

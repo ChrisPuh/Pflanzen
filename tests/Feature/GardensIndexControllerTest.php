@@ -162,7 +162,41 @@ describe('GardensIndexController', function () {
             $content = $response->getContent();
 
             // Should show 2 active gardens in stats
-            expect($content)->toContain('2');
+            expect($content)->toContain('2 aktiv');
+        });
+
+        it('shows areas statistics correctly', function () {
+            $garden1 = Garden::factory()->for($this->user)->create();
+            $garden2 = Garden::factory()->for($this->user)->create();
+
+            // Create areas
+            $activeArea1 = App\Models\Area::factory()->for($garden1, 'garden')->create(['is_active' => true]);
+            $activeArea2 = App\Models\Area::factory()->for($garden2, 'garden')->create(['is_active' => true]);
+            $inactiveArea = App\Models\Area::factory()->for($garden1, 'garden')->create(['is_active' => false]);
+
+            $response = $this->actingAs($this->user)->get(route('gardens.index'));
+
+            $response->assertOk();
+            $content = $response->getContent();
+
+            // Should show 3 total areas and 2 active
+            expect($content)->toContain('3');
+            expect($content)->toContain('2 aktiv');
+        });
+
+        it('shows correct statistics in header cards', function () {
+            // Create test data
+            Garden::factory()->for($this->user)->count(2)->create(['is_active' => true]);
+            Garden::factory()->for($this->user)->create(['is_active' => false]);
+
+            $response = $this->actingAs($this->user)->get(route('gardens.index'));
+
+            $response->assertOk()
+                ->assertSee('Gärten')
+                ->assertSee('3')  // Total gardens
+                ->assertSee('2 aktiv')  // Active gardens
+                ->assertSee('Gesamte Pflanzen')
+                ->assertSee('Bereiche');
         });
     });
 
@@ -236,6 +270,26 @@ describe('GardensIndexController', function () {
 
             $response->assertOk()
                 ->assertSee('5 Pflanzen');
+        });
+
+        it('displays area count for each garden', function () {
+            $garden = Garden::factory()->for($this->user)->create();
+            App\Models\Area::factory()->for($garden, 'garden')->count(3)->create();
+
+            $response = $this->actingAs($this->user)->get(route('gardens.index'));
+
+            $response->assertOk()
+                ->assertSee('3 Bereiche');
+        });
+
+        it('handles singular area count correctly', function () {
+            $garden = Garden::factory()->for($this->user)->create();
+            App\Models\Area::factory()->for($garden, 'garden')->create();
+
+            $response = $this->actingAs($this->user)->get(route('gardens.index'));
+
+            $response->assertOk()
+                ->assertSee('1 Bereich');
         });
     });
 
@@ -332,6 +386,28 @@ describe('GardensIndexController', function () {
             $response->assertOk()
                 ->assertSee('Neuen Garten erstellen');
         });
+
+        it('shows archived gardens link when archived gardens exist', function () {
+            // Create and archive a garden
+            $garden = Garden::factory()->for($this->user)->create();
+            $garden->delete();
+
+            $response = $this->actingAs($this->user)->get(route('gardens.index'));
+
+            $response->assertOk()
+                ->assertSee('Archivierte Gärten');
+        });
+
+        it('does not show archived gardens link when no archived gardens exist', function () {
+            Garden::factory()->for($this->user)->create();
+
+            $response = $this->actingAs($this->user)->get(route('gardens.index'));
+
+            $response->assertOk();
+            $content = $response->getContent();
+
+            expect($content)->not->toContain('Archivierte Gärten');
+        });
     });
 
     describe('View Data and Structure', function () {
@@ -342,6 +418,8 @@ describe('GardensIndexController', function () {
 
             $response->assertOk()
                 ->assertViewHas('gardens')
+                ->assertViewHas('stats')
+                ->assertViewHas('hasArchivedGardens')
                 ->assertViewHas('isAdmin', false);
         });
 

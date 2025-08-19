@@ -24,7 +24,7 @@ final class GardenService
             ->when(! $isAdmin, function (Builder $query) use ($user): void {
                 $query->forUser($user);
             })
-            ->with(['user', 'plants'])
+            ->with(['user', 'plants', 'areas'])
             ->latest()
             ->paginate($perPage);
     }
@@ -34,7 +34,7 @@ final class GardenService
      */
     public function getGardenForDisplay(Garden $garden): Garden
     {
-        return $garden->load(['user', 'plants']);
+        return $garden->load(['user', 'plants', 'areas']);
     }
 
     /**
@@ -101,6 +101,64 @@ final class GardenService
             'active' => $activeGardens,
             'total_plants' => $totalPlants,
             'by_type' => $byType,
+        ];
+    }
+
+    /**
+     * Get complete gardens index data with statistics
+     *
+     * @return array{gardens: LengthAwarePaginator, stats: array<string, int>, hasArchivedGardens: bool}
+     */
+    public function getGardensIndexData(User $user, bool $isAdmin = false, int $perPage = 12): array
+    {
+        // Get paginated gardens
+        $gardens = Garden::query()
+            ->when(! $isAdmin, function (Builder $query) use ($user): void {
+                $query->forUser($user);
+            })
+            ->with(['user', 'plants', 'areas'])
+            ->latest()
+            ->paginate($perPage);
+
+        // Calculate statistics
+        $totalCount = $gardens->total();
+        $activeCount = 0;
+        $inactiveCount = 0;
+        $totalAreas = 0;
+        $activeAreas = 0;
+        $totalPlants = 0;
+
+        foreach ($gardens as $garden) {
+            if ($garden->is_active) {
+                $activeCount++;
+            } else {
+                $inactiveCount++;
+            }
+
+            $totalAreas += $garden->areas->count();
+            $activeAreas += $garden->areas->where('is_active', true)->count();
+            $totalPlants += $garden->plants->count();
+        }
+
+        $stats = [
+            'total_gardens' => $totalCount,
+            'active_gardens' => $activeCount,
+            'inactive_gardens' => $inactiveCount,
+            'total_areas' => $totalAreas,
+            'active_areas' => $activeAreas,
+            'total_plants' => $totalPlants,
+        ];
+
+        // Check for archived gardens
+        $hasArchivedGardens = $this->getArchivedGardensForUser(
+            user: $user,
+            isAdmin: $isAdmin
+        )->isNotEmpty();
+
+        return [
+            'gardens' => $gardens,
+            'stats' => $stats,
+            'hasArchivedGardens' => $hasArchivedGardens,
         ];
     }
 

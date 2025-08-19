@@ -9,19 +9,22 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Area\StoreAreaRequest;
 use App\Models\Area;
 use App\Models\Garden;
+use App\Traits\AuthenticatedUser;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
 final class AreaCreateController extends Controller
 {
+    use AuthenticatedUser;
+
     public function create(Request $request): View
     {
-        $user = $request->user();
+        ['user' => $user, 'isAdmin' => $isAdmin] = $this->getUserAndAdminStatus();
 
         // Get user's gardens for dropdown
         $userGardens = Garden::query()
-            ->when(! $user->hasRole('admin'), function (\Illuminate\Database\Eloquent\Builder $query) use ($user): void {
+            ->when(! $isAdmin, function (\Illuminate\Database\Eloquent\Builder $query) use ($user): void {
                 $query->where('user_id', $user->id);
             })
             ->select('id', 'name', 'type')
@@ -38,7 +41,7 @@ final class AreaCreateController extends Controller
             'userGardens' => $userGardens,
             'selectedGarden' => $selectedGarden,
             'areaTypes' => AreaTypeEnum::options(),
-            'isAdmin' => $user->hasRole('admin'),
+            'isAdmin' => $isAdmin,
         ]);
     }
 
