@@ -33,107 +33,68 @@
         </div>
     </x-slot:actions>
 
-    <div class="space-y-6">
-        <!-- Gardens Stats -->
+    <x-slot:stats>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div class="bg-card rounded-xl border border-border p-6 shadow-sm">
-                <div class="flex items-center">
-                    <div class="flex-shrink-0">
-                        <div
-                            class="w-8 h-8 bg-green-100 dark:bg-green-900/20 rounded-lg flex items-center justify-center">
-                            <svg class="w-5 h-5 text-green-600 dark:text-green-400" fill="none" stroke="currentColor"
-                                 viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                      d="M3 21v-4a4 4 0 014-4h5a4 4 0 014 4v4M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14l9-5-9-5-9 5 9 5z"></path>
-                            </svg>
-                        </div>
-                    </div>
-                    <div class="ml-5 w-0 flex-1">
-                        <dl>
-                            <dt class="text-sm font-medium text-muted-foreground truncate">
-                                Gärten
-                            </dt>
-                            <dd class="text-lg font-medium text-foreground">
-                                {{ $stats['total_gardens'] }}
-                                <span class="text-sm text-muted-foreground font-normal">
-                                    ( {{ $stats['active_gardens'] }} aktiv )
+            <x-stats-card 
+                title="Gärten"
+                :value="$stats['total_gardens'] . ' (' . $stats['active_gardens'] . ' aktiv)'"
+                icon-color="green"
+            >
+                <x-slot:icon>
+                    <svg class="w-5 h-5 text-green-600 dark:text-green-400" fill="none" stroke="currentColor"
+                         viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M3 21v-4a4 4 0 014-4h5a4 4 0 014 4v4M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14l9-5-9-5-9 5 9 5z"></path>
+                    </svg>
+                </x-slot:icon>
+            </x-stats-card>
 
-                                </span>
+            <x-stats-card 
+                title="Gesamte Pflanzen"
+                :value="$stats['total_plants']"
+                icon-color="blue"
+            >
+                <x-slot:icon>
+                    <svg class="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor"
+                         viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zM21 5a2 2 0 00-2-2h-4a2 2 0 00-2 2v6.5l3 3V21a2 2 0 002-2V5z"></path>
+                    </svg>
+                </x-slot:icon>
+            </x-stats-card>
 
-                            </dd>
-                        </dl>
-                    </div>
-                </div>
-            </div>
-
-            <div class="bg-card rounded-xl border border-border p-6 shadow-sm">
-                <div class="flex items-center">
-                    <div class="flex-shrink-0">
-                        <div
-                            class="w-8 h-8 bg-blue-100 dark:bg-blue-900/20 rounded-lg flex items-center justify-center">
-                            <svg class="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor"
-                                 viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                      d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zM21 5a2 2 0 00-2-2h-4a2 2 0 00-2 2v6.5l3 3V21a2 2 0 002-2V5z"></path>
-                            </svg>
-                        </div>
-                    </div>
-                    <div class="ml-5 w-0 flex-1">
-                        <dl>
-                            <dt class="text-sm font-medium text-muted-foreground truncate">
-                                Gesamte Pflanzen
-                            </dt>
-                            <dd class="text-lg font-medium text-foreground">
-                                {{ $stats['total_plants'] }}
-                            </dd>
-                        </dl>
-                    </div>
-                </div>
-            </div>
-
-            <div class="bg-card rounded-xl border border-border p-6 shadow-sm">
-                <div class="flex items-center">
-                    <div class="flex-shrink-0">
-                        <div
-                            class="w-8 h-8 bg-purple-100 dark:bg-purple-900/20 rounded-lg flex items-center justify-center">
-                            <svg class="w-5 h-5 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor"
-                                 viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                      d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
-                            </svg>
-                        </div>
-                    </div>
-                    <div class="ml-5 w-0 flex-1">
-                        <dl>
-                            <dt class="text-sm font-medium text-muted-foreground truncate">
-                                Bereiche
-                            </dt>
-                            <dd class="text-lg font-medium text-foreground">
-                                {{ $stats['total_areas'] }}
-                                @if($stats['active_areas'] > 0)
-                                    <span class="text-sm text-muted-foreground font-normal">({{ $stats['active_areas'] }} aktiv)</span>
-                                @endif
-                            </dd>
-                        </dl>
-                    </div>
-                </div>
-            </div>
+            <x-stats-card 
+                title="Bereiche"
+                :value="$stats['total_areas'] . ($stats['active_areas'] > 0 ? ' (' . $stats['active_areas'] . ' aktiv)' : '')"
+                icon-color="purple"
+            >
+                <x-slot:icon>
+                    <svg class="w-5 h-5 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor"
+                         viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+                    </svg>
+                </x-slot:icon>
+            </x-stats-card>
         </div>
+    </x-slot:stats>
 
-        <!-- Results Info -->
-        <div class="flex items-center justify-between">
-            <p class="text-muted-foreground">
-                {{ $gardens->total() }} {{ $gardens->total() === 1 ? 'Garten' : 'Gärten' }} gefunden
-                @if($isAdmin)
-                    <span class="text-orange-600 dark:text-orange-400 font-medium">(Admin-Ansicht)</span>
-                @endif
-            </p>
-            @if($gardens->hasPages())
-                <p class="text-sm text-muted-foreground">
-                    Seite {{ $gardens->currentPage() }} von {{ $gardens->lastPage() }}
-                </p>
+    <!-- Results Info -->
+    <div class="flex items-center justify-between mb-6">
+        <p class="text-muted-foreground">
+            {{ $gardens->total() }} {{ $gardens->total() === 1 ? 'Garten' : 'Gärten' }} gefunden
+            @if($isAdmin)
+                <span class="text-orange-600 dark:text-orange-400 font-medium">(Admin-Ansicht)</span>
             @endif
-        </div>
+        </p>
+        @if($gardens->hasPages())
+            <p class="text-sm text-muted-foreground">
+                Seite {{ $gardens->currentPage() }} von {{ $gardens->lastPage() }}
+            </p>
+        @endif
+    </div>
+
+    <div class="space-y-6">
 
         <!-- Gardens Grid -->
         @if($gardens->count() > 0)

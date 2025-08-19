@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Http\Controllers\Area\AreaCreateController;
+use App\Http\Controllers\Area\AreaEditController;
 use App\Http\Controllers\Area\AreaShowController;
 use App\Http\Controllers\Area\AreasIndexController;
 use App\Http\Controllers\Garden\GardenCreateController;
@@ -30,6 +31,8 @@ Route::get('areas', AreasIndexController::class)->middleware(['auth', 'verified'
 Route::get('areas/create', [AreaCreateController::class, 'create'])->middleware(['auth', 'verified'])->name('areas.create');
 Route::post('areas', [AreaCreateController::class, 'store'])->middleware(['auth', 'verified'])->name('areas.store');
 Route::get('areas/{area}', AreaShowController::class)->middleware(['auth', 'verified'])->name('areas.show');
+Route::get('areas/{area}/edit', [AreaEditController::class, 'edit'])->middleware(['auth', 'verified'])->name('areas.edit');
+Route::put('areas/{area}', [AreaEditController::class, 'update'])->middleware(['auth', 'verified'])->name('areas.update');
 
 Route::get('gardens', GardensIndexController::class)->middleware(['auth', 'verified'])->name('gardens.index');
 Route::get('gardens/archived', [GardensIndexController::class, 'archived'])->middleware(['auth', 'verified'])->name('gardens.archived');

@@ -137,6 +137,22 @@
                     href="{{ route('areas.show', $area) }}"
                     class="bg-card rounded-xl border border-border overflow-hidden shadow-sm hover:shadow-md transition-all group cursor-pointer transform hover:scale-[1.02] relative"
                 >
+                    <!-- Edit Button -->
+                    @can('update', $area)
+                        <div
+                            class="absolute top-2 right-2 z-10 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <a
+                                href="{{ route('areas.edit', $area) }}"
+                                class="inline-flex items-center justify-center w-8 h-8 bg-white/90 dark:bg-gray-900/90 rounded-full hover:bg-white dark:hover:bg-gray-900 transition-colors shadow-sm"
+                                title="Bereich bearbeiten"
+                                onclick="event.stopPropagation()"
+                            >
+                                <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                                </svg>
+                            </a>
+                        </div>
+                    @endcan
                     <!-- Area Header with Color -->
                     <div
                         class="aspect-video bg-gradient-to-br from-primary/10 to-primary/20 flex items-center justify-center relative"
