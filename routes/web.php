@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\Area\AreasIndexController;
 use App\Http\Controllers\Garden\GardenCreateController;
 use App\Http\Controllers\Garden\GardenDeleteController;
 use App\Http\Controllers\Garden\GardenEditController;
@@ -22,6 +23,8 @@ Route::view('dashboard', 'dashboard')
 
 Route::get('plants', PlantsIndexController::class)->middleware(['auth', 'verified'])->name('plants.index');
 Route::get('plants/{plant}', PlantShowController::class)->middleware(['auth', 'verified'])->name('plants.show');
+
+Route::get('areas', AreasIndexController::class)->middleware(['auth', 'verified'])->name('areas.index');
 
 Route::get('gardens', GardensIndexController::class)->middleware(['auth', 'verified'])->name('gardens.index');
 Route::get('gardens/archived', [GardensIndexController::class, 'archived'])->middleware(['auth', 'verified'])->name('gardens.archived');
