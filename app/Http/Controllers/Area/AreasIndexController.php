@@ -31,19 +31,19 @@ final class AreasIndexController extends Controller
             ->latest();
 
         // Apply filters
-        if ($request->filled('garden_id')) {
+        if ($request->filled('garden_id') && $request->get('garden_id') !== '') {
             $areasQuery->where('garden_id', $request->integer('garden_id'));
         }
 
-        if ($request->filled('type')) {
+        if ($request->filled('type') && $request->get('type') !== '') {
             $areasQuery->where('type', $request->string('type'));
         }
 
-        if ($request->filled('category')) {
+        if ($request->filled('category') && $request->get('category') !== '') {
             $areasQuery->byCategory($request->string('category'));
         }
 
-        if ($request->filled('search')) {
+        if ($request->filled('search') && $request->get('search') !== '') {
             $search = $request->string('search');
             $areasQuery->where(function (\Illuminate\Database\Eloquent\Builder $query) use ($search): void {
                 $query->where('name', 'like', "%{$search}%")
@@ -51,12 +51,14 @@ final class AreasIndexController extends Controller
             });
         }
 
-        if ($request->filled('active')) {
-            if ($request->boolean('active')) {
+        if ($request->filled('active') && $request->get('active') !== '') {
+            $activeValue = $request->get('active');
+            if ($activeValue === '1') {
                 $areasQuery->active();
-            } else {
+            } elseif ($activeValue === '0') {
                 $areasQuery->where('is_active', false);
             }
+            // If empty string, show all (no filter applied)
         }
 
         $areas = $areasQuery->paginate(12)->withQueryString();

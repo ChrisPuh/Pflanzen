@@ -6,6 +6,17 @@
     submit-text="Bereich erstellen"
 >
 
+    @if ($errors->any())
+        <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-4">
+            <h4 class="font-medium">Es sind Fehler aufgetreten:</h4>
+            <ul class="mt-2 list-disc list-inside">
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
                 <!-- Area Name -->
                 <x-forms.input 
                     label="Name des Bereichs"
@@ -98,25 +109,15 @@
                     <label for="color" class="block text-sm font-medium text-foreground mb-2">
                         Farbe (für Anzeige)
                     </label>
-                    <div class="flex items-center gap-3">
-                        <input 
-                            type="color"
-                            id="color"
-                            name="color"
-                            value="{{ old('color', '#10b981') }}"
-                            class="w-12 h-10 border border-border rounded-lg bg-background cursor-pointer"
-                        >
-                        <input 
-                            type="text"
-                            placeholder="#10b981"
-                            value="{{ old('color', '#10b981') }}"
-                            class="flex-1 px-4 py-2 border border-border rounded-lg bg-background text-foreground placeholder-muted-foreground focus:ring-2 focus:ring-primary focus:border-transparent"
-                            pattern="^#[0-9A-Fa-f]{6}$"
-                            id="color-text"
-                        >
-                    </div>
+                    <input 
+                        type="color"
+                        id="color"
+                        name="color"
+                        value="{{ old('color', '#10b981') }}"
+                        class="w-16 h-10 border border-border rounded-lg bg-background cursor-pointer"
+                    >
                     @error('color')
-                        <span class="text-danger text-sm">{{ $message }}</span>
+                        <span class="text-danger text-sm block mt-1">{{ $message }}</span>
                     @enderror
                 </div>
 
@@ -135,19 +136,4 @@
                     </label>
                 </div>
 
-    <script>
-        // Sync color picker and text input
-        const colorPicker = document.getElementById('color');
-        const colorText = document.getElementById('color-text');
-        
-        colorPicker.addEventListener('change', function() {
-            colorText.value = this.value;
-        });
-        
-        colorText.addEventListener('input', function() {
-            if (this.value.match(/^#[0-9A-Fa-f]{6}$/)) {
-                colorPicker.value = this.value;
-            }
-        });
-    </script>
 </x-layouts.create-page>

@@ -55,16 +55,16 @@ final class AreaCreateController extends Controller
             ];
         }
 
-        $area = Area::create([
-            'name' => $validated['name'],
-            'description' => $validated['description'] ?? null,
-            'garden_id' => $validated['garden_id'],
-            'type' => AreaTypeEnum::from($validated['type']),
-            'size_sqm' => $validated['size_sqm'] ?? null,
-            'coordinates' => $coordinates,
-            'color' => $validated['color'] ?? null,
-            'is_active' => $validated['is_active'] ?? true,
-        ]);
+        $area = new Area();
+        $area->name = $validated['name'];
+        $area->description = $validated['description'] ?? null;
+        $area->garden_id = (int) $validated['garden_id'];
+        $area->type = AreaTypeEnum::from($validated['type']);
+        $area->size_sqm = $validated['size_sqm'] ?? null;
+        $area->coordinates = $coordinates;
+        $area->color = $validated['color'] ?? null;
+        $area->is_active = $validated['is_active'] ?? true;
+        $area->save();
 
         return redirect()
             ->route('areas.index')

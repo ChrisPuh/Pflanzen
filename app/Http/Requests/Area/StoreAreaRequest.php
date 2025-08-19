@@ -16,6 +16,15 @@ final class StoreAreaRequest extends FormRequest
         return true;
     }
 
+    protected function prepareForValidation(): void
+    {
+        \Log::info('StoreAreaRequest prepareForValidation called', $this->all());
+        
+        if ($this->filled('color') && $this->input('color') === '') {
+            $this->merge(['color' => null]);
+        }
+    }
+
     /**
      * @return array<string, mixed>
      */
@@ -24,13 +33,13 @@ final class StoreAreaRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string', 'max:1000'],
-            'garden_id' => ['required', 'integer', 'exists:gardens,id'],
-            'type' => ['required', Rule::enum(AreaTypeEnum::class)],
+            'garden_id' => ['required', 'numeric', 'exists:gardens,id'],
+            'type' => ['required', 'string', Rule::in(array_column(AreaTypeEnum::cases(), 'value'))],
             'size_sqm' => ['nullable', 'numeric', 'min:0', 'max:999999.99'],
             'coordinates_x' => ['nullable', 'numeric', 'min:-999999.99', 'max:999999.99'],
             'coordinates_y' => ['nullable', 'numeric', 'min:-999999.99', 'max:999999.99'],
             'color' => ['nullable', 'string', 'regex:/^#[0-9A-Fa-f]{6}$/'],
-            'is_active' => ['boolean'],
+            'is_active' => ['nullable', 'boolean'],
         ];
     }
 
@@ -44,8 +53,10 @@ final class StoreAreaRequest extends FormRequest
             'name.max' => 'Der Name darf maximal 255 Zeichen lang sein.',
             'description.max' => 'Die Beschreibung darf maximal 1000 Zeichen lang sein.',
             'garden_id.required' => 'Bitte wählen Sie einen Garten aus.',
+            'garden_id.numeric' => 'Die Garten-ID muss eine Zahl sein.',
             'garden_id.exists' => 'Der ausgewählte Garten existiert nicht.',
             'type.required' => 'Bitte wählen Sie einen Bereichstyp aus.',
+            'type.in' => 'Der ausgewählte Bereichstyp ist ungültig.',
             'size_sqm.numeric' => 'Die Größe muss eine Zahl sein.',
             'size_sqm.min' => 'Die Größe kann nicht negativ sein.',
             'size_sqm.max' => 'Die Größe ist zu groß.',
@@ -58,13 +69,18 @@ final class StoreAreaRequest extends FormRequest
     public function withValidator(\Illuminate\Contracts\Validation\Validator $validator): void
     {
         $validator->after(function (\Illuminate\Contracts\Validation\Validator $validator): void {
+            \Log::info('StoreAreaRequest withValidator called', ['errors' => $validator->errors()->toArray()]);
+            
             if ($this->filled('garden_id')) {
                 $garden = Garden::find($this->integer('garden_id'));
 
                 if ($garden && ! $this->user()->hasRole('admin') && $garden->user_id !== $this->user()->id) {
+                    \Log::info('Garden permission denied', ['garden_id' => $garden->id, 'user_id' => $this->user()->id, 'garden_user_id' => $garden->user_id]);
                     $validator->errors()->add('garden_id', 'Sie haben keine Berechtigung, Bereiche zu diesem Garten hinzuzufügen.');
                 }
             }
+            
+            \Log::info('StoreAreaRequest final validation errors', $validator->errors()->toArray());
         });
     }
 }

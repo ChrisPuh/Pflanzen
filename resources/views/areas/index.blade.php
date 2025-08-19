@@ -133,7 +133,8 @@
         @if($areas->count() > 0)
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 @foreach($areas as $area)
-                    <div 
+                    <a 
+                        href="{{ route('areas.show', $area) }}" 
                         class="bg-card rounded-xl border border-border overflow-hidden shadow-sm hover:shadow-md transition-all group cursor-pointer transform hover:scale-[1.02] relative"
                     >
                         <!-- Area Header with Color -->
@@ -242,7 +243,7 @@
                                 </span>
                             </div>
                         </div>
-                    </div>
+                    </a>
                 @endforeach
             </div>
 

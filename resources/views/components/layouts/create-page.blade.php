@@ -5,6 +5,7 @@
     'method' => 'POST',
     'cancelRoute' => null,
     'maxWidth' => 'max-w-2xl',
+    'submitText' => 'Speichern',
 ])
 
 <x-layouts.page :title="$title" :subtitle="$subtitle">
@@ -28,7 +29,7 @@
                         type="submit" 
                         class="px-6 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 focus:ring-2 focus:ring-primary focus:ring-offset-2 transition-colors font-medium"
                     >
-                        {{ $submitText ?? 'Speichern' }}
+                        {{ $submitText }}
                     </button>
                     <a 
                         href="{{ $cancelRoute ?? url()->previous() }}" 

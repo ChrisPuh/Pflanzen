@@ -26,17 +26,10 @@
             <option value="">{{ $placeholder }}</option>
         @endif
         
-        @foreach($options as $option)
-            @if(is_array($option))
-                <option value="{{ $option['value'] ?? $option['id'] }}" 
-                        {{ $selected == ($option['value'] ?? $option['id']) ? 'selected' : '' }}>
-                    {{ $option['label'] ?? $option['name'] ?? $option['text'] }}
-                </option>
-            @else
-                <option value="{{ $option }}" {{ $selected == $option ? 'selected' : '' }}>
-                    {{ $option }}
-                </option>
-            @endif
+        @foreach($options as $value => $label)
+            <option value="{{ $value }}" {{ $selected == $value ? 'selected' : '' }}>
+                {{ $label }}
+            </option>
         @endforeach
     </select>
 </div>
