@@ -36,6 +36,61 @@ namespace App\Models{
 namespace App\Models{
 /**
  * @property int $id
+ * @property int $user_id
+ * @property string $name
+ * @property GardenTypeEnum $type
+ * @property string|null $location
+ * @property float|null $size_sqm
+ * @property string|null $description
+ * @property array|null $coordinates
+ * @property string|null $postal_code
+ * @property string|null $city
+ * @property string $country
+ * @property bool $is_active
+ * @property Carbon|null $established_at
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
+ * @property-read User $user
+ * @property-read Plant[] $plants
+ * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @property-read int|null $age_in_years
+ * @property-read string $formatted_size
+ * @property-read string $full_location
+ * @property-read int|null $plants_count
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Garden active()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Garden byLocation(string $location)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Garden byType(\App\Enums\Garden\GardenTypeEnum $type)
+ * @method static \Database\Factories\GardenFactory factory($count = null, $state = [])
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Garden forUser(\App\Models\User $user)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Garden newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Garden newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Garden onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Garden query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Garden whereCity($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Garden whereCoordinates($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Garden whereCountry($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Garden whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Garden whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Garden whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Garden whereEstablishedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Garden whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Garden whereIsActive($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Garden whereLocation($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Garden whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Garden wherePostalCode($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Garden whereSizeSqm($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Garden whereType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Garden whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Garden whereUserId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Garden withTrashed(bool $withTrashed = true)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Garden withoutTrashed()
+ */
+	final class Garden extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * @property int $id
  * @property string $name
  * @property string|null $latin_name
  * @property string|null $description
@@ -92,6 +147,8 @@ namespace App\Models{
  * @property string|null $remember_token
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Garden> $gardens
+ * @property-read int|null $gardens_count
  * @property-read \Illuminate\Notifications\DatabaseNotificationCollection<int, \Illuminate\Notifications\DatabaseNotification> $notifications
  * @property-read int|null $notifications_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \Spatie\Permission\Models\Permission> $permissions

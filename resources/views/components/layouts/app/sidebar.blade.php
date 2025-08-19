@@ -1,5 +1,5 @@
             <aside :class="{ 'w-full md:w-64': sidebarOpen, 'w-0 md:w-16 hidden md:block': !sidebarOpen }"
-                class="bg-sidebar text-sidebar-foreground border-r border-gray-200 dark:border-gray-700 sidebar-transition overflow-hidden">
+                class="bg-surface-2 text-foreground border-r border-default sidebar-transition overflow-hidden">
                 <!-- Sidebar Content -->
                 <div class="h-full flex flex-col">
                     <!-- Sidebar Menu -->
@@ -12,6 +12,12 @@
                             <!-- Plants -->
                             <x-layouts.sidebar-link href="{{ route('plants.index') }}" icon='fas-seedling'
                                 :active="request()->routeIs('plants*')">Pflanzen entdecken</x-layouts.sidebar-link>
+
+                            <!-- Gardens -->
+                            @can('viewAny', App\Models\Garden::class)
+                                <x-layouts.sidebar-link href="{{ route('gardens.index') }}" icon='fas-tree'
+                                    :active="request()->routeIs('gardens*')">Meine Gärten</x-layouts.sidebar-link>
+                            @endcan
 
                             <!-- Settings -->
                             <x-layouts.sidebar-two-level-link-parent title="Settings" icon="fas-gear"
