@@ -17,18 +17,18 @@
                 </svg>
                 Zurück zur Übersicht
             </a>
-            
-            @include('gardens.partials._actions')
+
+            @include('gardens.partials.show._actions')
         </div>
     </x-slot:actions>
 
     <div class="space-y-8">
-        @include('gardens.partials._header')
-        
-        @include('gardens.partials._details')
-        
-        @include('gardens.partials._areas')
-        
-        @include('gardens.partials._plants')
+        @include('gardens.partials.show._header')
+
+        @include('gardens.partials.show._details')
+
+        @include('gardens.partials.show._areas')
+
+        @include('gardens.partials.show._plants')
     </div>
 </x-layouts.page>
