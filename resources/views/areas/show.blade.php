@@ -182,31 +182,165 @@
 
                 <!-- Plants in Area -->
                 <div class="bg-card rounded-xl border border-border p-6 shadow-sm">
-                    <h3 class="text-lg font-semibold text-foreground mb-4">Pflanzen in diesem Bereich</h3>
-                    @if($area->plants->count() > 0)
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            @foreach($area->plants as $plant)
-                                <div class="flex items-center p-3 bg-secondary/50 rounded-lg">
-                                    <div class="flex-shrink-0">
-                                        <div class="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
-                                            <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zM21 5a2 2 0 00-2-2h-4a2 2 0 00-2 2v6.5l3 3V21a2 2 0 002-2V5z"></path>
-                                            </svg>
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-semibold text-foreground">Pflanzen in diesem Bereich</h3>
+                        @can('update', $area)
+                            <button 
+                                onclick="toggleAddPlantForm()"
+                                class="inline-flex items-center px-3 py-2 text-sm font-medium text-primary bg-primary/10 rounded-lg hover:bg-primary/20 transition-colors"
+                            >
+                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                                </svg>
+                                Pflanzen hinzufügen
+                            </button>
+                        @endcan
+                    </div>
+
+                    <!-- Add Plant Form -->
+                    @can('update', $area)
+                        <div id="add-plant-form" class="hidden mb-6 p-4 bg-secondary/30 rounded-lg border border-border/50">
+                            <form method="POST" action="{{ route('areas.plants.store', $area) }}" class="space-y-4">
+                                @csrf
+                                
+                                <div id="plants-container">
+                                    <div class="plant-entry space-y-3 p-4 bg-card rounded-lg border border-border/50">
+                                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                            <div>
+                                                <label for="plants[0][plant_id]" class="block text-sm font-medium text-foreground mb-1">
+                                                    Pflanze
+                                                </label>
+                                                <select 
+                                                    name="plants[0][plant_id]" 
+                                                    id="plants[0][plant_id]"
+                                                    class="w-full px-3 py-2 border border-border rounded-lg bg-card text-foreground focus:ring-2 focus:ring-primary focus:border-primary"
+                                                    required
+                                                >
+                                                    <option value="">Pflanze auswählen...</option>
+                                                    @foreach($availablePlants as $plant)
+                                                        <option value="{{ $plant->id }}">
+                                                            {{ $plant->name }}@if($plant->latin_name) ({{ $plant->latin_name }})@endif
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                            
+                                            <div>
+                                                <label for="plants[0][quantity]" class="block text-sm font-medium text-foreground mb-1">
+                                                    Anzahl
+                                                </label>
+                                                <input 
+                                                    type="number" 
+                                                    name="plants[0][quantity]" 
+                                                    id="plants[0][quantity]"
+                                                    min="1" 
+                                                    max="9999" 
+                                                    value="1"
+                                                    class="w-full px-3 py-2 border border-border rounded-lg bg-card text-foreground focus:ring-2 focus:ring-primary focus:border-primary"
+                                                    required
+                                                >
+                                            </div>
+                                            
+                                            <div>
+                                                <label for="plants[0][notes]" class="block text-sm font-medium text-foreground mb-1">
+                                                    Notizen (optional)
+                                                </label>
+                                                <input 
+                                                    type="text" 
+                                                    name="plants[0][notes]" 
+                                                    id="plants[0][notes]"
+                                                    maxlength="500"
+                                                    placeholder="z.B. Position, Besonderheiten..."
+                                                    class="w-full px-3 py-2 border border-border rounded-lg bg-card text-foreground focus:ring-2 focus:ring-primary focus:border-primary"
+                                                >
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="ml-3 flex-1">
-                                        <p class="text-sm font-medium text-foreground">{{ $plant->name }}</p>
-                                        @if($plant->latin_name)
-                                            <p class="text-xs text-muted-foreground italic">{{ $plant->latin_name }}</p>
-                                        @endif
+                                </div>
+                                
+                                <div class="flex items-center gap-3">
+                                    <button 
+                                        type="button" 
+                                        onclick="addPlantEntry()"
+                                        class="inline-flex items-center px-3 py-2 text-sm font-medium text-muted-foreground bg-secondary rounded-lg hover:bg-secondary/80 transition-colors"
+                                    >
+                                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                                        </svg>
+                                        Weitere Pflanze hinzufügen
+                                    </button>
+                                </div>
+                                
+                                <div class="flex items-center gap-3 pt-2 border-t border-border/50">
+                                    <button 
+                                        type="submit"
+                                        class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-primary rounded-lg hover:bg-primary/90 focus:ring-2 focus:ring-primary focus:ring-offset-2 transition-colors"
+                                    >
+                                        Pflanzen hinzufügen
+                                    </button>
+                                    <button 
+                                        type="button" 
+                                        onclick="toggleAddPlantForm()"
+                                        class="inline-flex items-center px-4 py-2 text-sm font-medium text-muted-foreground bg-secondary rounded-lg hover:bg-secondary/80 transition-colors"
+                                    >
+                                        Abbrechen
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    @endcan
+
+                    @if($area->plants->count() > 0)
+                        <div class="space-y-3">
+                            @foreach($area->plants as $plant)
+                                <div class="flex items-center justify-between p-4 bg-secondary/50 rounded-lg">
+                                    <div class="flex items-center">
+                                        <div class="flex-shrink-0">
+                                            <div class="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
+                                                <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zM21 5a2 2 0 00-2-2h-4a2 2 0 00-2 2v6.5l3 3V21a2 2 0 002-2V5z"></path>
+                                                </svg>
+                                            </div>
+                                        </div>
+                                        <div class="ml-3 flex-1">
+                                            <div class="flex items-center gap-2">
+                                                <p class="text-sm font-medium text-foreground">{{ $plant->name }}</p>
+                                                <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-primary/10 text-primary">
+                                                    {{ $plant->pivot->quantity }}x
+                                                </span>
+                                            </div>
+                                            @if($plant->latin_name)
+                                                <p class="text-xs text-muted-foreground italic">{{ $plant->latin_name }}</p>
+                                            @endif
+                                            @if($plant->pivot->notes)
+                                                <p class="text-xs text-muted-foreground mt-1">{{ $plant->pivot->notes }}</p>
+                                            @endif
+                                            @if($plant->pivot->planted_at)
+                                                <p class="text-xs text-muted-foreground">
+                                                    Hinzugefügt: {{ \Carbon\Carbon::parse($plant->pivot->planted_at)->format('d.m.Y') }}
+                                                </p>
+                                            @endif
+                                        </div>
                                     </div>
-                                    <div class="ml-3">
+                                    <div class="flex items-center gap-2">
                                         <a 
                                             href="{{ route('plants.show', $plant) }}" 
                                             class="text-primary hover:text-primary/80 text-sm font-medium"
                                         >
-                                            Anzeigen →
+                                            Anzeigen
                                         </a>
+                                        @can('update', $area)
+                                            <button 
+                                                onclick="if(confirm('Möchtest du {{ json_encode($plant->name) }} ({{ $plant->pivot->quantity }}x) wirklich aus diesem Bereich entfernen?')) { document.getElementById('remove-plant-{{ $plant->id }}').submit(); }"
+                                                class="text-red-600 hover:text-red-700 text-sm font-medium"
+                                            >
+                                                Entfernen
+                                            </button>
+                                            <form id="remove-plant-{{ $plant->id }}" method="POST" action="{{ route('areas.plants.destroy', [$area, $plant]) }}" class="hidden">
+                                                @csrf
+                                                @method('DELETE')
+                                            </form>
+                                        @endcan
                                     </div>
                                 </div>
                             @endforeach
@@ -217,16 +351,121 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zM21 5a2 2 0 00-2-2h-4a2 2 0 00-2 2v6.5l3 3V21a2 2 0 002-2V5z"></path>
                             </svg>
                             <p class="text-muted-foreground text-sm">Noch keine Pflanzen in diesem Bereich</p>
-                            <a 
-                                href="{{ route('plants.index') }}" 
-                                class="text-primary hover:text-primary/80 text-sm font-medium mt-2 inline-block"
-                            >
-                                Pflanzen durchstöbern →
-                            </a>
+                            @can('update', $area)
+                                <button 
+                                    onclick="toggleAddPlantForm()"
+                                    class="text-primary hover:text-primary/80 text-sm font-medium mt-2 inline-block"
+                                >
+                                    Pflanzen hinzufügen →
+                                </button>
+                            @else
+                                <a 
+                                    href="{{ route('plants.index') }}" 
+                                    class="text-primary hover:text-primary/80 text-sm font-medium mt-2 inline-block"
+                                >
+                                    Pflanzen durchstöbern →
+                                </a>
+                            @endcan
                         </div>
                     @endif
                 </div>
             </div>
         </div>
     </div>
+
+    <script>
+        let plantEntryCount = 1;
+        
+        function toggleAddPlantForm() {
+            const form = document.getElementById('add-plant-form');
+            if (form.classList.contains('hidden')) {
+                form.classList.remove('hidden');
+            } else {
+                form.classList.add('hidden');
+            }
+        }
+        
+        function addPlantEntry() {
+            const container = document.getElementById('plants-container');
+            const newEntry = createPlantEntry(plantEntryCount);
+            container.appendChild(newEntry);
+            plantEntryCount++;
+        }
+        
+        function createPlantEntry(index) {
+            const entry = document.createElement('div');
+            entry.className = 'plant-entry space-y-3 p-4 bg-card rounded-lg border border-border/50 relative';
+            
+            entry.innerHTML = `
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                        <label for="plants[${index}][plant_id]" class="block text-sm font-medium text-foreground mb-1">
+                            Pflanze
+                        </label>
+                        <select 
+                            name="plants[${index}][plant_id]" 
+                            id="plants[${index}][plant_id]"
+                            class="w-full px-3 py-2 border border-border rounded-lg bg-card text-foreground focus:ring-2 focus:ring-primary focus:border-primary"
+                            required
+                        >
+                            <option value="">Pflanze auswählen...</option>
+                            @foreach($availablePlants as $plant)
+                                <option value="{{ $plant->id }}">
+                                    {{ $plant->name }}@if($plant->latin_name) ({{ $plant->latin_name }})@endif
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label for="plants[${index}][quantity]" class="block text-sm font-medium text-foreground mb-1">
+                            Anzahl
+                        </label>
+                        <input 
+                            type="number" 
+                            name="plants[${index}][quantity]" 
+                            id="plants[${index}][quantity]"
+                            min="1" 
+                            max="9999" 
+                            value="1"
+                            class="w-full px-3 py-2 border border-border rounded-lg bg-card text-foreground focus:ring-2 focus:ring-primary focus:border-primary"
+                            required
+                        >
+                    </div>
+                    
+                    <div>
+                        <label for="plants[${index}][notes]" class="block text-sm font-medium text-foreground mb-1">
+                            Notizen (optional)
+                        </label>
+                        <input 
+                            type="text" 
+                            name="plants[${index}][notes]" 
+                            id="plants[${index}][notes]"
+                            maxlength="500"
+                            placeholder="z.B. Position, Besonderheiten..."
+                            class="w-full px-3 py-2 border border-border rounded-lg bg-card text-foreground focus:ring-2 focus:ring-primary focus:border-primary"
+                        >
+                    </div>
+                </div>
+                ${index > 0 ? `
+                    <button 
+                        type="button" 
+                        onclick="removePlantEntry(this)" 
+                        class="absolute top-2 right-2 text-red-600 hover:text-red-700 p-1"
+                        title="Eintrag entfernen"
+                    >
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                ` : ''}
+            `;
+            
+            return entry;
+        }
+        
+        function removePlantEntry(button) {
+            button.closest('.plant-entry').remove();
+        }
+    </script>
 </x-layouts.page>

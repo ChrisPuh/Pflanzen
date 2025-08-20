@@ -73,7 +73,7 @@ final class Area extends Model
     public function plants(): BelongsToMany
     {
         return $this->belongsToMany(Plant::class)
-            ->withPivot(['planted_at', 'notes'])
+            ->withPivot(['quantity', 'planted_at', 'notes'])
             ->withTimestamps();
     }
 

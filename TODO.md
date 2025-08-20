@@ -3,7 +3,7 @@ denke ans testen. generell gilt php 8.4 typesafety, laravel 12, nutze vorhandene
 
 ## Views
 
-- [ ] erstelle in index page layout (wie create) wovon alles index views nutzen haben. die filter section sollte aus page raus (andere benötigen das ja nicht)und füge es dort ein. denke das gleiche auch für stats, auch das results feld sollte extrahiert werden und darein
+- [x] erstelle in index page layout (wie create) wovon alles index views nutzen haben. die filter section sollte aus page raus (andere benötigen das ja nicht)und füge es dort ein. denke das gleiche auch für stats, auch das results feld sollte extrahiert werden und darein
 - [ ] die sidebar hat alle links einfach untereinander stehen. bitte sections machen für alles was da rein gehört
 
 
