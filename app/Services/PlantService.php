@@ -88,6 +88,60 @@ final class PlantService
     }
 
     /**
+     * Get all data needed for plants index page.
+     *
+     * @param  array<string, mixed>  $filters
+     * @return array<string, mixed>
+     */
+    public function getIndexData(array $filters): array
+    {
+        $search = $filters['search'] ?? null;
+        $type = $filters['type'] ?? null;
+        $categories = $filters['categories'] ?? [];
+
+        $plants = $this->getFilteredPlants(
+            search: $search,
+            type: $type,
+            categories: $categories
+        );
+
+        $plantTypes = $this->getAvailablePlantTypes();
+        $plantCategories = $this->getAvailablePlantCategories();
+
+        // Format plant types for select component
+        $plantTypesOptions = collect($plantTypes)->mapWithKeys(fn (PlantTypeEnum $plantType): array => [$plantType->value => $plantType->getLabel()]);
+
+        // Format plant categories for checkbox options
+        $plantCategoriesOptions = collect($plantCategories)->mapWithKeys(fn (PlantCategoryEnum $category): array => [$category->value => $category->getLabel()]);
+
+        return [
+            'plants' => $plants,
+            'search' => $search,
+            'selectedType' => $type,
+            'selectedCategories' => $categories,
+            'plantTypesOptions' => $plantTypesOptions,
+            'plantCategoriesOptions' => $plantCategoriesOptions,
+            'stats' => $this->getPlantStatistics(),
+        ];
+    }
+
+    /**
+     * Get all data needed for plant show page.
+     *
+     * @return array<string, mixed>
+     */
+    public function getShowData(Plant $plant): array
+    {
+        $plantWithRelations = $this->getPlantForDisplay($plant);
+        $relatedPlants = $this->getRelatedPlants($plant);
+
+        return [
+            'plant' => $plantWithRelations,
+            'relatedPlants' => $relatedPlants,
+        ];
+    }
+
+    /**
      * Get plant statistics for the index page.
      *
      * @return array{total: int, by_type: array<string, int>, by_category: array<string, int>}

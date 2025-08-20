@@ -17,38 +17,15 @@ final class PlantsIndexController extends Controller
 
     public function __invoke(PlantsIndexRequest $request): View
     {
-        $search = $request->getSearch();
-        $type = $request->getType();
-        $categories = $request->getCategories();
+        // Extract filters from request
+        $filters = [
+            'search' => $request->getSearch(),
+            'type' => $request->getType(),
+            'categories' => $request->getCategories(),
+        ];
 
-        $plants = $this->plantService->getFilteredPlants(
-            search: $search,
-            type: $type,
-            categories: $categories
-        );
+        $indexData = $this->plantService->getIndexData($filters);
 
-        $plantTypes = $this->plantService->getAvailablePlantTypes();
-        $plantCategories = $this->plantService->getAvailablePlantCategories();
-
-        // Format plant types for select component
-        $plantTypesOptions = collect($plantTypes)->mapWithKeys(function ($plantType) {
-            return [$plantType->value => $plantType->getLabel()];
-        });
-
-        // Format plant categories for checkbox options
-        $plantCategoriesOptions = collect($plantCategories)->mapWithKeys(function ($category) {
-            return [$category->value => $category->getLabel()];
-        });
-
-        return view('plants.index', [
-            'plants' => $plants,
-            'search' => $search,
-            'selectedType' => $type,
-            'selectedCategories' => $categories,
-            'plantTypesOptions' => $plantTypesOptions,
-            'plantCategoriesOptions' => $plantCategoriesOptions,
-            // Statistics for the layout
-            'stats' => $this->plantService->getPlantStatistics(),
-        ]);
+        return view('plants.index', $indexData);
     }
 }

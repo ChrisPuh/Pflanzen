@@ -30,18 +30,15 @@ final class GardensIndexController extends Controller
         ['user' => $user, 'isAdmin' => $isAdmin] = $this->getUserAndAdminStatus();
 
         // Get all data from service in one call
-        $data = $this->gardenService->getGardensIndexData(
+        $indexData = $this->gardenService->getGardensIndexData(
             user: $user,
             isAdmin: $isAdmin,
             perPage: 12
         );
 
-        return view('gardens.index', [
-            'gardens' => $data['gardens'],
-            'stats' => $data['stats'],
-            'hasArchivedGardens' => $data['hasArchivedGardens'],
-            'isAdmin' => $isAdmin,
-        ]);
+        $indexData['isAdmin'] = $isAdmin;
+
+        return view('gardens.index', $indexData);
     }
 
     /**
@@ -53,14 +50,8 @@ final class GardensIndexController extends Controller
 
         ['user' => $user, 'isAdmin' => $isAdmin] = $this->getUserAndAdminStatus();
 
-        $archivedGardens = $this->gardenService->getArchivedGardensForUser(
-            user: $user,
-            isAdmin: $isAdmin
-        );
+        $archivedData = $this->gardenService->getArchivedData($user, $isAdmin);
 
-        return view('gardens.archived', [
-            'gardens' => $archivedGardens,
-            'isAdmin' => $isAdmin,
-        ]);
+        return view('gardens.archived', $archivedData);
     }
 }

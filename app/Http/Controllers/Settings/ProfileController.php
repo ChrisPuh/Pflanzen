@@ -5,15 +5,17 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Settings;
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
+use App\Http\Requests\Settings\ProfileUpdateRequest;
+use App\Services\UserService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
 final class ProfileController extends Controller
 {
+    public function __construct(private readonly UserService $userService) {}
+
     public function edit(Request $request): View
     {
         return view('settings.profile', [
@@ -21,29 +23,9 @@ final class ProfileController extends Controller
         ]);
     }
 
-    public function update(Request $request): RedirectResponse
+    public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-        $user = $request->user();
-
-        $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => [
-                'required',
-                'string',
-                'lowercase',
-                'email',
-                'max:255',
-                Rule::unique(User::class)->ignore($user->id),
-            ],
-        ]);
-
-        $user->fill($validated);
-
-        if ($user->isDirty('email')) {
-            $user->email_verified_at = null;
-        }
-
-        $user->save();
+        $this->userService->updateProfile($request->user(), $request->validated());
 
         return to_route('settings.profile.edit')->with('status', __('Profile updated successfully'));
     }
@@ -54,7 +36,7 @@ final class ProfileController extends Controller
 
         Auth::logout();
 
-        $user->delete();
+        $this->userService->deleteAccount($user);
 
         $request->session()->invalidate();
         $request->session()->regenerateToken();

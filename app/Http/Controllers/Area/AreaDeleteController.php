@@ -6,11 +6,14 @@ namespace App\Http\Controllers\Area;
 
 use App\Http\Controllers\Controller;
 use App\Models\Area;
+use App\Services\AreaService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Gate;
 
 final class AreaDeleteController extends Controller
 {
+    public function __construct(private readonly AreaService $areaService) {}
+
     /**
      * Soft delete the specified area.
      */
@@ -18,15 +21,11 @@ final class AreaDeleteController extends Controller
     {
         Gate::authorize('delete', $area);
 
-        // Store area name for success message
-        $areaName = $area->name;
-
-        // Soft delete the area
-        $area->delete();
+        $this->areaService->archiveArea($area);
 
         return redirect()
             ->route('areas.index')
-            ->with('success', "Bereich '{$areaName}' wurde erfolgreich gelöscht.");
+            ->with('success', "Bereich '{$area->name}' wurde erfolgreich gelöscht.");
     }
 
     /**
@@ -38,7 +37,7 @@ final class AreaDeleteController extends Controller
 
         Gate::authorize('restore', $area);
 
-        $area->restore();
+        $this->areaService->restoreArea($area);
 
         return redirect()
             ->route('areas.show', $area)
@@ -56,8 +55,7 @@ final class AreaDeleteController extends Controller
 
         $areaName = $area->name;
 
-        // Permanently delete the area
-        $area->forceDelete();
+        $this->areaService->forceDeleteArea($area);
 
         return redirect()
             ->route('areas.index')

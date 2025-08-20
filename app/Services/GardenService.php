@@ -203,6 +203,60 @@ final class GardenService
     }
 
     /**
+     * Get all data needed for garden create form.
+     *
+     * @return array<string, mixed>
+     */
+    public function getCreateData(): array
+    {
+        return [
+            'gardenTypes' => $this->getAvailableGardenTypes(),
+        ];
+    }
+
+    /**
+     * Get all data needed for garden edit form.
+     *
+     * @return array<string, mixed>
+     */
+    public function getEditData(Garden $garden): array
+    {
+        return [
+            'garden' => $garden,
+            'gardenTypes' => $this->getAvailableGardenTypes(),
+        ];
+    }
+
+    /**
+     * Get all data needed for garden show page.
+     *
+     * @return array<string, mixed>
+     */
+    public function getShowData(Garden $garden): array
+    {
+        $garden->load(['user', 'areas.plants']);
+
+        return [
+            'garden' => $garden,
+        ];
+    }
+
+    /**
+     * Get all data needed for gardens archived page.
+     *
+     * @return array<string, mixed>
+     */
+    public function getArchivedData(User $user, bool $isAdmin = false): array
+    {
+        $archivedGardens = $this->getArchivedGardensForUser($user, $isAdmin);
+
+        return [
+            'gardens' => $archivedGardens,
+            'isAdmin' => $isAdmin,
+        ];
+    }
+
+    /**
      * Get recently active gardens for a user.
      *
      * @return \Illuminate\Database\Eloquent\Collection<int, Garden>

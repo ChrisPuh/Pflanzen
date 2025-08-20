@@ -26,12 +26,9 @@ final class GardenEditController extends Controller
     {
         Gate::authorize('update', $garden);
 
-        $gardenTypes = $this->gardenService->getAvailableGardenTypes();
+        $editData = $this->gardenService->getEditData($garden);
 
-        return view('gardens.edit', [
-            'garden' => $garden,
-            'gardenTypes' => $gardenTypes,
-        ]);
+        return view('gardens.edit', $editData);
     }
 
     /**

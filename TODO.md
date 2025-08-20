@@ -32,5 +32,5 @@ denke ans testen. generell gilt php 8.4 typesafety, laravel 12, nutze vorhandene
 
 ## Controller
 
-- [ ] kontroller sollen schlank sein. überprüfe bitte ob alle kontroller eine request und service benutzen 
-- [ ] kontrolliere dass alle controller die einen authenticated user nutzen den authenticated controller extenden
+- [x] kontroller sollen schlank sein. überprüfe bitte ob alle kontroller eine request und service benutzen 
+- [x] kontrolliere dass alle controller die einen authenticated user nutzen den authenticated controller extenden

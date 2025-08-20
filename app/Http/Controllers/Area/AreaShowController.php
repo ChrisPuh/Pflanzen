@@ -6,25 +6,24 @@ namespace App\Http\Controllers\Area;
 
 use App\Http\Controllers\Controller;
 use App\Models\Area;
+use App\Services\AreaService;
 use App\Traits\AuthenticatedUser;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 final class AreaShowController extends Controller
 {
     use AuthenticatedUser;
 
+    public function __construct(private readonly AreaService $areaService) {}
+
     public function __invoke(Request $request, Area $area): View
     {
-        ['user' => $user, 'isAdmin' => $isAdmin] = $this->getUserAndAdminStatus();
+        Gate::authorize('view', $area);
 
-        // Check access permissions
-        if (! $isAdmin && $area->garden->user_id !== $user->id) {
-            abort(403, 'Sie haben keine Berechtigung, diesen Bereich anzuzeigen.');
-        }
+        $showData = $this->areaService->getShowData($area);
 
-        $area->load(['garden', 'plants']);
-
-        return view('areas.show', ['area' => $area]);
+        return view('areas.show', $showData);
     }
 }

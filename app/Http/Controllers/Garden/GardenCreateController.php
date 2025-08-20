@@ -28,11 +28,9 @@ final class GardenCreateController extends Controller
     {
         Gate::authorize('create', Garden::class);
 
-        $gardenTypes = $this->gardenService->getAvailableGardenTypes();
+        $createData = $this->gardenService->getCreateData();
 
-        return view('gardens.create', [
-            'gardenTypes' => $gardenTypes,
-        ]);
+        return view('gardens.create', $createData);
     }
 
     /**
