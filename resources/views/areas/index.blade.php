@@ -1,4 +1,4 @@
-<x-layouts.page
+<x-layouts.index
     title="{{ $isAdmin ? 'Alle Bereiche' : 'Meine Bereiche' }}"
     subtitle="{{ $isAdmin ? 'Übersicht aller Bereiche im System' : 'Verwalte deine Gartenbereiche' }}"
 >
@@ -38,7 +38,6 @@
             ]
         ]" />
     </x-slot:stats>
-
     <x-slot:filters>
         <x-filter-card action="{{ route('areas.index') }}">
             <!-- Search Bar -->
@@ -133,26 +132,8 @@
     @if($areas->count() > 0)
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             @foreach($areas as $area)
-                <a
-                    href="{{ route('areas.show', $area) }}"
-                    class="bg-card rounded-xl border border-border overflow-hidden shadow-sm hover:shadow-md transition-all group cursor-pointer transform hover:scale-[1.02] relative"
-                >
-                    <!-- Edit Button -->
-                    @can('update', $area)
-                        <div
-                            class="absolute top-2 right-2 z-10 opacity-0 group-hover:opacity-100 transition-opacity">
-                            <a
-                                href="{{ route('areas.edit', $area) }}"
-                                class="inline-flex items-center justify-center w-8 h-8 bg-white/90 dark:bg-gray-900/90 rounded-full hover:bg-white dark:hover:bg-gray-900 transition-colors shadow-sm"
-                                title="Bereich bearbeiten"
-                                onclick="event.stopPropagation()"
-                            >
-                                <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
-                                </svg>
-                            </a>
-                        </div>
-                    @endcan
+                <div class="bg-card rounded-xl border border-border overflow-hidden shadow-sm hover:shadow-md transition-all group transform hover:scale-[1.02] relative">
+                    <a href="{{ route('areas.show', $area) }}" class="block">
                     <!-- Area Header with Color -->
                     <div
                         class="aspect-video bg-gradient-to-br from-primary/10 to-primary/20 flex items-center justify-center relative"
@@ -172,7 +153,7 @@
 
                         <!-- Position Indicator -->
                         @if($area->hasCoordinates())
-                            <div class="absolute top-3 right-3">
+                            <div class="absolute bottom-3 right-3">
                                 <div class="bg-white/90 dark:bg-gray-900/90 rounded-full p-1.5">
                                     <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor"
                                          viewBox="0 0 24 24">
@@ -186,8 +167,9 @@
                         @endif
 
                         <div class="text-center">
-                            <svg class="h-12 w-12 text-primary/60 group-hover:text-primary transition-colors mx-auto"
-                                 fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg
+                                class="h-12 w-12 text-primary/60 group-hover:text-primary transition-colors mx-auto"
+                                fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
                                       d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
                             </svg>
@@ -218,11 +200,13 @@
 
                         <!-- Garden Link -->
                         <div class="flex items-center gap-1 text-sm text-muted-foreground">
-                            <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor"
+                                 viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                       d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
                             </svg>
-                            <span class="truncate hover:text-primary transition-colors">{{ $area->garden->name }}</span>
+                            <span
+                                class="truncate hover:text-primary transition-colors">{{ $area->garden->name }}</span>
                         </div>
 
                         <!-- Description -->
@@ -274,7 +258,41 @@
                                 </span>
                         </div>
                     </div>
-                </a>
+                    </a>
+
+                    <!-- Action Buttons -->
+                    <div class="absolute top-3 right-3 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                        @can('update', $area)
+                            <a
+                                href="{{ route('areas.edit', $area) }}"
+                                onclick="event.stopPropagation();"
+                                class="inline-flex items-center p-2 text-white bg-primary rounded-lg hover:bg-primary/90 focus:ring-2 focus:ring-primary focus:ring-offset-2 transition-colors shadow-sm"
+                                title="Bearbeiten"
+                            >
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                                </svg>
+                            </a>
+                        @endcan
+
+                        @can('delete', $area)
+                            <button
+                                onclick="event.stopPropagation(); if(confirm('Möchtest du den Bereich {{ json_encode($area->name) }} wirklich löschen? Er kann später wiederhergestellt werden.')) { document.getElementById('delete-area-form-{{ $area->id }}').submit(); }"
+                                class="inline-flex items-center p-2 text-white bg-red-600 rounded-lg hover:bg-red-700 focus:ring-2 focus:ring-red-600 focus:ring-offset-2 transition-colors shadow-sm"
+                                title="Löschen"
+                            >
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                </svg>
+                            </button>
+
+                            <form id="delete-area-form-{{ $area->id }}" method="POST" action="{{ route('areas.destroy', $area) }}" class="hidden">
+                                @csrf
+                                @method('DELETE')
+                            </form>
+                        @endcan
+                    </div>
+                </div>
             @endforeach
         </div>
 
@@ -285,7 +303,6 @@
             </div>
         @endif
     @else
-        <!-- Empty State -->
         <div class="text-center py-16">
             <svg class="mx-auto h-24 w-24 text-muted-foreground/50" fill="none" stroke="currentColor"
                  viewBox="0 0 24 24">
@@ -295,7 +312,8 @@
             <h3 class="text-lg font-medium text-foreground mt-4">Keine Bereiche gefunden</h3>
             <p class="text-muted-foreground mt-2">
                 @if(request()->hasAny(['search', 'garden_id', 'type', 'category', 'active']))
-                    Keine Bereiche entsprechen den gewählten Filtern. Versuche deine Suchkriterien zu ändern oder die Filter zurückzusetzen.
+                    Keine Bereiche entsprechen den gewählten Filtern. Versuche deine Suchkriterien zu ändern oder die
+                    Filter zurückzusetzen.
                 @else
                     Es sind noch keine Bereiche angelegt.
                 @endif
@@ -332,8 +350,9 @@
                 @endif
             </div>
         </div>
-        @endif
-        </div>
+    @endif
 
 
-</x-layouts.page>
+</x-layouts.index>
+<!-- Empty State -->
+

@@ -41,21 +41,6 @@
             </div>
         </div>
     </div>
-
-    <!-- Statistics Section -->
-    @if(isset($stats))
-        <div class="mb-6">
-            {{ $stats }}
-        </div>
-    @endif
-
-    <!-- Filter Section -->
-    @if(isset($filters))
-        <div class="mb-6">
-            {{ $filters }}
-        </div>
-    @endif
-
     <!-- Page Content -->
     <div>
         {{ $slot }}

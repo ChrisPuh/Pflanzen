@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Http\Controllers\Area\AreaCreateController;
+use App\Http\Controllers\Area\AreaDeleteController;
 use App\Http\Controllers\Area\AreaEditController;
 use App\Http\Controllers\Area\AreaShowController;
 use App\Http\Controllers\Area\AreasIndexController;
@@ -33,6 +34,9 @@ Route::post('areas', [AreaCreateController::class, 'store'])->middleware(['auth'
 Route::get('areas/{area}', AreaShowController::class)->middleware(['auth', 'verified'])->name('areas.show');
 Route::get('areas/{area}/edit', [AreaEditController::class, 'edit'])->middleware(['auth', 'verified'])->name('areas.edit');
 Route::put('areas/{area}', [AreaEditController::class, 'update'])->middleware(['auth', 'verified'])->name('areas.update');
+Route::delete('areas/{area}', [AreaDeleteController::class, 'destroy'])->middleware(['auth', 'verified'])->name('areas.destroy');
+Route::post('areas/{areaId}/restore', [AreaDeleteController::class, 'restore'])->middleware(['auth', 'verified'])->name('areas.restore');
+Route::delete('areas/{areaId}/force', [AreaDeleteController::class, 'forceDelete'])->middleware(['auth', 'verified'])->name('areas.force-delete');
 
 Route::get('gardens', GardensIndexController::class)->middleware(['auth', 'verified'])->name('gardens.index');
 Route::get('gardens/archived', [GardensIndexController::class, 'archived'])->middleware(['auth', 'verified'])->name('gardens.archived');
