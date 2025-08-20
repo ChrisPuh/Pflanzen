@@ -254,6 +254,11 @@ final class GardenService
             ->where('areas.garden_id', $garden->id)
             ->sum('area_plant.quantity');
 
+        // Add plant quantity for each area
+        $garden->areas->each(function (\App\Models\Area $area): void {
+            $area->plant_quantity = $area->plants()->sum('area_plant.quantity') ?: 0;
+        });
+
         return [
             'garden' => $garden,
             'areasStats' => [
