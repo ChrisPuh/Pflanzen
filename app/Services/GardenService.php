@@ -141,12 +141,14 @@ final class GardenService
             $totalAreas += $garden->areas->count();
             $activeAreas += $garden->areas->where('is_active', true)->count();
 
-            // Calculate plant quantity for this garden directly
+            // Calculate plant quantity for this garden directly and add it to the garden object
             $gardenPlantQuantity = \Illuminate\Support\Facades\DB::table('areas')
                 ->join('area_plant', 'areas.id', '=', 'area_plant.area_id')
                 ->where('areas.garden_id', $garden->id)
                 ->sum('area_plant.quantity');
-            $totalPlants += (int) $gardenPlantQuantity;
+
+            $garden->plant_count = (int) $gardenPlantQuantity;
+            $totalPlants += $garden->plant_count;
         }
 
         $stats = [
