@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Models\Area;
 use App\Models\Garden;
 use App\Models\Plant;
 use App\Models\User;
@@ -183,8 +184,9 @@ describe('GardenShowController Controller', function () {
                 'name' => 'Testpflanze 2',
             ]);
 
-            // Associate plants with garden
-            $this->garden->plants()->attach([$plant1->id, $plant2->id]);
+            // Create an area and associate plants with it
+            $area = Area::factory()->create(['garden_id' => $this->garden->id]);
+            $area->plants()->attach([$plant1->id, $plant2->id]);
 
             $response = $this->actingAs($this->user)->get(route('gardens.show', $this->garden));
 
@@ -205,7 +207,8 @@ describe('GardenShowController Controller', function () {
 
         it('includes plant links to show page', function () {
             $plant = Plant::factory()->create(['name' => 'Testpflanze']);
-            $this->garden->plants()->attach($plant->id);
+            $area = Area::factory()->create(['garden_id' => $this->garden->id]);
+            $area->plants()->attach($plant->id);
 
             $response = $this->actingAs($this->user)->get(route('gardens.show', $this->garden));
 
@@ -219,7 +222,8 @@ describe('GardenShowController Controller', function () {
     describe('View Data', function () {
         it('loads garden with relationships', function () {
             $plant = Plant::factory()->create();
-            $this->garden->plants()->attach($plant->id);
+            $area = Area::factory()->create(['garden_id' => $this->garden->id]);
+            $area->plants()->attach($plant->id);
 
             $response = $this->actingAs($this->user)->get(route('gardens.show', $this->garden));
 

@@ -100,14 +100,12 @@ namespace App\Models{
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property-read User $user
- * @property-read Plant[] $plants
  * @property-read Area[] $areas
  * @property \Illuminate\Support\Carbon|null $deleted_at
  * @property-read int|null $areas_count
  * @property-read int|null $age_in_years
  * @property-read string $formatted_size
  * @property-read string $full_location
- * @property-read int|null $plants_count
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Garden active()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Garden byLocation(string $location)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Garden byType(\App\Enums\Garden\GardenTypeEnum $type)
@@ -148,6 +146,8 @@ namespace App\Models{
  * @property int $plant_type_id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Area> $areas
+ * @property-read int|null $areas_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Category> $categories
  * @property-read int|null $categories_count
  * @property-read \App\Models\PlantType $plantType

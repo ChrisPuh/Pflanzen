@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Models\Area;
 use App\Models\Garden;
 use App\Models\Plant;
 use App\Models\User;
@@ -52,7 +53,7 @@ describe('GardenService', function () {
             $garden = $result->items()[0];
 
             expect($garden->relationLoaded('user'))->toBeTrue();
-            expect($garden->relationLoaded('plants'))->toBeTrue();
+            expect($garden->relationLoaded('areas'))->toBeTrue();
         });
 
         it('orders gardens by latest', function () {
@@ -84,14 +85,15 @@ describe('GardenService', function () {
     describe('getGardenForDisplay', function () {
         it('loads garden with relationships', function () {
             $garden = Garden::factory()->for($this->user)->create();
+            $area = Area::factory()->create(['garden_id' => $garden->id]);
             $plant = Plant::factory()->create();
-            $garden->plants()->attach($plant);
+            $area->plants()->attach($plant);
 
             $result = $this->service->getGardenForDisplay($garden);
 
             expect($result->relationLoaded('user'))->toBeTrue();
-            expect($result->relationLoaded('plants'))->toBeTrue();
-            expect($result->plants)->toHaveCount(1);
+            expect($result->relationLoaded('areas'))->toBeTrue();
+            expect($result->plants()->count())->toBe(1);
             expect($result->user->id)->toBe($this->user->id);
         });
     });
@@ -102,11 +104,12 @@ describe('GardenService', function () {
             Garden::factory()->for($this->user)->count(2)->create(['is_active' => true]);
             Garden::factory()->for($this->user)->count(1)->create(['is_active' => false]);
 
-            // Create plants and attach to gardens
+            // Create plants and attach to areas
             $garden1 = Garden::factory()->for($this->user)->create(['is_active' => true]);
+            $area1 = Area::factory()->create(['garden_id' => $garden1->id]);
             $plant1 = Plant::factory()->create();
             $plant2 = Plant::factory()->create();
-            $garden1->plants()->attach([$plant1->id, $plant2->id]);
+            $area1->plants()->attach([$plant1->id, $plant2->id]);
 
             // Create other user's gardens (should not be counted)
             Garden::factory()->count(2)->create();
@@ -189,14 +192,15 @@ describe('GardenService', function () {
             expect($result)->toHaveCount(3);
         });
 
-        it('loads plants relationship', function () {
+        it('loads areas relationship', function () {
             $garden = Garden::factory()->for($this->user)->create(['is_active' => true]);
+            $area = Area::factory()->create(['garden_id' => $garden->id]);
             $plant = Plant::factory()->create();
-            $garden->plants()->attach($plant);
+            $area->plants()->attach($plant);
 
             $result = $this->service->getRecentlyActiveGardens($this->user, 5);
 
-            expect($result->first()->relationLoaded('plants'))->toBeTrue();
+            expect($result->first()->relationLoaded('areas'))->toBeTrue();
         });
     });
 
@@ -256,13 +260,13 @@ describe('GardenService', function () {
             $inactiveGarden = Garden::factory()->for($this->user)->create(['is_active' => false]);
 
             // Add areas
-            $activeArea = App\Models\Area::factory()->for($activeGarden, 'garden')->create(['is_active' => true]);
-            $inactiveArea = App\Models\Area::factory()->for($inactiveGarden, 'garden')->create(['is_active' => false]);
+            $activeArea = Area::factory()->for($activeGarden, 'garden')->create(['is_active' => true]);
+            $inactiveArea = Area::factory()->for($inactiveGarden, 'garden')->create(['is_active' => false]);
 
-            // Add plants
+            // Add plants to active area
             $plant1 = Plant::factory()->create();
             $plant2 = Plant::factory()->create();
-            $activeGarden->plants()->attach([$plant1->id, $plant2->id]);
+            $activeArea->plants()->attach([$plant1->id, $plant2->id]);
 
             $result = $this->service->getGardensIndexData($this->user, false, 12);
             $stats = $result['stats'];
@@ -303,7 +307,6 @@ describe('GardenService', function () {
             $garden = $result['gardens']->items()[0];
 
             expect($garden->relationLoaded('user'))->toBeTrue();
-            expect($garden->relationLoaded('plants'))->toBeTrue();
             expect($garden->relationLoaded('areas'))->toBeTrue();
         });
     });
@@ -317,10 +320,11 @@ describe('GardenService', function () {
             // Create garden with size for largest garden test
             $largestGarden = Garden::factory()->for($this->user)->create(['size_sqm' => 100.5, 'is_active' => true]);
 
-            // Add plants to garden
+            // Add plants to garden through area
+            $area = Area::factory()->create(['garden_id' => $largestGarden->id]);
             $plant1 = Plant::factory()->create();
             $plant2 = Plant::factory()->create();
-            $largestGarden->plants()->attach([$plant1->id, $plant2->id]);
+            $area->plants()->attach([$plant1->id, $plant2->id]);
 
             $summary = $this->service->getDashboardSummary($this->user);
 
@@ -396,13 +400,14 @@ describe('GardenService', function () {
 
         it('loads relationships', function () {
             $garden = Garden::factory()->for($this->user)->create(['name' => 'Test Garden']);
+            $area = Area::factory()->create(['garden_id' => $garden->id]);
             $plant = Plant::factory()->create();
-            $garden->plants()->attach($plant);
+            $area->plants()->attach($plant);
 
             $result = $this->service->searchGardens($this->user, 'Test');
 
             expect($result->first()->relationLoaded('user'))->toBeTrue();
-            expect($result->first()->relationLoaded('plants'))->toBeTrue();
+            expect($result->first()->relationLoaded('areas'))->toBeTrue();
         });
 
         it('orders results by latest', function () {

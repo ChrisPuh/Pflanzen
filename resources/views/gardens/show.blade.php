@@ -392,9 +392,9 @@
                 <!-- Plants in Garden -->
                 <div class="bg-card rounded-xl border border-border p-6 shadow-sm">
                     <h3 class="text-lg font-semibold text-foreground mb-4">Pflanzen in diesem Garten</h3>
-                    @if($garden->plants->count() > 0)
+                    @if($garden->plants()->count() > 0)
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            @foreach($garden->plants as $plant)
+                            @foreach($garden->plants()->get() as $plant)
                                 <div class="flex items-center p-3 bg-secondary/50 rounded-lg">
                                     <div class="flex-shrink-0">
                                         <div

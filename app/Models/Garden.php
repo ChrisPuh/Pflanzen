@@ -12,7 +12,6 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -33,7 +32,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property-read User $user
- * @property-read Plant[] $plants
  * @property-read Area[] $areas
  */
 final class Garden extends Model
@@ -78,16 +76,19 @@ final class Garden extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function plants(): BelongsToMany
-    {
-        return $this->belongsToMany(Plant::class)
-            ->withPivot(['planted_at', 'notes'])
-            ->withTimestamps();
-    }
-
     public function areas(): HasMany
     {
         return $this->hasMany(Area::class);
+    }
+
+    /**
+     * Get all plants in this garden through its areas
+     */
+    public function plants(): Builder
+    {
+        return Plant::whereHas('areas', function (Builder $query): void {
+            $query->where('garden_id', $this->id);
+        });
     }
 
     public function scopeActive(Builder $query): Builder
