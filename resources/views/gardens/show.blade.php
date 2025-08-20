@@ -8,8 +8,6 @@
 >
     <x-slot:actions>
         <div class="flex items-center gap-3">
-
-
             <a
                 href="{{ route('gardens.index') }}"
                 class="inline-flex items-center px-4 py-2 text-sm font-medium text-foreground bg-secondary rounded-lg hover:bg-secondary/80 focus:ring-2 focus:ring-secondary focus:ring-offset-2 transition-colors"
@@ -74,11 +72,8 @@
                             @can('delete', $garden)
                                 <div class="border-t border-border my-1"></div>
                                 <button
-                                    onclick="document.getElementById('delete-form').submit(); return confirm('Möchtest du den Garten \"
-                                    {{ $garden->name }}\" wirklich archivieren? Er kann später wiederhergestellt
-                                werden.');"
-                                class="flex items-center w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50
-                                dark:hover:bg-red-900/20 transition-colors"
+                                    onclick="if(confirm('Möchtest du den Garten {{ addslashes($garden->name) }} wirklich archivieren? Er kann später wiederhergestellt werden.')) { document.getElementById('delete-form').submit(); }"
+                                    class="flex items-center w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
                                 >
                                 <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -175,7 +170,7 @@
             </div>
 
             <!-- Garden Information -->
-            <div class="lg:col-span-2 space-y-6">
+            <div class="lg:col-span-2 space-y-6" >
                 <!-- Basic Information -->
                 <div class="bg-card rounded-xl border border-border p-6 shadow-sm">
                     <h3 class="text-lg font-semibold text-foreground mb-4">Gartendetails</h3>
@@ -253,7 +248,7 @@
                     </div>
 
                     @if($garden->areas->count() > 0)
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="grid grid-cols-1  gap-4">
                             @foreach($garden->areas as $area)
                                 <a
                                     href="{{ route('areas.show', $area) }}"
@@ -272,9 +267,7 @@
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                                                 </svg>
                                             </a>
-                                        @endcan
 
-                                        @can('delete', $area)
                                             <button
                                                 onclick="event.stopPropagation(); if(confirm('Möchtest du den Bereich {{ json_encode($area->name) }} wirklich löschen? Er kann später wiederhergestellt werden.')) { document.getElementById('delete-area-form-garden-{{ $area->id }}').submit(); }"
                                                 class="inline-flex items-center justify-center w-6 h-6 bg-white/90 dark:bg-gray-900/90 rounded-full hover:bg-white dark:hover:bg-gray-900 transition-colors shadow-sm"
@@ -319,9 +312,12 @@
                                                     • {{ $area->formatted_size }}
                                                 @endif
                                             </p>
-                                            @if($area->plants->count() > 0)
+                                            @php
+                                                $areaPlantQuantity = $area->plants()->sum('area_plant.quantity') ?: 0;
+                                            @endphp
+                                            @if($areaPlantQuantity > 0)
                                                 <p class="text-xs text-muted-foreground mt-1">
-                                                    {{ $area->plants->count() }} {{ $area->plants->count() === 1 ? 'Pflanze' : 'Pflanzen' }}
+                                                    {{ $areaPlantQuantity }} {{ $areaPlantQuantity === 1 ? 'Pflanze' : 'Pflanzen' }}
                                                 </p>
                                             @endif
                                         </div>
@@ -339,24 +335,19 @@
                         </div>
 
                         <!-- Areas Summary -->
-                        @php
-                            $activeAreas = $garden->areas->where('is_active', true)->count();
-                            $plantingAreas = $garden->areas->filter(fn($area) => $area->isPlantingArea())->count();
-                        @endphp
-
-                        @if($garden->areas->count() > 2)
+                        @if($areasStats['total'] > 2)
                             <div class="mt-4 pt-4 border-t border-border">
                                 <div class="flex items-center justify-between text-sm">
                                     <div class="flex items-center gap-6">
                                         <span class="text-muted-foreground">
-                                            {{ $garden->areas->count() }} Bereiche gesamt
+                                            {{ $areasStats['total'] }} Bereiche gesamt
                                         </span>
                                         <span class="text-muted-foreground">
-                                            {{ $activeAreas }} aktiv
+                                            {{ $areasStats['active'] }} aktiv
                                         </span>
-                                        @if($plantingAreas > 0)
+                                        @if($areasStats['planting'] > 0)
                                             <span class="text-muted-foreground">
-                                                {{ $plantingAreas }} Pflanzflächen
+                                                {{ $areasStats['planting'] }} Pflanzflächen
                                             </span>
                                         @endif
                                     </div>
@@ -392,7 +383,7 @@
                 <!-- Plants in Garden -->
                 <div class="bg-card rounded-xl border border-border p-6 shadow-sm">
                     <h3 class="text-lg font-semibold text-foreground mb-4">Pflanzen in diesem Garten</h3>
-                    @if($garden->plants()->count() > 0)
+                    @if($areasStats['total_plants'] > 0)
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             @foreach($garden->plants()->get() as $plant)
                                 <div class="flex items-center p-3 bg-secondary/50 rounded-lg">

@@ -2,7 +2,7 @@
     use App\Enums\Garden\GardenTypeEnum;
 @endphp
 
-<x-layouts.page
+<x-layouts.index
     title="Meine Gärten"
     subtitle="Verwalte und durchstöbere deine Gärten"
 >
@@ -35,7 +35,7 @@
 
     <x-slot:stats>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <x-stats-card 
+            <x-stats-card
                 title="Gärten"
                 :value="$stats['total_gardens'] . ' (' . $stats['active_gardens'] . ' aktiv)'"
                 icon-color="green"
@@ -49,7 +49,7 @@
                 </x-slot:icon>
             </x-stats-card>
 
-            <x-stats-card 
+            <x-stats-card
                 title="Gesamte Pflanzen"
                 :value="$stats['total_plants']"
                 icon-color="blue"
@@ -63,7 +63,7 @@
                 </x-slot:icon>
             </x-stats-card>
 
-            <x-stats-card 
+            <x-stats-card
                 title="Bereiche"
                 :value="$stats['total_areas'] . ($stats['active_areas'] > 0 ? ' (' . $stats['active_areas'] . ' aktiv)' : '')"
                 icon-color="purple"
@@ -210,7 +210,7 @@
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                   d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zM21 5a2 2 0 00-2-2h-4a2 2 0 00-2 2v6.5l3 3V21a2 2 0 002-2V5z"></path>
                                         </svg>
-                                        <span>{{ $garden->plants()->count() }} Pflanzen</span>
+                                        <span>{{ \Illuminate\Support\Facades\DB::table('areas')->join('area_plant', 'areas.id', '=', 'area_plant.area_id')->where('areas.garden_id', $garden->id)->sum('area_plant.quantity') ?: 0 }} Pflanzen</span>
                                     </div>
                                 </div>
 
@@ -281,4 +281,4 @@
             </div>
         @endif
     </div>
-</x-layouts.page>
+</x-layouts.index>

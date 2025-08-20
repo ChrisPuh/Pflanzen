@@ -79,12 +79,14 @@ final class GardenService
         $totalGardens = $query->count();
         $activeGardens = (clone $query)->where('is_active', true)->count();
 
-        // Get total plants across all gardens through areas
-        $totalPlants = 0;
-        $gardens = (clone $query)->with('areas')->get();
-        foreach ($gardens as $garden) {
-            $totalPlants += $garden->plants()->count();
-        }
+        // Get total plants across all gardens through areas - use direct DB query
+        $totalPlants = \Illuminate\Support\Facades\DB::table('areas')
+            ->join('area_plant', 'areas.id', '=', 'area_plant.area_id')
+            ->join('gardens', 'areas.garden_id', '=', 'gardens.id')
+            ->when(! $isAdmin, function (\Illuminate\Database\Query\Builder $query) use ($user): void {
+                $query->where('gardens.user_id', $user->id);
+            })
+            ->sum('area_plant.quantity');
 
         // Get gardens by type
         $byType = (clone $query)
@@ -138,7 +140,13 @@ final class GardenService
 
             $totalAreas += $garden->areas->count();
             $activeAreas += $garden->areas->where('is_active', true)->count();
-            $totalPlants += $garden->plants()->count();
+
+            // Calculate plant quantity for this garden directly
+            $gardenPlantQuantity = \Illuminate\Support\Facades\DB::table('areas')
+                ->join('area_plant', 'areas.id', '=', 'area_plant.area_id')
+                ->where('areas.garden_id', $garden->id)
+                ->sum('area_plant.quantity');
+            $totalPlants += (int) $gardenPlantQuantity;
         }
 
         $stats = [
@@ -236,8 +244,24 @@ final class GardenService
     {
         $garden->load(['user', 'areas.plants']);
 
+        // Calculate areas statistics
+        $activeAreas = $garden->areas->where('is_active', true)->count();
+        $plantingAreas = $garden->areas->filter(fn (\App\Models\Area $area): bool => $area->isPlantingArea())->count();
+
+        // Calculate total plants in this garden
+        $totalPlants = \Illuminate\Support\Facades\DB::table('areas')
+            ->join('area_plant', 'areas.id', '=', 'area_plant.area_id')
+            ->where('areas.garden_id', $garden->id)
+            ->sum('area_plant.quantity');
+
         return [
             'garden' => $garden,
+            'areasStats' => [
+                'total' => $garden->areas->count(),
+                'active' => $activeAreas,
+                'planting' => $plantingAreas,
+                'total_plants' => (int) $totalPlants,
+            ],
         ];
     }
 
@@ -299,11 +323,12 @@ final class GardenService
         $gardensCount = $userGardens->count();
         $activeGardens = (clone $userGardens)->where('is_active', true)->count();
 
-        $totalPlants = 0;
-        $gardensWithAreas = (clone $userGardens)->with('areas')->get();
-        foreach ($gardensWithAreas as $garden) {
-            $totalPlants += $garden->plants()->count();
-        }
+        // Calculate total plants directly from database
+        $totalPlants = \Illuminate\Support\Facades\DB::table('areas')
+            ->join('area_plant', 'areas.id', '=', 'area_plant.area_id')
+            ->join('gardens', 'areas.garden_id', '=', 'gardens.id')
+            ->where('gardens.user_id', $user->id)
+            ->sum('area_plant.quantity');
 
         $largestGarden = (clone $userGardens)
             ->where('size_sqm', '>', 0)

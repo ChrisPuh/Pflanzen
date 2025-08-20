@@ -148,7 +148,7 @@
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zM21 5a2 2 0 00-2-2h-4a2 2 0 00-2 2v6.5l3 3V21a2 2 0 002-2V5z"></path>
                                         </svg>
-                                        <span>{{ $garden->plants()->count() }} Pflanzen</span>
+                                        <span>{{ \Illuminate\Support\Facades\DB::table('areas')->join('area_plant', 'areas.id', '=', 'area_plant.area_id')->where('areas.garden_id', $garden->id)->sum('area_plant.quantity') ?: 0 }} Pflanzen</span>
                                     </div>
                                 </div>
 

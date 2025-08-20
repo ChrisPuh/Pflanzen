@@ -91,6 +91,26 @@ final class Garden extends Model
         });
     }
 
+    /**
+     * Get the total quantity of plants in this garden.
+     */
+    public function getTotalPlantQuantity(): int
+    {
+        return (int) $this->areas()
+            ->join('area_plant', 'areas.id', '=', 'area_plant.area_id')
+            ->sum('area_plant.quantity');
+    }
+
+    /**
+     * Alternative method to get total plant quantity.
+     */
+    public function plantQuantityTotal(): int
+    {
+        return (int) $this->areas()
+            ->join('area_plant', 'areas.id', '=', 'area_plant.area_id')
+            ->sum('area_plant.quantity');
+    }
+
     public function scopeActive(Builder $query): Builder
     {
         return $query->where('is_active', true);
