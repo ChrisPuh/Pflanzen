@@ -28,7 +28,7 @@ denke ans testen. generell gilt php 8.4 typesafety, laravel 12, nutze vorhandene
 
 ## routes
 
-- [ ] alle routes liegen da unstrukturiert in web. bitte modern und elegant strukturieren (realworld). 
+- [x] alle routes liegen da unstrukturiert in web. bitte modern und elegant strukturieren (realworld). 
 
 ## Controller
 
