@@ -69,6 +69,9 @@ final class Garden extends Model
         'country' => 'string',
         'is_active' => 'boolean',
         'established_at' => 'date',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+        'deleted_at' => 'datetime',
     ];
 
     public function user(): BelongsTo
@@ -96,7 +99,7 @@ final class Garden extends Model
      */
     public function getTotalPlantQuantity(): int
     {
-        return (int) $this->areas()
+        return (int)$this->areas()
             ->join('area_plant', 'areas.id', '=', 'area_plant.area_id')
             ->sum('area_plant.quantity');
     }
@@ -106,7 +109,7 @@ final class Garden extends Model
      */
     public function plantQuantityTotal(): int
     {
-        return (int) $this->areas()
+        return (int)$this->areas()
             ->join('area_plant', 'areas.id', '=', 'area_plant.area_id')
             ->sum('area_plant.quantity');
     }
@@ -141,16 +144,37 @@ final class Garden extends Model
             return 'Größe nicht angegeben';
         }
 
-        return number_format((float) $this->size_sqm, 2, ',', '.').' m²';
+        return number_format((float)$this->size_sqm, 2, ',', '.') . ' m²';
     }
 
-    public function getAgeInYearsAttribute(): ?int
+    public function getAgeInYearsAttribute(): int
     {
         if ($this->established_at === null) {
-            return null;
+            return 0;
         }
+        return (int)Carbon::now()->diffInYears($this->established_at);
+    }
 
-        return (int) $this->established_at->diffInYears(now());
+    public function getFormattedAgeAttribute(): string
+    {
+        return $this->attributes['established_at']
+            ? $this->attributes['established_at']->format('d.m.Y')
+            : 'Anlegedatum nicht angegeben';
+    }
+
+
+    public function getCreatedAtAttribute(): string
+    {
+        return $this->attributes['created_at']
+            ? Carbon::parse($this->attributes['created_at'])->toDateTimeString()
+            : 'Anlegedatum nicht angegeben';
+    }
+
+    public function getUpdatedAtAttribute(): string
+    {
+        return $this->attributes['updated_at']
+            ? Carbon::parse($this->attributes['updated_at'])->toDateTimeString()
+            : 'Anlegedatum nicht angegeben';
     }
 
     public function hasCoordinates(): bool
@@ -162,12 +186,12 @@ final class Garden extends Model
 
     public function getLatitude(): ?float
     {
-        return $this->hasCoordinates() ? (float) $this->coordinates['lat'] : null;
+        return $this->hasCoordinates() ? (float)$this->coordinates['lat'] : null;
     }
 
     public function getLongitude(): ?float
     {
-        return $this->hasCoordinates() ? (float) $this->coordinates['lng'] : null;
+        return $this->hasCoordinates() ? (float)$this->coordinates['lng'] : null;
     }
 
     public function setCoordinates(float $latitude, float $longitude): void
@@ -187,6 +211,11 @@ final class Garden extends Model
         ]);
 
         return in_array(implode(', ', $parts), ['', '0'], true) ? 'Standort nicht angegeben' : implode(', ', $parts);
+    }
+
+    public function getLocationAttribute(): string
+    {
+        return $this->location ?? 'Standort nicht angegeben';
     }
 
     protected static function booted(): void
