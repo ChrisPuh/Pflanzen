@@ -22,9 +22,9 @@ denke ans testen. generell gilt php 8.4 typesafety, laravel 12, nutze vorhandene
 - [ ] warum werden die dataen für die selectboxen in den views geladen? das sollte doch im controller passieren. bitte ändere das (index view)
 
 ## Feature Plants
-- [ ] die plants index view implementiert noch nicht die layouts.index view
-- [ ] die plants index view nutzt noch nicht die vorhanden form components oder auch die filter card
-- [ ] die plants index view lädt die daten für select noch in der view anstatt im controller
+- [x] die plants index view implementiert noch nicht die layouts.index view
+- [x] die plants index view nutzt noch nicht die vorhanden form components oder auch die filter card
+- [X] die plants index view lädt die daten für select noch in der view anstatt im controller
 
 ## routes
 
