@@ -19,7 +19,7 @@ denke ans testen. generell gilt php 8.4 typesafety, laravel 12, nutze vorhandene
 - [x] der User sollte nun die möglichkeit haben seine areas zu editieren (denke an links damit der user auch zu den areas kommt)
 - [x] der User sollte nun die möglichkeit haben seine areas zu löschen 
 - [x] momentan ist es so gelöst dass ein garten viele blumen hat (belongstomany). dazu gibt es auch einen pivottable. ich denke aber dass eine blume in einem bereich gepflanzt wird. also sollte die pflanze eher eine beziehung zum bereich haben und nicht zum garten. ändere das bitte. nutze die vorhandenen sachen (migration) benenne sie um passe sie an den
-- [ ] warum werden die dataen für die selectboxen in den views geladen? das sollte doch im controller passieren. bitte ändere das (index view)
+- [x] warum werden die dataen für die selectboxen in den views geladen? das sollte doch im controller passieren. bitte ändere das (index view)
 
 ## Feature Plants
 - [x] die plants index view implementiert noch nicht die layouts.index view

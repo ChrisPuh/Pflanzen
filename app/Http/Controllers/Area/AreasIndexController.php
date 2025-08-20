@@ -109,14 +109,35 @@ final class AreasIndexController extends Controller
             })
             ->count();
 
+        // Format garden options for select component
+        $gardenOptions = $userGardens->mapWithKeys(function (Garden $garden) use ($isAdmin) {
+            $label = $garden->name;
+            if ($isAdmin) {
+                $label .= ' ('.$garden->type->getLabel().')';
+            }
+
+            return [$garden->id => $label];
+        });
+
+        // Format area type options for select component
+        $areaTypeOptions = collect(AreaTypeEnum::options())->mapWithKeys(function (array $type) {
+            return [$type['value'] => $type['label']];
+        });
+
+        // Format area category options for select component
+        $areaCategoryOptions = collect(AreaTypeEnum::cases())
+            ->map(fn (AreaTypeEnum $type): string => $type->category())
+            ->unique()
+            ->values()
+            ->mapWithKeys(function (string $category) {
+                return [$category => $category];
+            });
+
         return view('areas.index', [
             'areas' => $areas,
-            'userGardens' => $userGardens,
-            'areaTypes' => AreaTypeEnum::options(),
-            'areaCategories' => collect(AreaTypeEnum::cases())
-                ->map(fn (AreaTypeEnum $type): string => $type->category())
-                ->unique()
-                ->values(),
+            'gardenOptions' => $gardenOptions,
+            'areaTypeOptions' => $areaTypeOptions,
+            'areaCategoryOptions' => $areaCategoryOptions,
             'isAdmin' => $isAdmin,
             'totalAreas' => $totalAreas,
             'activeAreas' => $activeAreas,

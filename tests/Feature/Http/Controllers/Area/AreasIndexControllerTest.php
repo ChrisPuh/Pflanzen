@@ -222,9 +222,9 @@ describe('AreasIndexController', function (): void {
 
             $response->assertSuccessful()
                 ->assertViewHas('areas')
-                ->assertViewHas('userGardens')
-                ->assertViewHas('areaTypes')
-                ->assertViewHas('areaCategories')
+                ->assertViewHas('gardenOptions')
+                ->assertViewHas('areaTypeOptions')
+                ->assertViewHas('areaCategoryOptions')
                 ->assertViewHas('isAdmin', false)
                 ->assertViewHas('totalAreas')
                 ->assertViewHas('activeAreas')

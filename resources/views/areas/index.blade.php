@@ -56,13 +56,7 @@
                     name="garden_id"
                     placeholder="Alle Gärten"
                     :selected="$filters['garden_id']"
-                    :options="$userGardens->mapWithKeys(function($garden) use ($isAdmin) {
-                        $label = $garden->name;
-                        if ($isAdmin) {
-                            $label .= ' (' . $garden->type->getLabel() . ')';
-                        }
-                        return [$garden->id => $label];
-                    })"
+                    :options="$gardenOptions"
                 />
 
                 <!-- Type Filter -->
@@ -71,9 +65,7 @@
                     name="type"
                     placeholder="Alle Typen"
                     :selected="$filters['type']"
-                    :options="collect($areaTypes)->mapWithKeys(function($type) {
-                        return [$type['value'] => $type['label']];
-                    })"
+                    :options="$areaTypeOptions"
                 />
 
                 <!-- Category Filter -->
@@ -82,9 +74,7 @@
                     name="category"
                     placeholder="Alle Kategorien"
                     :selected="$filters['category']"
-                    :options="$areaCategories->mapWithKeys(function($category) {
-                        return [$category => $category];
-                    })"
+                    :options="$areaCategoryOptions"
                 />
             </div>
 
