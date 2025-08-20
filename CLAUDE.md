@@ -40,6 +40,10 @@ This application is a Laravel application and its main Laravel ecosystems packag
 ## Documentation Files
 - You must only create documentation files if explicitly requested by the user.
 
+## View Layouts
+- **Create Pages**: Use a consistent CreatePage layout component for all create/edit forms. Never create centered forms directly in views.
+- **Form Consistency**: All create and edit forms should use the same layout structure and styling for consistency.
+
 
 === boost rules ===
 
@@ -143,6 +147,7 @@ protected function isAccessible(User $user, ?string $path = null): bool
 ### Controllers & Validation
 - Always create Form Request classes for validation rather than inline validation in controllers. Include both validation rules and custom error messages.
 - Check sibling Form Requests to see if the application uses array or string based validation rules.
+- **ALWAYS use Form Request classes** - create them for every controller action that receives data, including index actions with filters. This ensures consistent validation and keeps controllers clean.
 
 ### Queues
 - Use queued jobs for time-consuming operations with the `ShouldQueue` interface.
@@ -290,10 +295,19 @@ document.addEventListener('livewire:init', function () {
 - You must not remove any tests or test files from the tests directory without approval. These are not temporary or helper files - these are core to the application.
 - Tests should test all of the happy paths, failure paths, and weird paths.
 - Tests live in the `tests/Feature` and `tests/Unit` directories.
+- **ALWAYS use describe() blocks to structure tests** - group related tests logically using describe() for better organization and readability.
 - Pest tests look and behave like this:
-<code-snippet name="Basic Pest Test Example" lang="php">
-it('is true', function () {
-    expect(true)->toBeTrue();
+<code-snippet name="Basic Pest Test Example with describe()" lang="php">
+describe('User authentication', function () {
+    it('can login with valid credentials', function () {
+        // test logic here
+        expect(true)->toBeTrue();
+    });
+    
+    it('cannot login with invalid credentials', function () {
+        // test logic here
+        expect(false)->toBeFalse();
+    });
 });
 </code-snippet>
 
@@ -302,6 +316,7 @@ it('is true', function () {
 - To run all tests: `php artisan test`.
 - To run all tests in a file: `php artisan test tests/Feature/ExampleTest.php`.
 - To filter on a particular test name: `php artisan test --filter=testName` (recommended after making a change to a related file).
+- **CRITICAL: Always run `composer test` after completing any task** - this ensures all tests pass and catches any issues before finishing. Fix any test failures found.
 - When the tests relating to your changes are passing, ask the user if they would like to run the entire test suite to ensure everything is still passing.
 
 ### Pest Assertions

@@ -17,23 +17,15 @@ final class PlantsIndexController extends Controller
 
     public function __invoke(PlantsIndexRequest $request): View
     {
-        $search = $request->getSearch();
-        $type = $request->getType();
-        $categories = $request->getCategories();
+        // Extract filters from request
+        $filters = [
+            'search' => $request->getSearch(),
+            'type' => $request->getType(),
+            'categories' => $request->getCategories(),
+        ];
 
-        $plants = $this->plantService->getFilteredPlants(
-            search: $search,
-            type: $type,
-            categories: $categories
-        );
+        $indexData = $this->plantService->getIndexData($filters);
 
-        return view('plants.index', [
-            'plants' => $plants,
-            'search' => $search,
-            'selectedType' => $type,
-            'selectedCategories' => $categories,
-            'plantTypes' => $this->plantService->getAvailablePlantTypes(),
-            'plantCategories' => $this->plantService->getAvailablePlantCategories(),
-        ]);
+        return view('plants.index', $indexData);
     }
 }

@@ -24,10 +24,8 @@ final class GardenShowController extends Controller
     {
         Gate::authorize('view', $garden);
 
-        $garden = $this->gardenService->getGardenForDisplay($garden);
+        $showData = $this->gardenService->getShowData($garden);
 
-        return view('gardens.show', [
-            'garden' => $garden,
-        ]);
+        return view('gardens.show', $showData);
     }
 }

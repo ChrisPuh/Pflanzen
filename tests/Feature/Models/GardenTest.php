@@ -3,7 +3,9 @@
 declare(strict_types=1);
 
 use App\Enums\Garden\GardenTypeEnum;
+use App\Models\Area;
 use App\Models\Garden;
+use App\Models\Plant;
 use App\Models\User;
 
 describe('Garden Model', function () {
@@ -52,10 +54,17 @@ describe('Garden Model', function () {
                 ->and($garden->user->id)->toBe($user->id);
         });
 
-        it('can have many plants', function () {
+        it('can get plants through areas', function () {
             $garden = Garden::factory()->create();
+            $area = Area::factory()->create(['garden_id' => $garden->id]);
+            $plant = Plant::factory()->create();
 
-            expect($garden->plants())->toBeInstanceOf(Illuminate\Database\Eloquent\Relations\BelongsToMany::class);
+            // Plant is attached to area
+            $area->plants()->attach($plant->id);
+
+            expect($garden->plants())->toBeInstanceOf(Illuminate\Database\Eloquent\Builder::class)
+                ->and($garden->plants()->count())->toBe(1)
+                ->and($garden->plants()->first()->id)->toBe($plant->id);
         });
     });
 

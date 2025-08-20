@@ -24,7 +24,7 @@ final class GardenService
             ->when(! $isAdmin, function (Builder $query) use ($user): void {
                 $query->forUser($user);
             })
-            ->with(['user', 'plants'])
+            ->with(['user', 'areas'])
             ->latest()
             ->paginate($perPage);
     }
@@ -34,7 +34,7 @@ final class GardenService
      */
     public function getGardenForDisplay(Garden $garden): Garden
     {
-        return $garden->load(['user', 'plants']);
+        return $garden->load(['user', 'areas']);
     }
 
     /**
@@ -79,11 +79,12 @@ final class GardenService
         $totalGardens = $query->count();
         $activeGardens = (clone $query)->where('is_active', true)->count();
 
-        // Get total plants across all gardens
-        $totalPlants = (clone $query)
-            ->withCount('plants')
-            ->get()
-            ->sum('plants_count');
+        // Get total plants across all gardens through areas
+        $totalPlants = 0;
+        $gardens = (clone $query)->with('areas')->get();
+        foreach ($gardens as $garden) {
+            $totalPlants += $garden->plants()->count();
+        }
 
         // Get gardens by type
         $byType = (clone $query)
@@ -101,6 +102,64 @@ final class GardenService
             'active' => $activeGardens,
             'total_plants' => $totalPlants,
             'by_type' => $byType,
+        ];
+    }
+
+    /**
+     * Get complete gardens index data with statistics
+     *
+     * @return array{gardens: LengthAwarePaginator, stats: array<string, int>, hasArchivedGardens: bool}
+     */
+    public function getGardensIndexData(User $user, bool $isAdmin = false, int $perPage = 12): array
+    {
+        // Get paginated gardens
+        $gardens = Garden::query()
+            ->when(! $isAdmin, function (Builder $query) use ($user): void {
+                $query->forUser($user);
+            })
+            ->with(['user', 'areas'])
+            ->latest()
+            ->paginate($perPage);
+
+        // Calculate statistics
+        $totalCount = $gardens->total();
+        $activeCount = 0;
+        $inactiveCount = 0;
+        $totalAreas = 0;
+        $activeAreas = 0;
+        $totalPlants = 0;
+
+        foreach ($gardens as $garden) {
+            if ($garden->is_active) {
+                $activeCount++;
+            } else {
+                $inactiveCount++;
+            }
+
+            $totalAreas += $garden->areas->count();
+            $activeAreas += $garden->areas->where('is_active', true)->count();
+            $totalPlants += $garden->plants()->count();
+        }
+
+        $stats = [
+            'total_gardens' => $totalCount,
+            'active_gardens' => $activeCount,
+            'inactive_gardens' => $inactiveCount,
+            'total_areas' => $totalAreas,
+            'active_areas' => $activeAreas,
+            'total_plants' => $totalPlants,
+        ];
+
+        // Check for archived gardens
+        $hasArchivedGardens = $this->getArchivedGardensForUser(
+            user: $user,
+            isAdmin: $isAdmin
+        )->isNotEmpty();
+
+        return [
+            'gardens' => $gardens,
+            'stats' => $stats,
+            'hasArchivedGardens' => $hasArchivedGardens,
         ];
     }
 
@@ -144,6 +203,60 @@ final class GardenService
     }
 
     /**
+     * Get all data needed for garden create form.
+     *
+     * @return array<string, mixed>
+     */
+    public function getCreateData(): array
+    {
+        return [
+            'gardenTypes' => $this->getAvailableGardenTypes(),
+        ];
+    }
+
+    /**
+     * Get all data needed for garden edit form.
+     *
+     * @return array<string, mixed>
+     */
+    public function getEditData(Garden $garden): array
+    {
+        return [
+            'garden' => $garden,
+            'gardenTypes' => $this->getAvailableGardenTypes(),
+        ];
+    }
+
+    /**
+     * Get all data needed for garden show page.
+     *
+     * @return array<string, mixed>
+     */
+    public function getShowData(Garden $garden): array
+    {
+        $garden->load(['user', 'areas.plants']);
+
+        return [
+            'garden' => $garden,
+        ];
+    }
+
+    /**
+     * Get all data needed for gardens archived page.
+     *
+     * @return array<string, mixed>
+     */
+    public function getArchivedData(User $user, bool $isAdmin = false): array
+    {
+        $archivedGardens = $this->getArchivedGardensForUser($user, $isAdmin);
+
+        return [
+            'gardens' => $archivedGardens,
+            'isAdmin' => $isAdmin,
+        ];
+    }
+
+    /**
      * Get recently active gardens for a user.
      *
      * @return \Illuminate\Database\Eloquent\Collection<int, Garden>
@@ -152,7 +265,7 @@ final class GardenService
     {
         return Garden::query()
             ->forUser($user)
-            ->with(['plants'])
+            ->with(['areas'])
             ->where('is_active', true)
             ->latest('updated_at')
             ->limit($limit)
@@ -168,7 +281,7 @@ final class GardenService
     {
         return Garden::query()
             ->forUser($user)
-            ->with(['plants'])
+            ->with(['areas'])
             ->where('city', $city)
             ->latest()
             ->get();
@@ -186,10 +299,11 @@ final class GardenService
         $gardensCount = $userGardens->count();
         $activeGardens = (clone $userGardens)->where('is_active', true)->count();
 
-        $totalPlants = (clone $userGardens)
-            ->withCount('plants')
-            ->get()
-            ->sum('plants_count');
+        $totalPlants = 0;
+        $gardensWithAreas = (clone $userGardens)->with('areas')->get();
+        foreach ($gardensWithAreas as $garden) {
+            $totalPlants += $garden->plants()->count();
+        }
 
         $largestGarden = (clone $userGardens)
             ->where('size_sqm', '>', 0)
@@ -243,7 +357,7 @@ final class GardenService
             ->when(! $isAdmin, function (Builder $query) use ($user): void {
                 $query->forUser($user);
             })
-            ->with(['user', 'plants'])
+            ->with(['user', 'areas'])
             ->latest('deleted_at')
             ->get();
     }
@@ -259,7 +373,7 @@ final class GardenService
             ->when(! $isAdmin, function (Builder $query) use ($user): void {
                 $query->forUser($user);
             })
-            ->with(['user', 'plants'])
+            ->with(['user', 'areas'])
             ->where(function (Builder $query) use ($search): void {
                 $query->where('name', 'like', "%{$search}%")
                     ->orWhere('description', 'like', "%{$search}%")

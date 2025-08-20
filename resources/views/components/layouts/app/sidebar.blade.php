@@ -19,6 +19,12 @@
                                     :active="request()->routeIs('gardens*')">Meine Gärten</x-layouts.sidebar-link>
                             @endcan
 
+                            <!-- Areas -->
+                            @can('viewAny', App\Models\Area::class)
+                                <x-layouts.sidebar-link href="{{ route('areas.index') }}" icon='fas-th-large'
+                                    :active="request()->routeIs('areas*')">Meine Bereiche</x-layouts.sidebar-link>
+                            @endcan
+
                             <!-- Settings -->
                             <x-layouts.sidebar-two-level-link-parent title="Settings" icon="fas-gear"
                                 :active="request()->routeIs('settings*')">

@@ -5,14 +5,16 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Settings;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Settings\PasswordUpdateRequest;
+use App\Services\UserService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rules;
 use Illuminate\View\View;
 
 final class PasswordController extends Controller
 {
+    public function __construct(private readonly UserService $userService) {}
+
     public function edit(Request $request): View
     {
         return view('settings.password', [
@@ -20,16 +22,11 @@ final class PasswordController extends Controller
         ]);
     }
 
-    public function update(Request $request): RedirectResponse
+    public function update(PasswordUpdateRequest $request): RedirectResponse
     {
-        $validated = $request->validate([
-            'current_password' => ['required', 'current_password'],
-            'password' => ['required', Rules\Password::defaults(), 'confirmed'],
-        ]);
+        $validated = $request->validated();
 
-        $request->user()->update([
-            'password' => Hash::make($validated['password']),
-        ]);
+        $this->userService->updatePassword($request->user(), $validated['password']);
 
         return back()->with('status', 'password-updated');
     }

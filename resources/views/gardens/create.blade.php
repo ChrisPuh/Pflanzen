@@ -2,13 +2,13 @@
     use App\Enums\Garden\GardenTypeEnum;
 @endphp
 
-<x-layouts.page 
+<x-layouts.create-page 
     title="Neuen Garten erstellen" 
     subtitle="Erstelle einen neuen Garten und füge ihn zu deiner Sammlung hinzu"
+    :form-action="route('gardens.store')"
+    :cancel-route="route('gardens.index')"
+    submit-text="Garten erstellen"
 >
-    <div class="max-w-2xl">
-        <form method="POST" action="{{ route('gardens.store') }}" class="space-y-6">
-            @csrf
             
             <!-- Garden Name -->
             <div>
@@ -240,22 +240,4 @@
                 @enderror
             </div>
 
-            <!-- Form Actions -->
-            <div class="flex items-center justify-between pt-6 border-t border-border">
-                <a 
-                    href="{{ route('gardens.index') }}" 
-                    class="px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
-                >
-                    Abbrechen
-                </a>
-                
-                <button 
-                    type="submit" 
-                    class="px-6 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 focus:ring-2 focus:ring-primary focus:ring-offset-2 transition-colors font-medium"
-                >
-                    Garten erstellen
-                </button>
-            </div>
-        </form>
-    </div>
-</x-layouts.page>
+</x-layouts.create-page>

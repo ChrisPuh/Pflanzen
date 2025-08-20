@@ -29,4 +29,11 @@ final class Plant extends Model
     {
         return $this->belongsToMany(Category::class)->withTimestamps();
     }
+
+    public function areas(): BelongsToMany
+    {
+        return $this->belongsToMany(Area::class)
+            ->withPivot(['planted_at', 'notes'])
+            ->withTimestamps();
+    }
 }

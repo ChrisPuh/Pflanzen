@@ -2,44 +2,97 @@
 
 declare(strict_types=1);
 
-use App\Http\Controllers\Garden\GardenCreateController;
-use App\Http\Controllers\Garden\GardenDeleteController;
-use App\Http\Controllers\Garden\GardenEditController;
-use App\Http\Controllers\Garden\GardenShowController;
-use App\Http\Controllers\Garden\GardensIndexController;
-use App\Http\Controllers\Plants\PlantShowController;
-use App\Http\Controllers\Plants\PlantsIndexController;
+use App\Http\Controllers\Area;
+use App\Http\Controllers\Garden;
+use App\Http\Controllers\Plants;
 use App\Http\Controllers\Settings;
 use Illuminate\Support\Facades\Route;
+
+/*
+|--------------------------------------------------------------------------
+| Public Routes
+|--------------------------------------------------------------------------
+*/
 
 Route::get('/', function () {
     return view('welcome');
 })->name('home');
 
-Route::view('dashboard', 'dashboard')
-    ->middleware(['auth', 'verified'])
-    ->name('dashboard');
+/*
+|--------------------------------------------------------------------------
+| Authenticated Routes
+|--------------------------------------------------------------------------
+*/
 
-Route::get('plants', PlantsIndexController::class)->middleware(['auth', 'verified'])->name('plants.index');
-Route::get('plants/{plant}', PlantShowController::class)->middleware(['auth', 'verified'])->name('plants.show');
+Route::middleware(['auth', 'verified'])->group(function () {
+    // Dashboard
+    Route::view('dashboard', 'dashboard')->name('dashboard');
 
-Route::get('gardens', GardensIndexController::class)->middleware(['auth', 'verified'])->name('gardens.index');
-Route::get('gardens/archived', [GardensIndexController::class, 'archived'])->middleware(['auth', 'verified'])->name('gardens.archived');
-Route::get('gardens/create', [GardenCreateController::class, 'create'])->middleware(['auth', 'verified'])->name('gardens.create');
-Route::post('gardens', [GardenCreateController::class, 'store'])->middleware(['auth', 'verified'])->name('gardens.store');
-Route::get('gardens/{garden}', GardenShowController::class)->middleware(['auth', 'verified'])->name('gardens.show');
-Route::get('gardens/{garden}/edit', [GardenEditController::class, 'edit'])->middleware(['auth', 'verified'])->name('gardens.edit');
-Route::put('gardens/{garden}', [GardenEditController::class, 'update'])->middleware(['auth', 'verified'])->name('gardens.update');
-Route::delete('gardens/{garden}', [GardenDeleteController::class, 'destroy'])->middleware(['auth', 'verified'])->name('gardens.destroy');
-Route::post('gardens/{garden}/restore', [GardenDeleteController::class, 'restore'])->middleware(['auth', 'verified'])->name('gardens.restore');
+    // Plants Resource Routes
+    Route::controller(Plants\PlantsIndexController::class)->group(function () {
+        Route::get('plants', '__invoke')->name('plants.index');
+    });
 
-Route::middleware('auth')->group(function () {
-    Route::get('settings/profile', [Settings\ProfileController::class, 'edit'])->name('settings.profile.edit');
-    Route::put('settings/profile', [Settings\ProfileController::class, 'update'])->name('settings.profile.update');
-    Route::delete('settings/profile', [Settings\ProfileController::class, 'destroy'])->name('settings.profile.destroy');
-    Route::get('settings/password', [Settings\PasswordController::class, 'edit'])->name('settings.password.edit');
-    Route::put('settings/password', [Settings\PasswordController::class, 'update'])->name('settings.password.update');
-    Route::get('settings/appearance', [Settings\AppearanceController::class, 'edit'])->name('settings.appearance.edit');
+    Route::controller(Plants\PlantShowController::class)->group(function () {
+        Route::get('plants/{plant}', '__invoke')->name('plants.show');
+    });
+
+    // Areas Resource Routes
+    Route::prefix('areas')->name('areas.')->group(function () {
+        Route::get('/', Area\AreasIndexController::class)->name('index');
+        Route::get('create', [Area\AreaCreateController::class, 'create'])->name('create');
+        Route::post('/', [Area\AreaCreateController::class, 'store'])->name('store');
+        Route::get('{area}', Area\AreaShowController::class)->name('show');
+        Route::get('{area}/edit', [Area\AreaEditController::class, 'edit'])->name('edit');
+        Route::put('{area}', [Area\AreaEditController::class, 'update'])->name('update');
+        Route::delete('{area}', [Area\AreaDeleteController::class, 'destroy'])->name('destroy');
+
+        // Soft Delete Management
+        Route::post('{areaId}/restore', [Area\AreaDeleteController::class, 'restore'])->name('restore');
+        Route::delete('{areaId}/force', [Area\AreaDeleteController::class, 'forceDelete'])->name('force-delete');
+    });
+
+    // Gardens Resource Routes
+    Route::prefix('gardens')->name('gardens.')->group(function () {
+        Route::get('/', Garden\GardensIndexController::class)->name('index');
+        Route::get('archived', [Garden\GardensIndexController::class, 'archived'])->name('archived');
+        Route::get('create', [Garden\GardenCreateController::class, 'create'])->name('create');
+        Route::post('/', [Garden\GardenCreateController::class, 'store'])->name('store');
+        Route::get('{garden}', Garden\GardenShowController::class)->name('show');
+        Route::get('{garden}/edit', [Garden\GardenEditController::class, 'edit'])->name('edit');
+        Route::put('{garden}', [Garden\GardenEditController::class, 'update'])->name('update');
+        Route::delete('{garden}', [Garden\GardenDeleteController::class, 'destroy'])->name('destroy');
+
+        // Soft Delete Management
+        Route::post('{garden}/restore', [Garden\GardenDeleteController::class, 'restore'])->name('restore');
+    });
+
+    // Settings Routes
+    Route::prefix('settings')->name('settings.')->group(function () {
+        // Profile Management
+        Route::prefix('profile')->name('profile.')->controller(Settings\ProfileController::class)->group(function () {
+            Route::get('/', 'edit')->name('edit');
+            Route::put('/', 'update')->name('update');
+            Route::delete('/', 'destroy')->name('destroy');
+        });
+
+        // Password Management
+        Route::prefix('password')->name('password.')->controller(Settings\PasswordController::class)->group(function () {
+            Route::get('/', 'edit')->name('edit');
+            Route::put('/', 'update')->name('update');
+        });
+
+        // Appearance Settings
+        Route::prefix('appearance')->name('appearance.')->controller(Settings\AppearanceController::class)->group(function () {
+            Route::get('/', 'edit')->name('edit');
+        });
+    });
 });
+
+/*
+|--------------------------------------------------------------------------
+| Authentication Routes
+|--------------------------------------------------------------------------
+*/
 
 require __DIR__.'/auth.php';

@@ -8,6 +8,7 @@
     "require": {
         "php": "^8.4",
         "blade-ui-kit/blade-icons": "^1.8",
+        "dyrynda/laravel-cascade-soft-deletes": "^4.5",
         "filament/filament": "^4.0",
         "laravel/framework": "^12.24",
         "laravel/tinker": "^2.10.1",

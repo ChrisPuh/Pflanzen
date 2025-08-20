@@ -18,13 +18,8 @@ final class PlantShowController extends Controller
 
     public function __invoke(PlantShowRequest $request, Plant $plant): View
     {
-        // Load relationships and get related plants
-        $plantWithRelations = $this->plantService->getPlantForDisplay($plant);
-        $relatedPlants = $this->plantService->getRelatedPlants($plant);
+        $showData = $this->plantService->getShowData($plant);
 
-        return view('plants.show', [
-            'plant' => $plantWithRelations,
-            'relatedPlants' => $relatedPlants,
-        ]);
+        return view('plants.show', $showData);
     }
 }

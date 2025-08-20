@@ -7,14 +7,16 @@ namespace App\Http\Controllers\Garden;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Garden\GardenCreateRequest;
 use App\Models\Garden;
-use App\Models\User;
 use App\Services\GardenService;
+use App\Traits\AuthenticatedUser;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
 
 final class GardenCreateController extends Controller
 {
+    use AuthenticatedUser;
+
     public function __construct(
         private readonly GardenService $gardenService
     ) {}
@@ -26,11 +28,9 @@ final class GardenCreateController extends Controller
     {
         Gate::authorize('create', Garden::class);
 
-        $gardenTypes = $this->gardenService->getAvailableGardenTypes();
+        $createData = $this->gardenService->getCreateData();
 
-        return view('gardens.create', [
-            'gardenTypes' => $gardenTypes,
-        ]);
+        return view('gardens.create', $createData);
     }
 
     /**
@@ -40,8 +40,7 @@ final class GardenCreateController extends Controller
     {
         // Authorization handled by GardenCreateRequest::authorize()
 
-        /** @var User $user */
-        $user = $request->user();
+        $user = $this->getUser();
 
         $garden = $this->gardenService->createGarden(
             user: $user,
