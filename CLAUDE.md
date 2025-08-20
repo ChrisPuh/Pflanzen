@@ -295,10 +295,19 @@ document.addEventListener('livewire:init', function () {
 - You must not remove any tests or test files from the tests directory without approval. These are not temporary or helper files - these are core to the application.
 - Tests should test all of the happy paths, failure paths, and weird paths.
 - Tests live in the `tests/Feature` and `tests/Unit` directories.
+- **ALWAYS use describe() blocks to structure tests** - group related tests logically using describe() for better organization and readability.
 - Pest tests look and behave like this:
-<code-snippet name="Basic Pest Test Example" lang="php">
-it('is true', function () {
-    expect(true)->toBeTrue();
+<code-snippet name="Basic Pest Test Example with describe()" lang="php">
+describe('User authentication', function () {
+    it('can login with valid credentials', function () {
+        // test logic here
+        expect(true)->toBeTrue();
+    });
+    
+    it('cannot login with invalid credentials', function () {
+        // test logic here
+        expect(false)->toBeFalse();
+    });
 });
 </code-snippet>
 
@@ -307,6 +316,7 @@ it('is true', function () {
 - To run all tests: `php artisan test`.
 - To run all tests in a file: `php artisan test tests/Feature/ExampleTest.php`.
 - To filter on a particular test name: `php artisan test --filter=testName` (recommended after making a change to a related file).
+- **CRITICAL: Always run `composer test` after completing any task** - this ensures all tests pass and catches any issues before finishing. Fix any test failures found.
 - When the tests relating to your changes are passing, ask the user if they would like to run the entire test suite to ensure everything is still passing.
 
 ### Pest Assertions

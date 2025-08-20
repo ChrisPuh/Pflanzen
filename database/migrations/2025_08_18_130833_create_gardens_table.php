@@ -29,6 +29,9 @@ return new class extends Migration
             $table->boolean('is_active')->default(true);
             $table->date('established_at')->nullable();
             $table->timestamps();
+            $table->softDeletes();
+
+            $table->index('deleted_at');
 
             $table->index(['user_id', 'is_active']);
             $table->index(['type']);

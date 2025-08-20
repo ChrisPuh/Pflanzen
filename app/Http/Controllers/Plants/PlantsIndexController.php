@@ -27,13 +27,28 @@ final class PlantsIndexController extends Controller
             categories: $categories
         );
 
+        $plantTypes = $this->plantService->getAvailablePlantTypes();
+        $plantCategories = $this->plantService->getAvailablePlantCategories();
+
+        // Format plant types for select component
+        $plantTypesOptions = collect($plantTypes)->mapWithKeys(function ($plantType) {
+            return [$plantType->value => $plantType->getLabel()];
+        });
+
+        // Format plant categories for checkbox options
+        $plantCategoriesOptions = collect($plantCategories)->mapWithKeys(function ($category) {
+            return [$category->value => $category->getLabel()];
+        });
+
         return view('plants.index', [
             'plants' => $plants,
             'search' => $search,
             'selectedType' => $type,
             'selectedCategories' => $categories,
-            'plantTypes' => $this->plantService->getAvailablePlantTypes(),
-            'plantCategories' => $this->plantService->getAvailablePlantCategories(),
+            'plantTypesOptions' => $plantTypesOptions,
+            'plantCategoriesOptions' => $plantCategoriesOptions,
+            // Statistics for the layout
+            'stats' => $this->plantService->getPlantStatistics(),
         ]);
     }
 }
