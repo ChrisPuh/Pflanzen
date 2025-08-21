@@ -47,6 +47,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::put('{area}', [Area\AreaEditController::class, 'update'])->name('update');
         Route::delete('{area}', [Area\AreaDeleteController::class, 'destroy'])->name('destroy');
 
+        // Plant Management Routes
+        Route::post('{area}/plants', [Area\AreaPlantController::class, 'store'])->name('plants.store');
+        Route::delete('{area}/plants/{plant}', [Area\AreaPlantController::class, 'destroy'])->name('plants.destroy');
+
         // Soft Delete Management
         Route::post('{areaId}/restore', [Area\AreaDeleteController::class, 'restore'])->name('restore');
         Route::delete('{areaId}/force', [Area\AreaDeleteController::class, 'forceDelete'])->name('force-delete');

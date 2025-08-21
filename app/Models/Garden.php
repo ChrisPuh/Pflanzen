@@ -69,6 +69,9 @@ final class Garden extends Model
         'country' => 'string',
         'is_active' => 'boolean',
         'established_at' => 'date',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+        'deleted_at' => 'datetime',
     ];
 
     public function user(): BelongsTo
@@ -89,6 +92,26 @@ final class Garden extends Model
         return Plant::whereHas('areas', function (Builder $query): void {
             $query->where('garden_id', $this->id);
         });
+    }
+
+    /**
+     * Get the total quantity of plants in this garden.
+     */
+    public function getTotalPlantQuantity(): int
+    {
+        return (int) $this->areas()
+            ->join('area_plant', 'areas.id', '=', 'area_plant.area_id')
+            ->sum('area_plant.quantity');
+    }
+
+    /**
+     * Alternative method to get total plant quantity.
+     */
+    public function plantQuantityTotal(): int
+    {
+        return (int) $this->areas()
+            ->join('area_plant', 'areas.id', '=', 'area_plant.area_id')
+            ->sum('area_plant.quantity');
     }
 
     public function scopeActive(Builder $query): Builder
@@ -130,7 +153,43 @@ final class Garden extends Model
             return null;
         }
 
-        return (int) $this->established_at->diffInYears(now());
+        return (int) $this->established_at->diffInYears(Carbon::now());
+    }
+
+    public function getFormattedAgeAttribute(): string
+    {
+        return $this->established_at
+            ? $this->established_at->format('d.m.Y')
+            : 'Anlegedatum nicht angegeben';
+    }
+
+    public function getAgeDisplayAttribute(): string
+    {
+        $ageInYears = $this->age_in_years;
+
+        if ($ageInYears === null) {
+            return 'Alter unbekannt';
+        }
+
+        if ($ageInYears === 1) {
+            return '1 Jahr alt';
+        }
+
+        return $ageInYears.' Jahre alt';
+    }
+
+    public function getFormattedCreatedAtAttribute(): string
+    {
+        return $this->created_at
+            ? $this->created_at->format('d.m.Y H:i')
+            : 'Anlegedatum nicht angegeben';
+    }
+
+    public function getFormattedUpdatedAtAttribute(): string
+    {
+        return $this->updated_at
+            ? $this->updated_at->format('d.m.Y H:i')
+            : 'Anlegedatum nicht angegeben';
     }
 
     public function hasCoordinates(): bool
@@ -161,12 +220,59 @@ final class Garden extends Model
     public function getFullLocationAttribute(): string
     {
         $parts = array_filter([
-            $this->location,
+            $this->attributes['location'],
             $this->postal_code,
             $this->city,
         ]);
 
-        return in_array(implode(', ', $parts), ['', '0'], true) ? 'Standort nicht angegeben' : implode(', ', $parts);
+        return count($parts) === 0 ? 'Standort nicht angegeben' : implode(', ', $parts);
+    }
+
+    public function getLocationAttribute(): ?string
+    {
+        return $this->attributes['location'];
+    }
+
+    public function getDetails(): array
+    {
+        return [
+            'type' => [
+                'label' => 'Typ',
+                'value' => $this->type->getLabel(),
+            ],
+            'size' => [
+                'label' => 'Größe',
+                'value' => $this->formatted_size,
+            ],
+            'location' => [
+                'label' => 'Standort',
+                'value' => $this->location ?? 'Standort nicht angegeben',
+            ],
+            'address' => [
+                'label' => 'Adresse',
+                'value' => $this->full_location,
+            ],
+            'established_at' => [
+                'label' => 'Anlegedatum',
+                'value' => $this->established_at ? $this->established_at->format('d.m.Y') : 'Nicht angegeben',
+            ],
+            'age' => [
+                'label' => 'Alter',
+                'value' => $this->age_display,
+            ],
+            'status' => [
+                'label' => 'Status',
+                'value' => $this->is_active ? 'active' : 'inactive',
+            ],
+            'created_at' => [
+                'label' => 'Angelegt am',
+                'value' => $this->formatted_created_at,
+            ],
+            'updated_at' => [
+                'label' => 'Aktualisiert am',
+                'value' => $this->formatted_updated_at,
+            ],
+        ];
     }
 
     protected static function booted(): void

@@ -103,8 +103,12 @@ namespace App\Models{
  * @property-read Area[] $areas
  * @property \Illuminate\Support\Carbon|null $deleted_at
  * @property-read int|null $areas_count
+ * @property-read string $age_display
  * @property-read int|null $age_in_years
+ * @property-read string $formatted_age
+ * @property-read string $formatted_created_at
  * @property-read string $formatted_size
+ * @property-read string $formatted_updated_at
  * @property-read string $full_location
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Garden active()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Garden byLocation(string $location)

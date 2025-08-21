@@ -53,6 +53,20 @@ describe('Garden Policy', function () {
             expect($response)->toBeInstanceOf(Response::class)
                 ->and($response->allowed())->toBeTrue();
         });
+
+        it('allows garden owner to restore their garden', function () {
+            $response = Gate::forUser($this->user)->inspect('restore', $this->garden);
+
+            expect($response)->toBeInstanceOf(Response::class)
+                ->and($response->allowed())->toBeTrue();
+        });
+
+        it('allows garden owner to force delete their garden', function () {
+            $response = Gate::forUser($this->user)->inspect('forceDelete', $this->garden);
+
+            expect($response)->toBeInstanceOf(Response::class)
+                ->and($response->allowed())->toBeTrue();
+        });
     });
 
     describe('Non-Owner Authorization', function () {
@@ -78,6 +92,22 @@ describe('Garden Policy', function () {
             expect($response)->toBeInstanceOf(Response::class)
                 ->and($response->allowed())->toBeFalse()
                 ->and($response->message())->toBe('Du kannst nur deine eigenen Gärten löschen.');
+        });
+
+        it('denies non-owner access to restore other users gardens', function () {
+            $response = Gate::forUser($this->user)->inspect('restore', $this->otherUserGarden);
+
+            expect($response)->toBeInstanceOf(Response::class)
+                ->and($response->allowed())->toBeFalse()
+                ->and($response->message())->toBe('Du kannst nur deine eigenen Gärten wiederherstellen.');
+        });
+
+        it('denies non-owner access to force delete other users gardens', function () {
+            $response = Gate::forUser($this->user)->inspect('forceDelete', $this->otherUserGarden);
+
+            expect($response)->toBeInstanceOf(Response::class)
+                ->and($response->allowed())->toBeFalse()
+                ->and($response->message())->toBe('Du kannst nur deine eigenen Gärten permanent löschen.');
         });
     });
 

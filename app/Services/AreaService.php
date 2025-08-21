@@ -7,6 +7,8 @@ namespace App\Services;
 use App\Enums\Area\AreaTypeEnum;
 use App\Models\Area;
 use App\Models\Garden;
+use App\Models\Plant;
+use App\Models\PlantType;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -123,10 +125,11 @@ final class AreaService
      */
     public function getShowData(Area $area): array
     {
-        $area->load(['garden', 'plants']);
+        $area->load(['garden', 'plants.plantType']);
 
         return [
             'area' => $area,
+            'availablePlants' => $this->getAvailablePlantsForArea(),
         ];
     }
 
@@ -206,6 +209,106 @@ final class AreaService
     public function forceDeleteArea(Area $area): bool
     {
         return $area->forceDelete();
+    }
+
+    /**
+     * Add plants to an area.
+     *
+     * @param  array<string, mixed>  $data
+     */
+    public function addPlantsToArea(Area $area, array $data): void
+    {
+        foreach ($data['plants'] as $plantData) {
+            $plantId = (int) $plantData['plant_id'];
+            $quantity = (int) $plantData['quantity'];
+            $notes = $plantData['notes'] ?? null;
+
+            // Check if plant is already in this area
+            $existingPivot = $area->plants()->where('plant_id', $plantId)->first();
+
+            if ($existingPivot) {
+                // Update quantity by adding to existing
+                $newQuantity = $existingPivot->pivot->quantity + $quantity;
+                $area->plants()->updateExistingPivot($plantId, [
+                    'quantity' => $newQuantity,
+                    'notes' => $notes ?: $existingPivot->pivot->notes,
+                    'planted_at' => now(),
+                ]);
+            } else {
+                // Attach new plant
+                $area->plants()->attach($plantId, [
+                    'quantity' => $quantity,
+                    'notes' => $notes,
+                    'planted_at' => now(),
+                ]);
+            }
+        }
+    }
+
+    /**
+     * Remove a plant from an area.
+     */
+    public function removePlantFromArea(Area $area, Plant $plant): void
+    {
+        $area->plants()->detach($plant->id);
+    }
+
+    /**
+     * Get available plants that can be added to an area.
+     *
+     * @return Collection<int, Plant>
+     */
+    public function getAvailablePlantsForArea(): Collection
+    {
+        return Plant::query()
+            ->with('plantType')
+            ->select('id', 'name', 'latin_name', 'description', 'plant_type_id')
+            ->orderBy('name')
+            ->get();
+    }
+
+    /**
+     * Get filtered plants for area excluding already planted ones.
+     *
+     * @return Collection<int, Plant>
+     */
+    public function getFilteredPlantsForArea(Area $area, string $search = '', ?int $plantTypeId = null): Collection
+    {
+        $plants = $this->getAvailablePlantsForArea();
+
+        // Filter already planted plants in this area
+        $plants = $plants->filter(fn (Plant $plant): bool => ! $area->plants()->where('plant_id', $plant->id)->exists());
+
+        // Apply search filter
+        if ($search !== '' && $search !== '0') {
+            $plants = $plants->filter(function (Plant $plant) use ($search): bool {
+                $searchLower = mb_strtolower($search);
+
+                return str_contains(mb_strtolower($plant->name), $searchLower) ||
+                       ($plant->latin_name && str_contains(mb_strtolower($plant->latin_name), $searchLower)) ||
+                       ($plant->description && str_contains(mb_strtolower($plant->description), $searchLower));
+            });
+        }
+
+        // Apply plant type filter
+        if ($plantTypeId !== null && $plantTypeId !== 0) {
+            $plants = $plants->filter(fn (Plant $plant): bool => $plant->plant_type_id === $plantTypeId);
+        }
+
+        return $plants->sortBy('name')->values();
+    }
+
+    /**
+     * Get plant type options for dropdowns.
+     *
+     * @return array<int, string>
+     */
+    public function getPlantTypeOptions(): array
+    {
+        return PlantType::orderBy('name')
+            ->get()
+            ->mapWithKeys(fn (PlantType $type): array => [$type->id => $type->name->getLabel()])
+            ->toArray();
     }
 
     /**
