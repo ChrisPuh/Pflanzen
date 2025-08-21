@@ -33,12 +33,28 @@ denke ans testen. generell gilt php 8.4 typesafety, laravel 12, nutze vorhandene
 - [x] der User sollte nun die möglichkeit haben seine areas zu löschen 
 - [x] momentan ist es so gelöst dass ein garten viele blumen hat (belongstomany). dazu gibt es auch einen pivottable. ich denke aber dass eine blume in einem bereich gepflanzt wird. also sollte die pflanze eher eine beziehung zum bereich haben und nicht zum garten. ändere das bitte. nutze die vorhandenen sachen (migration) benenne sie um passe sie an den
 - [x] warum werden die dataen für die selectboxen in den views geladen? das sollte doch im controller passieren. bitte ändere das (index view)
+- [x] die index cards und die show vie von area sehehn ja schon gut aus. mir fehlt noch ein bezug zum Garten, dass mann schneller erkennt wo die area hingehört
+- [ ] in der area show in der section Plants gibt es einen button um pflanzen hinzuzufügen. wenn man den drückt erscheint die form. wenn die form da ist sollte vielleicht statt dem button hinzufügen ein button da sein um die form zu schließen. und wenn die form geschlossen ist sollte der button wieder da sein. also toggle button
+- [ ] in area.show die form zum hinzufügen einer pflanze ist mit vielen funktionen (bulk etc) vielleicht sollte man da hier ein livewirecomponent implementieren. das ist ja eine komplexe form.
+- [ ] in area.show in der form um Pflanzen der area hinzuzufügen gibt es einen select für die Pflanzen. wenn die Pflanzendatenbank aber irgendwann größer wird, dann wird das select unübersichtlich. wir sollten hier eine möglichkeit finden wie der user nach pflanzen such oder durch filter etc auswählen kann. sollte der platz da zu wenig sein könnte man ja auch ein modal implementieren was die form enthält
+- 
 
 ## Feature Plants
 - [x] die plants index view implementiert noch nicht die layouts.index view
 - [x] die plants index view nutzt noch nicht die vorhanden form components oder auch die filter card
 - [X] die plants index view lädt die daten für select noch in der view anstatt im controller
-- [ ] die plants index view enthält cards welche den cards in area index und garden index ähneln. bitte in ein composent auslagern und in den views nutzen (also cards in area index, garden index und plants index)
+- [x] die plants index view enthält cards welche den cards in area index und garden index ähneln. bitte in ein composent auslagern und in den views nutzen (also cards in area index, garden index und plants index)
+
+## Feature About
+- [ ] die about view ist noch nicht implementiert. bitte erstelle eine einfache about view die die daten aus der database nutzt. denke an die vorhandenen components und layouts.
+
+## Feature Welcome
+- [ ] die welcome view ist noch nicht implementiert. bitte erstelle eine einfache welcome aber klarem cta. (hier sollte auch noch ein layout(guest) erstellt werden, welches die welcome view nutzt)
+
+## Feature Auth
+- [ ] da noch keine Email logik implementiert ist sollte der authenticated user vorerste ausreichen um die routes zu besuchen. das feature machen wir nach dem ersten release
+- [ ] wir haben emails noch nicht implementiert. also treiber service etc. 
+- [ ] tests zu email verification müssen vervollständigt werden 
 
 ## routes
 
