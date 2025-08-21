@@ -102,10 +102,10 @@
                     </div>
 
                     <!-- Selected Plants Counter -->
-                    @if(count($selectedPlants) > 0)
+                    @if($this->selectedPlantsCount > 0)
                         <div class="mt-4 p-3 bg-primary-soft rounded-lg">
                             <p class="text-sm text-primary font-medium">
-                                {{ count($selectedPlants) }} {{ count($selectedPlants) === 1 ? 'Pflanze' : 'Pflanzen' }}
+                                {{ $this->selectedPlantsCount }} {{ $this->selectedPlantsCount === 1 ? 'Pflanze' : 'Pflanzen' }}
                                 ausgewählt
                             </p>
                         </div>
@@ -113,7 +113,9 @@
                 </div>
 
                 <!-- Plants Grid -->
-                <div class="flex-1 overflow-y-auto max-h-96 p-6">
+                <div class="flex gap-6 flex-1 overflow-hidden">
+                    <!-- Available Plants -->
+                    <div class="flex-1 overflow-y-auto max-h-96 p-6">
                     @if($this->availablePlants->count() > 0)
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             @foreach($this->availablePlants as $plant)
@@ -207,13 +209,13 @@
                             </svg>
                             <h3 class="text-lg font-medium text-foreground mb-2">Keine Pflanzen gefunden</h3>
                             <p class="text-muted">
-                                @if(!empty($search) || $selectedPlantTypeId)
+                                @if($this->hasActiveFilters)
                                     Keine Pflanzen entsprechen den Suchkriterien.
                                 @else
                                     Alle verfügbaren Pflanzen sind bereits in diesem Bereich.
                                 @endif
                             </p>
-                            @if(!empty($search) || $selectedPlantTypeId)
+                            @if($this->hasActiveFilters)
                                 <x-ui.action-button
                                     variant="secondary"
                                     size="sm"
@@ -223,6 +225,71 @@
                                     Filter zurücksetzen →
                                 </x-ui.action-button>
                             @endif
+                        </div>
+                    @endif
+                    </div>
+
+                    <!-- Selected Plants Sidebar -->
+                    @if($this->selectedPlantsCount > 0)
+                        <div class="w-80 border-l border-default bg-surface-2 p-6 overflow-y-auto max-h-96">
+                            <h3 class="text-lg font-semibold text-foreground mb-4 sticky top-0 bg-surface-2 pb-2">
+                                Ausgewählte Pflanzen
+                                <span class="text-sm font-normal text-muted">({{ $this->selectedPlantsCount }})</span>
+                            </h3>
+                            
+                            <div class="space-y-4">
+                                @foreach($this->selectedPlantsData as $plant)
+                                        <div class="p-4 bg-surface rounded-lg border border-default">
+                                            <div class="flex items-start justify-between mb-3">
+                                                <div class="flex-1">
+                                                    <h4 class="font-semibold text-foreground text-sm">
+                                                        {{ $plant->name }}
+                                                    </h4>
+                                                    @if($plant->latin_name)
+                                                        <p class="text-xs text-muted italic">
+                                                            {{ $plant->latin_name }}
+                                                        </p>
+                                                    @endif
+                                                </div>
+                                                <button 
+                                                    wire:click="togglePlant({{ $plant->id }})"
+                                                    class="text-red-600 hover:text-red-700 p-1"
+                                                    title="Entfernen"
+                                                >
+                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                                    </svg>
+                                                </button>
+                                            </div>
+                                            
+                                            <div class="space-y-3">
+                                                <x-forms.input
+                                                    label="Anzahl"
+                                                    name="sidebar_quantity_{{ $plant->id }}"
+                                                    type="number"
+                                                    wire:model.live="selectedPlants.{{ $plant->id }}.quantity"
+                                                    wire:change="updateQuantity({{ $plant->id }}, $event.target.value)"
+                                                    labelClass="text-xs"
+                                                    class="text-sm px-2 py-1"
+                                                    min="1"
+                                                    max="9999"
+                                                />
+                                                
+                                                <x-forms.input
+                                                    label="Notizen (optional)"
+                                                    name="sidebar_notes_{{ $plant->id }}"
+                                                    type="text"
+                                                    placeholder="z.B. Position, Besonderheiten..."
+                                                    wire:model.live="selectedPlants.{{ $plant->id }}.notes"
+                                                    wire:change="updateNotes({{ $plant->id }}, $event.target.value)"
+                                                    labelClass="text-xs"
+                                                    class="text-sm px-2 py-1"
+                                                    maxlength="500"
+                                                />
+                                            </div>
+                                        </div>
+                                @endforeach
+                            </div>
                         </div>
                     @endif
                 </div>
@@ -244,8 +311,8 @@
 
 
                     >
-                        @if(count($selectedPlants) > 0)
-                            {{ count($selectedPlants) }} {{ count($selectedPlants) === 1 ? 'Pflanze' : 'Pflanzen' }}
+                        @if($this->selectedPlantsCount > 0)
+                            {{ $this->selectedPlantsCount }} {{ $this->selectedPlantsCount === 1 ? 'Pflanze' : 'Pflanzen' }}
                             hinzufügen
                         @else
                             Pflanzen hinzufügen

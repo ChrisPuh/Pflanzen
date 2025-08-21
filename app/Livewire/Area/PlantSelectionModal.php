@@ -6,7 +6,7 @@ namespace App\Livewire\Area;
 
 use App\Models\Area;
 use App\Models\Plant;
-use App\Models\PlantType;
+use App\Services\AreaService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Collection;
 use Livewire\Component;
@@ -68,7 +68,7 @@ final class PlantSelectionModal extends Component
 
     public function addSelectedPlants(): void
     {
-        if (empty($this->selectedPlants)) {
+        if ($this->selectedPlants === []) {
             return;
         }
 
@@ -96,32 +96,37 @@ final class PlantSelectionModal extends Component
 
     public function getAvailablePlantsProperty(): Collection
     {
-        $query = Plant::with(['plantType', 'categories'])
-            ->whereDoesntHave('areas', fn ($q) => $q->where('area_id', $this->area->id));
-
-        if (! empty($this->search)) {
-            $query->where(function ($q) {
-                $q->where('name', 'like', '%'.$this->search.'%')
-                    ->orWhere('latin_name', 'like', '%'.$this->search.'%')
-                    ->orWhere('description', 'like', '%'.$this->search.'%');
-            });
-        }
-
-        if ($this->selectedPlantTypeId) {
-            $query->where('plant_type_id', $this->selectedPlantTypeId);
-        }
-
-        return $query->orderBy('name')->get();
-    }
-
-    public function getPlantTypesProperty(): Collection
-    {
-        return PlantType::orderBy('name')->get();
+        return app(AreaService::class)->getFilteredPlantsForArea(
+            $this->area,
+            $this->search,
+            $this->selectedPlantTypeId
+        );
     }
 
     public function getPlantTypeOptionsProperty(): array
     {
-        return $this->plantTypes->mapWithKeys(fn($type) => [$type->id => $type->name->getLabel()])->toArray();
+        return app(AreaService::class)->getPlantTypeOptions();
+    }
+
+    public function getSelectedPlantsDataProperty(): Collection
+    {
+        if ($this->selectedPlants === []) {
+            return collect();
+        }
+
+        return Plant::with(['plantType'])
+            ->whereIn('id', array_keys($this->selectedPlants))
+            ->get();
+    }
+
+    public function getHasActiveFiltersProperty(): bool
+    {
+        return ($this->search !== '' && $this->search !== '0') || $this->selectedPlantTypeId !== null;
+    }
+
+    public function getSelectedPlantsCountProperty(): int
+    {
+        return count($this->selectedPlants);
     }
 
     public function render(): View
