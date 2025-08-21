@@ -277,7 +277,7 @@ describe('Area show page with plants', function () {
         $response = $this->actingAs($this->user)->get(route('areas.show', $this->area));
 
         $response->assertSee('Pflanzen hinzufügen')
-            ->assertSee('add-plant-form', false);
+            ->assertSeeLivewire('area.plant-selection-modal');
     });
 
     it('hides add plant form for unauthorized users', function (): void {

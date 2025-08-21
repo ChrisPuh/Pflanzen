@@ -192,6 +192,42 @@ describe('Garden Model', function () {
                 ->and($partialLocationGarden->full_location)->toBe('80331, München')
                 ->and($noLocationGarden->full_location)->toBe('Standort nicht angegeben');
         });
+
+        it('calculates total plant quantity', function () {
+            $garden = Garden::factory()->create();
+            $area1 = Area::factory()->create(['garden_id' => $garden->id]);
+            $area2 = Area::factory()->create(['garden_id' => $garden->id]);
+            $plant1 = Plant::factory()->create();
+            $plant2 = Plant::factory()->create();
+
+            // Add plants to areas with different quantities
+            $area1->plants()->attach($plant1->id, ['quantity' => 5, 'planted_at' => now()]);
+            $area1->plants()->attach($plant2->id, ['quantity' => 3, 'planted_at' => now()]);
+            $area2->plants()->attach($plant1->id, ['quantity' => 2, 'planted_at' => now()]);
+
+            expect($garden->getTotalPlantQuantity())->toBe(10)
+                ->and($garden->plantQuantityTotal())->toBe(10);
+        });
+
+        it('returns zero plant quantity for garden without plants', function () {
+            $garden = Garden::factory()->create();
+            $area = Area::factory()->create(['garden_id' => $garden->id]);
+
+            expect($garden->getTotalPlantQuantity())->toBe(0)
+                ->and($garden->plantQuantityTotal())->toBe(0);
+        });
+
+        it('formats age correctly', function () {
+            $gardenWithAge = Garden::factory()->create(['established_at' => '2020-01-15']);
+            $gardenWithoutAge = Garden::factory()->create(['established_at' => null]);
+
+            // Refresh to ensure the model is loaded properly from database
+            $gardenWithAge->refresh();
+            $gardenWithoutAge->refresh();
+
+            expect($gardenWithAge->formatted_age)->toBe('15.01.2020')
+                ->and($gardenWithoutAge->formatted_age)->toBe('Anlegedatum nicht angegeben');
+        });
     });
 
     describe('Validation and Casting', function () {

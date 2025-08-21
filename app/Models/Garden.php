@@ -158,8 +158,8 @@ final class Garden extends Model
 
     public function getFormattedAgeAttribute(): string
     {
-        return $this->attributes['established_at']
-            ? $this->attributes['established_at']->format('d.m.Y')
+        return $this->established_at
+            ? $this->established_at->format('d.m.Y')
             : 'Anlegedatum nicht angegeben';
     }
 
