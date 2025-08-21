@@ -37,8 +37,8 @@ denke ans testen. generell gilt php 8.4 typesafety, laravel 12, nutze vorhandene
 - [ ] in der area show in der section Plants gibt es einen button um pflanzen hinzuzufügen. wenn man den drückt erscheint die form. wenn die form da ist sollte vielleicht statt dem button hinzufügen ein button da sein um die form zu schließen. und wenn die form geschlossen ist sollte der button wieder da sein. also toggle button
 - [ ] in area.show die form zum hinzufügen einer pflanze ist mit vielen funktionen (bulk etc) vielleicht sollte man da hier ein livewirecomponent implementieren. das ist ja eine komplexe form.
 - [ ] in area.show in der form um Pflanzen der area hinzuzufügen gibt es einen select für die Pflanzen. wenn die Pflanzendatenbank aber irgendwann größer wird, dann wird das select unübersichtlich. wir sollten hier eine möglichkeit finden wie der user nach pflanzen such oder durch filter etc auswählen kann. sollte der platz da zu wenig sein könnte man ja auch ein modal implementieren was die form enthält
-- 
-
+- [ ] in area.show wenn ich im modal Pflanzen hinzufügen modal bin und eine pflanze ausgefüllt habe währe es cool wenn noch irgendwio eine liste angezeigt wird was ich ausgewählt habe und sie dort auch wieder entfernen könnte bze quantity und notes noch eingeben/ korrigieren kann
+- [ ] in area.show die actions könnten auch in einem dropdown sein. also actions dropdown (außer) back (siehe garden.show) vielleicht kann man eine layout.show machen wo das bereits implementiert ist und garden und area nutzen dann diese
 ## Feature Plants
 - [x] die plants index view implementiert noch nicht die layouts.index view
 - [x] die plants index view nutzt noch nicht die vorhanden form components oder auch die filter card
