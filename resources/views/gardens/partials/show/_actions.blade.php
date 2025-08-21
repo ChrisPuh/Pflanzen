@@ -1,4 +1,8 @@
 <!-- Actions Dropdown -->
+<x-ui.back-button
+    :href="route('gardens.index')"
+    text="Zurück zur Übersicht"
+/>
 @if(auth()->user()->can('update', $garden) || auth()->user()->can('delete', $garden))
     <div class="relative" x-data="{ open: false }">
         <button
@@ -62,7 +66,8 @@
                         Garten archivieren
                     </button>
 
-                    <form id="archive-garden-form" method="POST" action="{{ route('gardens.destroy', $garden) }}" class="hidden">
+                    <form id="archive-garden-form" method="POST" action="{{ route('gardens.destroy', $garden) }}"
+                          class="hidden">
                         @csrf
                         @method('DELETE')
                     </form>

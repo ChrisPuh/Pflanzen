@@ -19,6 +19,8 @@ return new class extends Migration
             $table->foreignId('plant_id')->constrained()->cascadeOnDelete();
             $table->timestamp('planted_at')->nullable();
             $table->text('notes')->nullable();
+            $table->integer('quantity')->default(1)->after('plant_id');
+
             $table->timestamps();
 
             $table->unique(['area_id', 'plant_id']);

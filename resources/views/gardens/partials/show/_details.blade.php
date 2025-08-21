@@ -32,19 +32,9 @@
 
     <!-- Garden Information -->
     <div class="lg:col-span-2">
-        <x-ui.card title="Garten-Informationen">
-            <dl class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                @foreach($garden->getDetails() as $key => $detail)
-                    <div class="flex items-center gap-2">
-                        <dt class="text-sm font-medium text-muted-foreground">{{$detail['label']}}</dt>
-                        @if($key === 'status')
-                            <x-ui.status-badge :status="$detail['value']" />
-                        @else
-                            <dd class="text-sm text-foreground">{{ $detail['value'] }}</dd>
-                        @endif
-                    </div>
-                @endforeach
-            </dl>
-        </x-ui.card>
+        <x-ui.detail-list 
+            :details="$garden->getDetails()"
+            title="Garten-Informationen"
+        />
     </div>
 </div>
