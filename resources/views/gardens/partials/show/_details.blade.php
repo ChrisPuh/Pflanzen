@@ -34,42 +34,16 @@
     <div class="lg:col-span-2">
         <x-ui.card title="Garten-Informationen">
             <dl class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div class="flex items-center gap-2">
-                    <dt class="text-sm font-medium text-muted-foreground">Typ</dt>
-                    <dd class="text-sm text-foreground">{{ $garden->type->getLabel() }}</dd>
-                </div>
-                <div class="flex items-center gap-2">
-                    <dt class="text-sm font-medium text-muted-foreground">Größe</dt>
-                    <dd class="text-sm text-foreground">{{ $garden->formatted_size }}</dd>
-                </div>
-                <div class="flex items-center gap-2">
-                    <dt class="text-sm font-medium text-muted-foreground">Standort</dt>
-                    <dd class="text-sm text-foreground">{{ $garden->location }}</dd>
-                </div>
-                <div class="flex items-center gap-2">
-                    <dt class="text-sm font-medium text-muted-foreground">Adresse</dt>
-                    <dd class="text-sm text-foreground">{{ $garden->full_location }}</dd>
-                </div>
-                <div class="flex items-center gap-2">
-                    <dt class="text-sm font-medium text-muted-foreground">Angelegt am</dt>
-                    <dd class="text-sm text-foreground ">
-                        {{ $garden->established_at }} {{ $garden->formatted_age }}
-                    </dd>
-                </div>
-                <div class="flex items-center gap-2">
-                    <dt class="text-sm font-medium text-muted-foreground">Status</dt>
-                    <dd class="text-sm text-foreground flex items-center gap-2">
-                        <x-ui.status-badge :status="$garden->is_active ? 'active' : 'inactive'" />
-                    </dd>
-                </div>
-                <div class="flex items-center gap-2">
-                    <dt class="text-sm font-medium text-muted-foreground">Erstellt Am</dt>
-                    <dd class="text-sm text-foreground">{{ $garden->created_at }}</dd>
-                </div>
-                <div class="flex items-center gap-2">
-                    <dt class="text-sm font-medium text-muted-foreground">Geändert Am</dt>
-                    <dd class="text-sm text-foreground">{{ $garden->updated_at }}</dd>
-                </div>
+                @foreach($garden->getDetails() as $key => $detail)
+                    <div class="flex items-center gap-2">
+                        <dt class="text-sm font-medium text-muted-foreground">{{$detail['label']}}</dt>
+                        @if($key === 'status')
+                            <x-ui.status-badge :status="$detail['value']" />
+                        @else
+                            <dd class="text-sm text-foreground">{{ $detail['value'] }}</dd>
+                        @endif
+                    </div>
+                @endforeach
             </dl>
         </x-ui.card>
     </div>

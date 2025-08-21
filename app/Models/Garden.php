@@ -224,4 +224,42 @@ final class Garden extends Model
             $garden->areas()->withTrashed()->restore();
         });
     }
+
+    public function getDetails(): array
+    {
+        return [
+            'type' => [
+                'label' => 'Typ',
+                'value' => $this->type->getLabel(),
+            ],
+            'size' => [
+                'label' => 'Größe',
+                'value' => $this->formatted_size,
+            ],
+            'location' => [
+                'label' => 'Standort',
+                'value' => $this->location,
+            ],
+            'address' => [
+                'label' => 'Adresse',
+                'value' => $this->full_location,
+            ],
+            'established_at' => [
+                'label' => 'Anlegedatum',
+                'value' => $this->established_at . $this->formatted_age,
+            ],
+            'status' => [
+                'label' => 'Status',
+                'value' => $this->is_active ? 'active' : 'inactive',
+            ],
+            'created_at' => [
+                'label' => 'Angelegt am',
+                'value' => $this->created_at,
+            ],
+            'updated_at' => [
+                'label' => 'Aktualisiert am',
+                'value' => $this->updated_at,
+            ],
+        ];
+    }
 }
