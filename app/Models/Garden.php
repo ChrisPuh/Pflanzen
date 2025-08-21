@@ -99,7 +99,7 @@ final class Garden extends Model
      */
     public function getTotalPlantQuantity(): int
     {
-        return (int)$this->areas()
+        return (int) $this->areas()
             ->join('area_plant', 'areas.id', '=', 'area_plant.area_id')
             ->sum('area_plant.quantity');
     }
@@ -109,7 +109,7 @@ final class Garden extends Model
      */
     public function plantQuantityTotal(): int
     {
-        return (int)$this->areas()
+        return (int) $this->areas()
             ->join('area_plant', 'areas.id', '=', 'area_plant.area_id')
             ->sum('area_plant.quantity');
     }
@@ -144,15 +144,16 @@ final class Garden extends Model
             return 'Größe nicht angegeben';
         }
 
-        return number_format((float)$this->size_sqm, 2, ',', '.') . ' m²';
+        return number_format((float) $this->size_sqm, 2, ',', '.').' m²';
     }
 
-    public function getAgeInYearsAttribute(): int
+    public function getAgeInYearsAttribute(): ?int
     {
         if ($this->established_at === null) {
-            return 0;
+            return null;
         }
-        return (int)Carbon::now()->diffInYears($this->established_at);
+
+        return (int) $this->established_at->diffInYears(Carbon::now());
     }
 
     public function getFormattedAgeAttribute(): string
@@ -162,18 +163,32 @@ final class Garden extends Model
             : 'Anlegedatum nicht angegeben';
     }
 
-
-    public function getCreatedAtAttribute(): string
+    public function getAgeDisplayAttribute(): string
     {
-        return $this->attributes['created_at']
-            ? Carbon::parse($this->attributes['created_at'])->toDateTimeString()
+        $ageInYears = $this->age_in_years;
+
+        if ($ageInYears === null) {
+            return 'Alter unbekannt';
+        }
+
+        if ($ageInYears === 1) {
+            return '1 Jahr alt';
+        }
+
+        return $ageInYears.' Jahre alt';
+    }
+
+    public function getFormattedCreatedAtAttribute(): string
+    {
+        return $this->created_at
+            ? $this->created_at->format('d.m.Y H:i')
             : 'Anlegedatum nicht angegeben';
     }
 
-    public function getUpdatedAtAttribute(): string
+    public function getFormattedUpdatedAtAttribute(): string
     {
-        return $this->attributes['updated_at']
-            ? Carbon::parse($this->attributes['updated_at'])->toDateTimeString()
+        return $this->updated_at
+            ? $this->updated_at->format('d.m.Y H:i')
             : 'Anlegedatum nicht angegeben';
     }
 
@@ -186,12 +201,12 @@ final class Garden extends Model
 
     public function getLatitude(): ?float
     {
-        return $this->hasCoordinates() ? (float)$this->coordinates['lat'] : null;
+        return $this->hasCoordinates() ? (float) $this->coordinates['lat'] : null;
     }
 
     public function getLongitude(): ?float
     {
-        return $this->hasCoordinates() ? (float)$this->coordinates['lng'] : null;
+        return $this->hasCoordinates() ? (float) $this->coordinates['lng'] : null;
     }
 
     public function setCoordinates(float $latitude, float $longitude): void
@@ -205,24 +220,17 @@ final class Garden extends Model
     public function getFullLocationAttribute(): string
     {
         $parts = array_filter([
-            $this->location,
+            $this->attributes['location'],
             $this->postal_code,
             $this->city,
         ]);
 
-        return in_array(implode(', ', $parts), ['', '0'], true) ? 'Standort nicht angegeben' : implode(', ', $parts);
+        return count($parts) === 0 ? 'Standort nicht angegeben' : implode(', ', $parts);
     }
 
-    public function getLocationAttribute(): string
+    public function getLocationAttribute(): ?string
     {
-        return $this->location ?? 'Standort nicht angegeben';
-    }
-
-    protected static function booted(): void
-    {
-        self::restored(function (Garden $garden): void {
-            $garden->areas()->withTrashed()->restore();
-        });
+        return $this->attributes['location'];
     }
 
     public function getDetails(): array
@@ -238,7 +246,7 @@ final class Garden extends Model
             ],
             'location' => [
                 'label' => 'Standort',
-                'value' => $this->location,
+                'value' => $this->location ?? 'Standort nicht angegeben',
             ],
             'address' => [
                 'label' => 'Adresse',
@@ -246,7 +254,11 @@ final class Garden extends Model
             ],
             'established_at' => [
                 'label' => 'Anlegedatum',
-                'value' => $this->established_at . $this->formatted_age,
+                'value' => $this->established_at ? $this->established_at->format('d.m.Y') : 'Nicht angegeben',
+            ],
+            'age' => [
+                'label' => 'Alter',
+                'value' => $this->age_display,
             ],
             'status' => [
                 'label' => 'Status',
@@ -254,12 +266,19 @@ final class Garden extends Model
             ],
             'created_at' => [
                 'label' => 'Angelegt am',
-                'value' => $this->created_at,
+                'value' => $this->formatted_created_at,
             ],
             'updated_at' => [
                 'label' => 'Aktualisiert am',
-                'value' => $this->updated_at,
+                'value' => $this->formatted_updated_at,
             ],
         ];
+    }
+
+    protected static function booted(): void
+    {
+        self::restored(function (Garden $garden): void {
+            $garden->areas()->withTrashed()->restore();
+        });
     }
 }
