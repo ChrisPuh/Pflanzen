@@ -18,6 +18,27 @@ Route::get('/', function () {
     return view('welcome');
 })->name('home');
 
+Route::get('/about', function () {
+    $stats = [
+        'plants_count' => \App\Models\Plant::count(),
+        'plant_types_count' => \App\Models\PlantType::count(),
+        'categories_count' => \App\Models\Category::count(),
+        'users_count' => \App\Models\User::count(),
+        'gardens_count' => \App\Models\Garden::count(),
+        'areas_count' => \App\Models\Area::count(),
+    ];
+    
+    return view('about', compact('stats'));
+})->name('about');
+
+Route::get('/privacy', function () {
+    return view('legal.privacy');
+})->name('privacy');
+
+Route::get('/terms', function () {
+    return view('legal.terms');
+})->name('terms');
+
 /*
 |--------------------------------------------------------------------------
 | Authenticated Routes

@@ -51,7 +51,7 @@ denke ans testen. generell gilt php 8.4 typesafety, laravel 12, nutze vorhandene
 - [ ] die about view ist noch nicht implementiert. bitte erstelle eine einfache about view die die daten aus der database nutzt. denke an die vorhandenen components und layouts.
 
 ## Feature Welcome
-- [ ] die welcome view ist noch nicht implementiert. bitte erstelle eine einfache welcome aber klarem cta. (hier sollte auch noch ein layout(guest) erstellt werden, welches die welcome view nutzt)
+- [x] die welcome view ist noch nicht implementiert. bitte erstelle eine einfache welcome aber klarem cta. (hier sollte auch noch ein layout(guest) erstellt werden, welches die welcome view nutzt)
 
 ## Feature Auth
 - [ ] da noch keine Email logik implementiert ist sollte der authenticated user vorerste ausreichen um die routes zu besuchen. das feature machen wir nach dem ersten release
