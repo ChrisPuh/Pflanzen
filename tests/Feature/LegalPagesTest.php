@@ -31,8 +31,8 @@ describe('Legal Pages', function () {
         $response->assertStatus(200)
             ->assertSee('Datenschutz')
             ->assertSee('AGB')
-            ->assertSee('href="' . route('privacy') . '"', false)
-            ->assertSee('href="' . route('terms') . '"', false);
+            ->assertSee('href="'.route('privacy').'"', false)
+            ->assertSee('href="'.route('terms').'"', false);
     });
 
     it('shows legal links in footer on about page', function () {
@@ -41,8 +41,8 @@ describe('Legal Pages', function () {
         $response->assertStatus(200)
             ->assertSee('Datenschutz')
             ->assertSee('AGB')
-            ->assertSee('href="' . route('privacy') . '"', false)
-            ->assertSee('href="' . route('terms') . '"', false);
+            ->assertSee('href="'.route('privacy').'"', false)
+            ->assertSee('href="'.route('terms').'"', false);
     });
 
     it('legal pages use guest layout', function () {
@@ -59,13 +59,13 @@ describe('Legal Pages', function () {
         $response = get('/privacy');
 
         $response->assertStatus(200)
-            ->assertSee('Stand: ' . date('d.m.Y'));
+            ->assertSee('Stand: '.date('d.m.Y'));
     });
 
     it('terms page shows current date', function () {
         $response = get('/terms');
 
         $response->assertStatus(200)
-            ->assertSee('Stand: ' . date('d.m.Y'));
+            ->assertSee('Stand: '.date('d.m.Y'));
     });
 });

@@ -31,8 +31,3 @@ denke ans testen. generell gilt php 8.4 typesafety, laravel 12, nutze vorhandene
 ## routes
 
 ## Controller
-
-
-
-
-- [ ] wir benötigen noch eine Readme für github

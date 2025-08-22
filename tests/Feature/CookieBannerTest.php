@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Livewire\Livewire;
+
 use function Pest\Laravel\get;
 
 describe('Cookie Banner', function () {
@@ -50,7 +51,7 @@ describe('Cookie Banner', function () {
     });
 
     it('shows settings panel content when settings are toggled', function () {
-        Livewire::test(\App\Livewire\CookieBanner::class)
+        Livewire::test(App\Livewire\CookieBanner::class)
             ->assertSet('showBanner', true)
             ->assertSet('showSettings', false)
             ->call('toggleSettings')
@@ -66,12 +67,12 @@ describe('Cookie Banner', function () {
         $response = get('/');
 
         $response->assertStatus(200)
-            ->assertSee('href="' . route('privacy') . '"', false)
+            ->assertSee('href="'.route('privacy').'"', false)
             ->assertSee('Mehr erfahren');
     });
 
     it('shows future cookie categories as disabled', function () {
-        Livewire::test(\App\Livewire\CookieBanner::class)
+        Livewire::test(App\Livewire\CookieBanner::class)
             ->call('toggleSettings')
             ->assertSee('Analyse-Cookies')
             ->assertSee('Marketing-Cookies')
@@ -79,14 +80,14 @@ describe('Cookie Banner', function () {
     });
 
     it('can accept all cookies and hide banner', function () {
-        Livewire::test(\App\Livewire\CookieBanner::class)
+        Livewire::test(App\Livewire\CookieBanner::class)
             ->assertSet('showBanner', true)
             ->call('acceptAll')
             ->assertSet('showBanner', false);
     });
 
     it('can accept essential cookies only and hide banner', function () {
-        Livewire::test(\App\Livewire\CookieBanner::class)
+        Livewire::test(App\Livewire\CookieBanner::class)
             ->assertSet('showBanner', true)
             ->call('acceptEssential')
             ->assertSet('showBanner', false);

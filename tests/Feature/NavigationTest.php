@@ -25,7 +25,7 @@ describe('Guest Navigation', function () {
 
         $response = get('/about');
         $response->assertStatus(200)
-            ->assertSee('Über ' . config('app.name'));
+            ->assertSee('Über '.config('app.name'));
     });
 
     it('can navigate from about to home', function () {
@@ -41,7 +41,7 @@ describe('Guest Navigation', function () {
         $response = get('/about');
 
         $response->assertStatus(200)
-            ->assertSee('href="' . route('home') . '"', false); // Logo should link to home
+            ->assertSee('href="'.route('home').'"', false); // Logo should link to home
     });
 
     it('shows active indicator on home page', function () {

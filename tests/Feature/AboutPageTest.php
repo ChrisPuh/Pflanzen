@@ -2,12 +2,10 @@
 
 declare(strict_types=1);
 
-use App\Models\Area;
-use App\Models\Category;
 use App\Models\Garden;
 use App\Models\Plant;
-use App\Models\PlantType;
 use App\Models\User;
+
 use function Pest\Laravel\get;
 
 describe('About Page', function () {
@@ -15,7 +13,7 @@ describe('About Page', function () {
         $response = get('/about');
 
         $response->assertStatus(200)
-            ->assertSee('Über ' . config('app.name'))
+            ->assertSee('Über '.config('app.name'))
             ->assertSee('in Zahlen')
             ->assertSee('Unsere Mission');
     });
@@ -41,7 +39,7 @@ describe('About Page', function () {
         $response = get('/about');
 
         $response->assertStatus(200);
-        
+
         // Check that numbers are displayed (they should be formatted with number_format)
         if ($plantsCount > 0) {
             $response->assertSee(number_format($plantsCount));

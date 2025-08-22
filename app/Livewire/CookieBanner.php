@@ -6,16 +6,17 @@ namespace App\Livewire;
 
 use Livewire\Component;
 
-class CookieBanner extends Component
+final class CookieBanner extends Component
 {
     public bool $showBanner = false;
+
     public bool $showSettings = false;
 
     public function mount(): void
     {
         // Only show banner if user hasn't made a choice yet
         // We check this via a cookie that gets set when user makes a choice
-        $this->showBanner = !request()->hasCookie('cookie_consent');
+        $this->showBanner = ! request()->hasCookie('cookie_consent');
     }
 
     public function acceptAll(): void
@@ -40,7 +41,12 @@ class CookieBanner extends Component
 
     public function toggleSettings(): void
     {
-        $this->showSettings = !$this->showSettings;
+        $this->showSettings = ! $this->showSettings;
+    }
+
+    public function render(): \Illuminate\View\View
+    {
+        return view('livewire.cookie-banner');
     }
 
     private function setCookieConsent(array $preferences): void
@@ -59,10 +65,5 @@ class CookieBanner extends Component
     {
         $this->showBanner = false;
         $this->showSettings = false;
-    }
-
-    public function render()
-    {
-        return view('livewire.cookie-banner');
     }
 }
