@@ -137,8 +137,27 @@
     <!-- Footer -->
     <footer class="bg-surface-2 border-t border-default mt-16">
         <div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
-            <div class="text-center text-muted text-sm">
-                <p>&copy; {{ date('Y') }} {{ config('app.name') }}. Alle Rechte vorbehalten.</p>
+            <div class="text-center">
+                <!-- Legal Links -->
+                <div class="flex justify-center space-x-6 mb-4">
+                    <a href="{{ route('privacy') }}" 
+                        class="text-muted hover:text-foreground text-sm transition-colors">
+                        Datenschutz
+                    </a>
+                    <a href="{{ route('terms') }}" 
+                        class="text-muted hover:text-foreground text-sm transition-colors">
+                        AGB
+                    </a>
+                    <a href="{{ route('about') }}" 
+                        class="text-muted hover:text-foreground text-sm transition-colors">
+                        Über uns
+                    </a>
+                </div>
+                
+                <!-- Copyright -->
+                <div class="text-muted text-sm">
+                    <p>&copy; {{ date('Y') }} {{ config('app.name') }}. Alle Rechte vorbehalten.</p>
+                </div>
             </div>
         </div>
     </footer>
