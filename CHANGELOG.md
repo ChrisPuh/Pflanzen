@@ -7,17 +7,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Added
-- New features that are in development but not yet released
+### Planned for 0.2.0 (Beta)
+- User-facing plant management (add plants to areas)
+- Plant care tracking (watering, fertilizing schedules)
+- Dashboard with real garden data
+- Mobile-responsive improvements
+- User onboarding flow
 
-### Changed
-- Changes in existing functionality
+### Planned for 0.3.0 (Release Candidate)  
+- Plant care reminders and notifications
+- Garden analytics and insights
+- Export functionality
+- Advanced plant search and filtering
+- Performance optimizations
 
-### Fixed
-- Bug fixes
+### Planned for 1.0.0 (Stable Release)
+- Weather integration
+- Plant disease/pest management
+- Community features
+- Mobile app (PWA)
+- Multi-language support beyond German
 
-### Removed
-- Removed features
+### Working On
+- User plant management interface
+- Plant care logging system
 
 ## [0.1.0] - 2025-01-22 - Alpha Release
 

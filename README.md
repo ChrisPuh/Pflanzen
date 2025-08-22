@@ -2,6 +2,8 @@
 
 A modern garden management application built with Laravel, helping you track and manage your plants, garden areas, and cultivation activities.
 
+> **⚠️ Alpha Status (v0.1.0):** This project is in active development. Core infrastructure is complete, but user-facing plant management features are still being implemented. Perfect for developers who want to contribute or explore the codebase!
+
 ## ✨ Features
 
 - 🏡 **Garden Management** - Organize your garden into different areas
