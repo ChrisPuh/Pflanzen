@@ -5,6 +5,7 @@ denke ans testen. generell gilt php 8.4 typesafety, laravel 12, nutze vorhandene
 
 - [x] erstelle in index page layout (wie create) wovon alles index views nutzen haben. die filter section sollte aus page raus (andere benötigen das ja nicht)und füge es dort ein. denke das gleiche auch für stats, auch das results feld sollte extrahiert werden und darein
 - [ ] die sidebar hat alle links einfach untereinander stehen. bitte sections machen für alles was da rein gehört
+- [ ] die section settings sollte auch ganz und stehen die beispiel links bitte auskommentieren und im code ganz runter
 
 
 ## Tests
@@ -38,7 +39,8 @@ denke ans testen. generell gilt php 8.4 typesafety, laravel 12, nutze vorhandene
 - [x] in area.show die form zum hinzufügen einer pflanze ist mit vielen funktionen (bulk etc) vielleicht sollte man da hier ein livewirecomponent implementieren. das ist ja eine komplexe form.
 - [x] in area.show in der form um Pflanzen der area hinzuzufügen gibt es einen select für die Pflanzen. wenn die Pflanzendatenbank aber irgendwann größer wird, dann wird das select unübersichtlich. wir sollten hier eine möglichkeit finden wie der user nach pflanzen such oder durch filter etc auswählen kann. sollte der platz da zu wenig sein könnte man ja auch ein modal implementieren was die form enthält
 - [x] in area.show wenn ich im modal Pflanzen hinzufügen modal bin und eine pflanze ausgefüllt habe währe es cool wenn noch irgendwio eine liste angezeigt wird was ich ausgewählt habe und sie dort auch wieder entfernen könnte bze quantity und notes noch eingeben/ korrigieren kann
-- [ ] in area.show die actions könnten auch in einem dropdown sein. also actions dropdown (außer) back (siehe garden.show) vielleicht kann man eine layout.show machen wo das bereits implementiert ist und garden und area nutzen dann diese
+- [x] in area.show die actions könnten auch in einem dropdown sein. also actions dropdown (außer) back (siehe garden.show) vielleicht kann man eine layout.show machen wo das bereits implementiert ist und garden und area nutzen dann diese
+
 ## Feature Plants
 - [x] die plants index view implementiert noch nicht die layouts.index view
 - [x] die plants index view nutzt noch nicht die vorhanden form components oder auch die filter card
@@ -56,6 +58,7 @@ denke ans testen. generell gilt php 8.4 typesafety, laravel 12, nutze vorhandene
 - [ ] wir haben emails noch nicht implementiert. also treiber service etc. 
 - [ ] tests zu email verification müssen vervollständigt werden 
 
+
 ## routes
 
 - [x] alle routes liegen da unstrukturiert in web. bitte modern und elegant strukturieren (realworld). 
@@ -64,3 +67,5 @@ denke ans testen. generell gilt php 8.4 typesafety, laravel 12, nutze vorhandene
 
 - [x] kontroller sollen schlank sein. überprüfe bitte ob alle kontroller eine request und service benutzen 
 - [x] kontrolliere dass alle controller die einen authenticated user nutzen den authenticated controller extenden
+
+- [ ] wir benötigen noch eine Readme für github

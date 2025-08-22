@@ -3,7 +3,7 @@
     :href="route('gardens.index')"
     text="Zurück zur Übersicht"
 />
-@if(auth()->user()->can('update', $garden) || auth()->user()->can('delete', $garden))
+@if(auth()->user()->can('update', $model ?? $garden) || auth()->user()->can('delete', $model ?? $garden))
     <div class="relative" x-data="{ open: false }">
         <button
             @click="open = !open"
@@ -28,9 +28,9 @@
             x-cloak
         >
             <div class="py-1">
-                @can('update', $garden)
+                @can('update', $model ?? $garden)
                     <a
-                        href="{{ route('areas.create', ['garden_id' => $garden->id]) }}"
+                        href="{{ route('areas.create', ['garden_id' => ($model ?? $garden)->id]) }}"
                         class="flex items-center px-4 py-2 text-sm text-foreground hover:bg-secondary/50 transition-colors"
                     >
                         <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -41,7 +41,7 @@
                     </a>
 
                     <a
-                        href="{{ route('gardens.edit', $garden) }}"
+                        href="{{ route('gardens.edit', $model ?? $garden) }}"
                         class="flex items-center px-4 py-2 text-sm text-foreground hover:bg-secondary/50 transition-colors"
                     >
                         <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -54,9 +54,9 @@
                     <div class="border-t border-border my-1"></div>
                 @endcan
 
-                @can('delete', $garden)
+                @can('delete', $model ?? $garden)
                     <button
-                        onclick="if(confirm('Möchtest du den Garten {{ json_encode($garden->name) }} wirklich archivieren? Er kann später wiederhergestellt werden.')) { document.getElementById('archive-garden-form').submit(); }"
+                        onclick="if(confirm('Möchtest du den Garten {{ json_encode(($model ?? $garden)->name) }} wirklich archivieren? Er kann später wiederhergestellt werden.')) { document.getElementById('archive-garden-form').submit(); }"
                         class="flex items-center w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-900/10 transition-colors"
                     >
                         <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -66,7 +66,7 @@
                         Garten archivieren
                     </button>
 
-                    <form id="archive-garden-form" method="POST" action="{{ route('gardens.destroy', $garden) }}"
+                    <form id="archive-garden-form" method="POST" action="{{ route('gardens.destroy', $model ?? $garden) }}"
                           class="hidden">
                         @csrf
                         @method('DELETE')

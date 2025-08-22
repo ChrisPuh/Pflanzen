@@ -2,15 +2,12 @@
     use App\Enums\Garden\GardenTypeEnum;
 @endphp
 
-<x-layouts.page
+<x-layouts.show
     :title="$garden->name"
     :subtitle="$garden->type->getLabel()"
+    actions-partial="gardens.partials.show._actions"
+    :model="$garden"
 >
-    <x-slot:actions>
-        <div class="flex items-center gap-3">
-            @include('gardens.partials.show._actions')
-        </div>
-    </x-slot:actions>
     <div class="space-y-8">
         @include('gardens.partials.show._header')
 
@@ -20,4 +17,4 @@
 
         @include('gardens.partials.show._plants')
     </div>
-</x-layouts.page>
+</x-layouts.show>
