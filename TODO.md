@@ -58,6 +58,10 @@ denke ans testen. generell gilt php 8.4 typesafety, laravel 12, nutze vorhandene
 - [ ] wir haben emails noch nicht implementiert. also treiber service etc. 
 - [ ] tests zu email verification müssen vervollständigt werden 
 
+## Feature Kontakt
+- [ ] section wo man bugs reporten kann (template) direkter post zu githaub issus
+- [ ] section wo man feature requests machen kann (template) direkter post zu githaub issus
+- [ ] section wo man 
 
 ## routes
 
