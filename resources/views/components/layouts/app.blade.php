@@ -40,6 +40,17 @@
 
 <body class="bg-surface text-foreground antialiased" x-data="{
     sidebarOpen: localStorage.getItem('sidebarOpen') === null ? window.innerWidth >= 1024 : localStorage.getItem('sidebarOpen') === 'true',
+    isMobile: window.innerWidth < 768,
+    init() {
+        window.addEventListener('resize', () => {
+            const wasMobile = this.isMobile;
+            this.isMobile = window.innerWidth < 768;
+            // Close mobile sidebar when switching from mobile to desktop
+            if (wasMobile && !this.isMobile && this.sidebarOpen) {
+                // Keep sidebar open when switching to desktop
+            }
+        });
+    },
     toggleSidebar() {
         this.sidebarOpen = !this.sidebarOpen;
         localStorage.setItem('sidebarOpen', this.sidebarOpen);
@@ -54,17 +65,45 @@
 }">
 
 <!-- Main Container -->
-<div class="min-h-screen flex flex-col">
+<div class="h-screen flex flex-col overflow-hidden">
 
-    <x-layouts.app.header />
+    <!-- Fixed Header -->
+    <div class="fixed top-0 left-0 right-0 z-30">
+        <x-layouts.app.header />
+    </div>
 
-    <!-- Main Content Area -->
-    <div class="flex flex-1 overflow-hidden">
+    <!-- Main Content Area with fixed sidebar -->
+    <div class="flex flex-1 pt-16 overflow-hidden">
 
-        <x-layouts.app.sidebar />
+        <!-- Fixed Sidebar -->
+        <div class="fixed left-0 top-16 bottom-0 z-20 transition-all duration-300" 
+             :class="{ 
+                'w-64': sidebarOpen && !isMobile, 
+                'w-16 hidden md:block': !sidebarOpen,
+                'w-full md:w-64': sidebarOpen && isMobile
+             }">
+            <x-layouts.app.sidebar />
+        </div>
 
-        <!-- Main Content -->
-        <main class="flex-1 overflow-auto bg-surface content-transition">
+        <!-- Mobile Sidebar Overlay -->
+        <div x-show="sidebarOpen && isMobile" 
+             @click="sidebarOpen = false"
+             class="fixed inset-0 bg-black bg-opacity-50 z-10 md:hidden"
+             x-transition:enter="transition-opacity ease-linear duration-300"
+             x-transition:enter-start="opacity-0"
+             x-transition:enter-end="opacity-100"
+             x-transition:leave="transition-opacity ease-linear duration-300"
+             x-transition:leave-start="opacity-100"
+             x-transition:leave-end="opacity-0">
+        </div>
+
+        <!-- Scrollable Main Content -->
+        <main class="flex-1 overflow-auto bg-surface content-transition transition-all duration-300"
+              :class="{ 
+                'ml-64': sidebarOpen && !isMobile, 
+                'ml-16': !sidebarOpen && !isMobile,
+                'ml-0': isMobile
+              }">
             <div class="p-6">
                 <!-- Success Message -->
                 @session('status')
