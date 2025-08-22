@@ -161,6 +161,9 @@
             </div>
         </div>
     </footer>
+
+    <!-- Cookie Banner -->
+    <livewire:cookie-banner />
 </body>
 
 </html>
