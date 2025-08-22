@@ -1,4 +1,4 @@
-<x-layouts.auth :title="__('Verify Email')">
+<x-layouts.guest>
     <!-- Verify Email Card -->
     <div class="bg-surface-2 rounded-lg shadow-md border border-default overflow-hidden">
         <div class="p-6">
@@ -34,4 +34,4 @@
             </div>
         </div>
     </div>
-</x-layouts.auth>
+</x-layouts.guest>

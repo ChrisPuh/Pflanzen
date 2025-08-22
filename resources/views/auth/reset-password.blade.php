@@ -1,4 +1,4 @@
-<x-layouts.auth :title="__('Reset Password')">
+<x-layouts.guest>
     <!-- Reset Password Card -->
     <div class="bg-surface-2 rounded-lg shadow-md border border-default overflow-hidden">
         <div class="p-6">
@@ -41,4 +41,4 @@
             </div>
         </div>
     </div>
-</x-layouts.auth>
+</x-layouts.guest>

@@ -148,6 +148,13 @@
                         class="text-muted hover:text-foreground text-sm transition-colors">
                         AGB
                     </a>
+                    @if(config('app.impressum_url'))
+                        <a href="{{ config('app.impressum_url') }}" 
+                            class="text-muted hover:text-foreground text-sm transition-colors"
+                            target="_blank" rel="noopener">
+                            Impressum
+                        </a>
+                    @endif
                     <a href="{{ route('about') }}" 
                         class="text-muted hover:text-foreground text-sm transition-colors">
                         Über uns

@@ -58,6 +58,18 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Legal Information URLs
+    |--------------------------------------------------------------------------
+    |
+    | URLs for legal pages like impressum, privacy policy, etc.
+    | These can be internal routes or external URLs.
+    |
+    */
+
+    'impressum_url' => env('IMPRESSUM_URL', null),
+
+    /*
+    |--------------------------------------------------------------------------
     | Application Timezone
     |--------------------------------------------------------------------------
     |
