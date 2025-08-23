@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\DTOs;
 
 use App\Enums\Area\AreaTypeEnum;
@@ -7,17 +9,15 @@ use App\Enums\Area\AreaTypeEnum;
 final readonly class AreaUpdateDTO
 {
     public function __construct(
-        public string       $name,
-        public int          $gardenId,
+        public string $name,
+        public int $gardenId,
         public AreaTypeEnum $type,
-        public bool         $isActive,
-        public ?string      $description = null,
-        public ?float       $sizeSqm = null,
-        public ?array       $coordinates = null,
-        public ?string      $color = null,
-    )
-    {
-    }
+        public bool $isActive,
+        public ?string $description = null,
+        public ?float $sizeSqm = null,
+        public ?array $coordinates = null,
+        public ?string $color = null,
+    ) {}
 
     /**
      * Create an instance from validated array data.
@@ -25,15 +25,15 @@ final readonly class AreaUpdateDTO
     public static function fromValidated(array $validated): self
     {
         return new self(
-            name: (string)$validated['name'],
-            gardenId: (int)$validated['garden_id'],
+            name: (string) $validated['name'],
+            gardenId: (int) $validated['garden_id'],
             type: AreaTypeEnum::from($validated['type']),
-            isActive: (bool)$validated['is_active'],
+            isActive: (bool) $validated['is_active'],
 
-            description: isset($validated['description']) ? (string)$validated['description'] : null,
-            sizeSqm: isset($validated['size_sqm']) ? (float)$validated['size_sqm'] : null,
+            description: isset($validated['description']) ? (string) $validated['description'] : null,
+            sizeSqm: isset($validated['size_sqm']) ? (float) $validated['size_sqm'] : null,
             coordinates: self::prepareCoordinatesFromArray($validated),
-            color: isset($validated['color']) ? (string)$validated['color'] : null,
+            color: isset($validated['color']) ? (string) $validated['color'] : null,
         );
     }
 
@@ -45,14 +45,14 @@ final readonly class AreaUpdateDTO
     public function toModelData(): array
     {
         return [
-            'name' => (string)$this->name,
-            'description' => $this->description !== null ? (string)$this->description : null,
-            'garden_id' => (int)$this->gardenId,
+            'name' => $this->name,
+            'description' => $this->description,
+            'garden_id' => $this->gardenId,
             'type' => $this->type->value,
-            'size_sqm' => $this->sizeSqm !== null ? (float)$this->sizeSqm : null,
+            'size_sqm' => $this->sizeSqm,
             'coordinates' => $this->coordinates, // Already array|null
-            'color' => $this->color !== null ? (string)$this->color : null,
-            'is_active' => (bool)$this->isActive,
+            'color' => $this->color,
+            'is_active' => $this->isActive,
         ];
     }
 
@@ -63,8 +63,8 @@ final readonly class AreaUpdateDTO
      */
     private static function prepareCoordinatesFromArray(array $validated): ?array
     {
-        $x = isset($validated['coordinates_x']) ? (float)$validated['coordinates_x'] : null;
-        $y = isset($validated['coordinates_y']) ? (float)$validated['coordinates_y'] : null;
+        $x = isset($validated['coordinates_x']) ? (float) $validated['coordinates_x'] : null;
+        $y = isset($validated['coordinates_y']) ? (float) $validated['coordinates_y'] : null;
 
         if ($x === null && $y === null) {
             return null;

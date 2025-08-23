@@ -162,7 +162,7 @@ describe('AreaUpdateRequest', function (): void {
                 'name' => 'Test Area',
                 'garden_id' => $this->otherGarden->id,
                 'type' => 'flower_bed',
-                'is_active' => true
+                'is_active' => true,
             ];
 
             $request = AreaUpdateRequest::create('/areas/'.$this->area->id, 'PUT', $data);
@@ -180,7 +180,7 @@ describe('AreaUpdateRequest', function (): void {
                 'name' => 'Updated Test Area',
                 'garden_id' => $this->garden->id,
                 'type' => 'flower_bed',
-                'is_active' => true
+                'is_active' => true,
             ];
 
             $request = AreaUpdateRequest::create('/areas/'.$this->area->id, 'PUT', $data);

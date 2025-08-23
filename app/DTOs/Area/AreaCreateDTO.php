@@ -24,8 +24,6 @@ final readonly class AreaCreateDTO
     /**
      * Create an instance of AreaCreateDTO from request data.
      *
-     * @param array $validated
-     * @return AreaCreateDTO
      * @throws InvalidArgumentException
      */
     public static function fromValidatedRequest(array $validated): self

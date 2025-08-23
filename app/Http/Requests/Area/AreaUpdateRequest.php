@@ -16,7 +16,7 @@ final class AreaUpdateRequest extends FormRequest
     {
         $area = $this->route('area');
 
-        if (!$area instanceof Area) {
+        if (! $area instanceof Area) {
             return false;
         }
 
@@ -72,12 +72,12 @@ final class AreaUpdateRequest extends FormRequest
                 $garden = Garden::find($this->integer('garden_id'));
                 $area = $this->route('area');
 
-                if ($garden && !$this->user()->hasRole('admin') && $garden->user_id !== $this->user()->id) {
+                if ($garden && ! $this->user()->hasRole('admin') && $garden->user_id !== $this->user()->id) {
                     $validator->errors()->add('garden_id', 'Sie haben keine Berechtigung, diesem Garten Bereiche zuzuweisen.');
                 }
 
                 // Check if the area belongs to the same user as the new garden
-                if ($area instanceof Area && $garden && !$this->user()->hasRole('admin') && $area->garden->user_id !== $this->user()->id) {
+                if ($area instanceof Area && $garden && ! $this->user()->hasRole('admin') && $area->garden->user_id !== $this->user()->id) {
                     $validator->errors()->add('area', 'Sie haben keine Berechtigung, diesen Bereich zu bearbeiten.');
                 }
             }
