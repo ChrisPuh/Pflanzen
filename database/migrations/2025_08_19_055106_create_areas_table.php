@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('name');
             $table->enum('type', AreaTypeEnum::values());
             $table->text('description')->nullable();
-            $table->decimal('size_sqm', 8, 2)->nullable();
+            $table->float('size_sqm', 8)->nullable();
             $table->json('coordinates')->nullable(); // For positioning within garden
             $table->json('dimensions')->nullable(); // Length, width, height if applicable
             $table->string('color', 7)->nullable(); // Hex color for visualization
