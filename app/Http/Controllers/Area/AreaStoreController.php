@@ -23,7 +23,7 @@ final class AreaStoreController extends Controller
     public function __invoke(AreaStoreRequest $request): RedirectResponse
     {
         // TODO handle possible exceptions and provide user feedback
-        $area = $this->areaService->createArea(AreaStoreDTO::fromValidatedRequest($request->validated()));
+        $area = $this->areaService->storeArea(AreaStoreDTO::fromValidatedRequest($request->validated()));
 
         return redirect()
             ->route('areas.index')

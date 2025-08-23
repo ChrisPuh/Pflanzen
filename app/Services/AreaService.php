@@ -144,7 +144,7 @@ final readonly class AreaService
     /**
      * Create a new area.
      */
-    public function createArea(AreaStoreDTO $data): Area
+    public function storeArea(AreaStoreDTO $data): Area
     {
         // 1. Action ausführen (macht die eigentliche Arbeit)
         // $area = $this->createAction->execute($data);
