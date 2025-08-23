@@ -18,25 +18,21 @@ final class AreaRepository implements AreaRepositoryInterface
     public function findById(int $id): ?Area
     {
         throw new NotImplementedException('Method not implemented yet.');
-
     }
 
     public function findWithTrashed(int $id): ?Area
     {
         throw new NotImplementedException('Method not implemented yet.');
-
     }
 
     public function getUserAreas(User $user, array $filters = [], bool $isAdmin = false): LengthAwarePaginator
     {
         throw new NotImplementedException('Method not implemented yet.');
-
     }
 
     public function getUserAreasQuery(User $user, bool $isAdmin = false): Builder
     {
         throw new NotImplementedException('Method not implemented yet.');
-
     }
 
     public function getAreaStatistics(User $user, bool $isAdmin = false): array
@@ -59,18 +55,15 @@ final class AreaRepository implements AreaRepositoryInterface
     public function delete(Area $area): bool
     {
         throw new NotImplementedException('Method not implemented yet.');
-
     }
 
     public function restore(Area $area): bool
     {
         throw new NotImplementedException('Method not implemented yet.');
-
     }
 
     public function forceDelete(Area $area): bool
     {
         throw new NotImplementedException('Method not implemented yet.');
-
     }
 }

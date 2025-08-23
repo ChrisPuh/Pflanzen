@@ -7,11 +7,9 @@ use App\DTOs\Area\AreaUpdateDTO;
 use App\Enums\Area\AreaTypeEnum;
 use App\Models\Area;
 use App\Models\Garden;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Log;
 
 describe('AreaUpdateAction', function () {
-    uses(RefreshDatabase::class);
 
     beforeEach(function () {
         $this->action = new AreaUpdateAction(
@@ -41,5 +39,28 @@ describe('AreaUpdateAction', function () {
 
         expect($result->name)->toBe('Updated Area')
             ->and($result->description)->toBe('Updated description');
+    });
+
+    it('handles exceptions and logs errors', function () {
+        $exception = new Exception('Database error');
+
+        Log::shouldReceive('info')
+            ->once()
+            ->with('Updating area', ['area_id' => $this->area->id]);
+
+        Log::shouldReceive('error')
+            ->once()
+            ->with('Error updating area', ['error' => $exception->getMessage(), 'area_id' => $this->area->id]);
+
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage('Database error');
+
+        // Mock the repository to throw an exception
+        $mockRepo = Mockery::mock(App\Repositories\Contracts\AreaRepositoryInterface::class);
+        $mockRepo->shouldReceive('update')
+            ->andThrow($exception);
+
+        $actionWithMock = new AreaUpdateAction($mockRepo);
+        $actionWithMock->execute($this->area, $this->dto);
     });
 });

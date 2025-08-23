@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\DTOs\Area\AreaStoreDTO;
+use App\DTOs\Area\AreaUpdateDTO;
 use App\Enums\Area\AreaTypeEnum;
 use App\Models\Area;
 use App\Models\Garden;
@@ -107,6 +108,76 @@ describe('AreaRepository', function () {
             expect($area->created_at)->not->toBeNull()
                 ->and($area->updated_at)->not->toBeNull()
                 ->and($area->created_at)->toEqual($area->updated_at);
+        });
+    });
+
+    describe('update', function () {
+        it('updates area successfully', function () {
+            $area = Area::factory()->create([
+                'name' => 'Old Name',
+                'garden_id' => $this->garden->id,
+                'type' => AreaTypeEnum::HerbBed,
+                'is_active' => true,
+            ]);
+
+            $dto = AreaUpdateDTO::fromValidated([
+                'name' => 'Updated Name',
+                'garden_id' => $this->garden->id,
+                'type' => AreaTypeEnum::FlowerBed->value,
+                'is_active' => false,
+                'description' => 'Updated description',
+                'size_sqm' => 30.0,
+                'coordinates_x' => 5.1,
+                'coordinates_y' => 10.1,
+                'color' => '#0000FF',
+            ]);
+
+            $updatedArea = $this->repository->update($area, $dto);
+
+            expect($updatedArea->id)->toBe($area->id)
+                ->and($updatedArea->name)->toBe('Updated Name')
+                ->and($updatedArea->garden_id)->toBe($this->garden->id)
+                ->and($updatedArea->type)->toBe(AreaTypeEnum::FlowerBed)
+                ->and($updatedArea->is_active)->toBeFalse()
+                ->and($updatedArea->description)->toBe('Updated description')
+                ->and($updatedArea->size_sqm)->toBe(30.0)
+                ->and($updatedArea->coordinates)->toBe(['x' => 5.1, 'y' => 10.1])
+                ->and($updatedArea->color)->toBe('#0000FF');
+
+            $this->assertDatabaseHas('areas', [
+                'id' => $area->id,
+                'name' => 'Updated Name',
+                'type' => AreaTypeEnum::FlowerBed->value,
+                'is_active' => false,
+                'description' => 'Updated description',
+                'size_sqm' => 30.0,
+                'color' => '#0000FF',
+            ]);
+        });
+
+        it('sets timestamps on update', function () {
+            $area = Area::factory()->create([
+                'name' => 'Timestamp Area',
+                'garden_id' => $this->garden->id,
+                'type' => AreaTypeEnum::HerbBed,
+                'is_active' => true,
+            ]);
+
+            $originalUpdatedAt = $area->updated_at;
+
+            sleep(1); // Ensure timestamp difference
+
+            $dto = AreaUpdateDTO::fromValidated([
+                'name' => 'Timestamp Area Updated',
+                'garden_id' => $this->garden->id,
+                'type' => AreaTypeEnum::HerbBed->value,
+                'is_active' => true,
+            ]);
+
+            $updatedArea = $this->repository->update($area, $dto);
+
+            expect($updatedArea->updated_at)->not->toBe($originalUpdatedAt)
+                ->and($updatedArea->updated_at)->toBeGreaterThan($originalUpdatedAt);
         });
     });
 
