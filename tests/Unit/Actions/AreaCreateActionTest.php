@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use App\Actions\AreaCreateAction;
-use App\DTOs\Area\AreaCreateDTO;
+use App\Actions\AreaStoreAction;
+use App\DTOs\Area\AreaStoreDTO;
 use App\Enums\Area\AreaTypeEnum;
 use App\Models\Area;
 use App\Repositories\Contracts\AreaRepositoryInterface;
@@ -13,8 +13,8 @@ use Illuminate\Support\Facades\Log;
 describe('AreaCreateAction', function () {
     beforeEach(function () {
         $this->repository = Mockery::mock(AreaRepositoryInterface::class);
-        $this->action = new AreaCreateAction($this->repository);
-        $this->dto = new AreaCreateDTO(
+        $this->action = new AreaStoreAction($this->repository);
+        $this->dto = new AreaStoreDTO(
             name: 'Test Area',
             gardenId: 1,
             type: AreaTypeEnum::VegetableBed,

@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace App\Actions;
 
-use App\DTOs\Area\AreaCreateDTO;
+use App\DTOs\Area\AreaStoreDTO;
 use App\Models\Area;
 use App\Repositories\Contracts\AreaRepositoryInterface;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Throwable;
 
-final readonly class AreaCreateAction
+final readonly class AreaStoreAction
 {
     public function __construct(
         private AreaRepositoryInterface $repository
@@ -20,7 +20,7 @@ final readonly class AreaCreateAction
     /**
      * @throws Throwable
      */
-    public function execute(AreaCreateDTO $data): Area
+    public function execute(AreaStoreDTO $data): Area
     {
         try {
             Log::info('Creating new area', ['name' => $data->name]);

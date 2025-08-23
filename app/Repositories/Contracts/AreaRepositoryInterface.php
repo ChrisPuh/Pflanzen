@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Repositories\Contracts;
 
-use App\DTOs\Area\AreaCreateDTO;
+use App\DTOs\Area\AreaStoreDTO;
 use App\Models\Area;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
@@ -22,7 +22,7 @@ interface AreaRepositoryInterface
 
     public function getAreaStatistics(User $user, bool $isAdmin = false): array;
 
-    public function create(AreaCreateDTO $data): Area;
+    public function create(AreaStoreDTO $data): Area;
 
     public function update(Area $area, array $data): Area;
 

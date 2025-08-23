@@ -9,7 +9,7 @@ use App\Models\Garden;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-final class AreaCreateRequest extends FormRequest
+final class AreaStoreRequest extends FormRequest
 {
     public function authorize(): bool
     {

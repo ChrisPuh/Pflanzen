@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\DTOs\AreaUpdateDTO;
+use App\DTOs\Area\AreaUpdateDTO;
 use App\Enums\Area\AreaTypeEnum;
 
 describe('AreaUpdateDTO', function () {

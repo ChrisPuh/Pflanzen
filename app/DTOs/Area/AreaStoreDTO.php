@@ -7,7 +7,7 @@ namespace App\DTOs\Area;
 use App\Enums\Area\AreaTypeEnum;
 use OpenSpout\Common\Exception\InvalidArgumentException;
 
-final readonly class AreaCreateDTO
+final readonly class AreaStoreDTO
 {
     public function __construct(
         public string $name,
@@ -22,7 +22,7 @@ final readonly class AreaCreateDTO
     ) {}
 
     /**
-     * Create an instance of AreaCreateDTO from request data.
+     * Create an instance of AreaStoreDTO from request data.
      *
      * @throws InvalidArgumentException
      */

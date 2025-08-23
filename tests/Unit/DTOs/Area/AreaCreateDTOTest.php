@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-use App\DTOs\Area\AreaCreateDTO;
+use App\DTOs\Area\AreaStoreDTO;
 use App\Enums\Area\AreaTypeEnum;
 use OpenSpout\Common\Exception\InvalidArgumentException;
 
-describe('AreaCreateDTO', function () {
+describe('AreaStoreDTO', function () {
     it(/**
      * @throws InvalidArgumentException
      */ 'creates instance from validated request with all data', function () {
@@ -22,7 +22,7 @@ describe('AreaCreateDTO', function () {
             'color' => '#FF0000',
         ];
 
-        $dto = AreaCreateDTO::fromValidatedRequest($data);
+        $dto = AreaStoreDTO::fromValidatedRequest($data);
 
         expect($dto->name)->toBe('Test Area')
             ->and($dto->gardenId)->toBe(1)
@@ -42,7 +42,7 @@ describe('AreaCreateDTO', function () {
             'is_active' => false,
         ];
 
-        $dto = AreaCreateDTO::fromValidatedRequest($data);
+        $dto = AreaStoreDTO::fromValidatedRequest($data);
 
         expect($dto->name)->toBe('Minimal Area')
             ->and($dto->gardenId)->toBe(2)
@@ -63,7 +63,7 @@ describe('AreaCreateDTO', function () {
             'coordinates_x' => 15.0,
         ];
 
-        $dto = AreaCreateDTO::fromValidatedRequest($data);
+        $dto = AreaStoreDTO::fromValidatedRequest($data);
 
         expect($dto->coordinates)->toBe(['x' => 15.0, 'y' => null]);
     });
@@ -76,7 +76,7 @@ describe('AreaCreateDTO', function () {
             'is_active' => true,
         ];
 
-        expect(fn () => AreaCreateDTO::fromValidatedRequest($data))
+        expect(fn () => AreaStoreDTO::fromValidatedRequest($data))
             ->toThrow(InvalidArgumentException::class, 'Invalid area type');
     });
 
@@ -87,12 +87,12 @@ describe('AreaCreateDTO', function () {
             'is_active' => true,
         ];
 
-        expect(fn () => AreaCreateDTO::fromValidatedRequest($data))
+        expect(fn () => AreaStoreDTO::fromValidatedRequest($data))
             ->toThrow(InvalidArgumentException::class, 'Invalid area type');
     });
 
     it('converts to model data correctly', function () {
-        $dto = new AreaCreateDTO(
+        $dto = new AreaStoreDTO(
             name: 'Test Area',
             gardenId: 1,
             type: AreaTypeEnum::VegetableBed,

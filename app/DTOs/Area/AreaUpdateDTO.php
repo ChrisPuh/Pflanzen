@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\DTOs;
+namespace App\DTOs\Area;
 
 use App\Enums\Area\AreaTypeEnum;
 

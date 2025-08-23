@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\DTOs\Area\AreaCreateDTO;
+use App\DTOs\Area\AreaStoreDTO;
 use App\Enums\Area\AreaTypeEnum;
 use App\Models\Area;
 use App\Models\Garden;
@@ -17,7 +17,7 @@ describe('AreaRepository', function () {
 
     describe('create', function () {
         it('creates area with all data', function () {
-            $dto = new AreaCreateDTO(
+            $dto = new AreaStoreDTO(
                 name: 'Test Vegetable Patch',
                 gardenId: $this->garden->id,
                 type: AreaTypeEnum::VegetableBed,
@@ -54,7 +54,7 @@ describe('AreaRepository', function () {
         });
 
         it('creates area with minimal required data', function () {
-            $dto = new AreaCreateDTO(
+            $dto = new AreaStoreDTO(
                 name: 'Minimal Area',
                 gardenId: $this->garden->id,
                 type: AreaTypeEnum::HerbBed,
@@ -77,7 +77,7 @@ describe('AreaRepository', function () {
 
         it('handles json coordinates correctly', function () {
             $coordinates = ['x' => 15.75, 'y' => 30.25];
-            $dto = new AreaCreateDTO(
+            $dto = new AreaStoreDTO(
                 name: 'Coordinates Test',
                 gardenId: $this->garden->id,
                 type: AreaTypeEnum::FlowerBed,
@@ -96,7 +96,7 @@ describe('AreaRepository', function () {
         });
 
         it('sets timestamps automatically', function () {
-            $dto = new AreaCreateDTO(
+            $dto = new AreaStoreDTO(
                 name: 'Timestamp Test',
                 gardenId: $this->garden->id,
                 type: AreaTypeEnum::VegetableBed

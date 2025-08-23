@@ -61,11 +61,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Areas Resource Routes
     Route::prefix('areas')->name('areas.')->group(function () {
         Route::get('/', Area\AreasIndexController::class)->name('index');
-        Route::get('create', [Area\AreaCreateController::class, 'create'])->name('create');
-        Route::post('/', [Area\AreaCreateController::class, 'store'])->name('store');
+
+        Route::get('create', Area\AreaCreateController::class)->name('create');
+        Route::post('/', Area\AreaStoreController::class)->name('store');
+
         Route::get('{area}', Area\AreaShowController::class)->name('show');
+
         Route::get('{area}/edit', Area\AreaEditController::class)->name('edit');
         Route::put('{area}', Area\AreaUpdateController::class)->name('update');
+        
         Route::delete('{area}', [Area\AreaDeleteController::class, 'destroy'])->name('destroy');
 
         // Plant Management Routes

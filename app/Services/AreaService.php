@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use App\Actions\AreaCreateAction;
-use App\DTOs\Area\AreaCreateDTO;
+use App\Actions\AreaStoreAction;
+use App\DTOs\Area\AreaStoreDTO;
 use App\Enums\Area\AreaTypeEnum;
 use App\Models\Area;
 use App\Models\Garden;
@@ -20,7 +20,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 final readonly class AreaService
 {
     public function __construct(
-        private AreaCreateAction $createAction,
+        private AreaStoreAction $createAction,
     ) {}
 
     /**
@@ -144,7 +144,7 @@ final readonly class AreaService
     /**
      * Create a new area.
      */
-    public function createArea(AreaCreateDTO $data): Area
+    public function createArea(AreaStoreDTO $data): Area
     {
         // 1. Action ausführen (macht die eigentliche Arbeit)
         // $area = $this->createAction->execute($data);

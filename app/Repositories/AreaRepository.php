@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Repositories;
 
-use App\DTOs\Area\AreaCreateDTO;
+use App\DTOs\Area\AreaStoreDTO;
 use App\Models\Area;
 use App\Models\User;
 use App\Repositories\Contracts\AreaRepositoryInterface;
@@ -38,7 +38,7 @@ final class AreaRepository implements AreaRepositoryInterface
         // TODO: Implement getAreaStatistics() method.
     }
 
-    public function create(AreaCreateDTO $data): Area
+    public function create(AreaStoreDTO $data): Area
     {
         return Area::query()->create($data->toModelData());
     }
