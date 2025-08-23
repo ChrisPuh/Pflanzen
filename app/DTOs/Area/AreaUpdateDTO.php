@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace App\DTOs\Area;
 
+use App\DTOs\Shared\Contracts\WritableDTOInterface;
 use App\Enums\Area\AreaTypeEnum;
 
-final readonly class AreaUpdateDTO
+final readonly class AreaUpdateDTO implements WritableDTOInterface
 {
     public function __construct(
         public string $name,
