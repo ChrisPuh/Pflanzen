@@ -5,15 +5,18 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Area;
 
 use App\DTOs\Area\AreaUpdateDTO;
-use App\Http\Controllers\Controller;
 use App\Http\Requests\Area\AreaUpdateRequest;
 use App\Models\Area;
 use Illuminate\Http\RedirectResponse;
+use Throwable;
 
-final class AreaUpdateController extends Controller
+final class AreaUpdateController extends AreaController
 {
-    public function __construct(private readonly \App\Services\AreaService $areaService) {}
-
+    /**
+     * TODO handle potential exceptions from the service layer
+     *
+     * @throws Throwable
+     */
     public function __invoke(AreaUpdateRequest $request, Area $area): RedirectResponse
     {
         // TODO implement Data Transfer Object (DTO) pattern for request data
@@ -21,6 +24,6 @@ final class AreaUpdateController extends Controller
 
         return redirect()
             ->route('areas.show', $area)
-            ->with('success', "Bereich '{$area->name}' wurde erfolgreich aktualisiert.");
+            ->with('success', "Bereich '$area->name' wurde erfolgreich aktualisiert.");
     }
 }

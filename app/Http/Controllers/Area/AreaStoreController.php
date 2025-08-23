@@ -5,20 +5,14 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Area;
 
 use App\DTOs\Area\AreaStoreDTO;
-use App\Http\Controllers\Controller;
 use App\Http\Requests\Area\AreaStoreRequest;
-use App\Services\AreaService;
 use Illuminate\Http\RedirectResponse;
-use OpenSpout\Common\Exception\InvalidArgumentException;
+use Throwable as ThrowableAlias;
 
-final class AreaStoreController extends Controller
+final class AreaStoreController extends AreaController
 {
-    public function __construct(
-        private readonly AreaService $areaService
-    ) {}
-
     /**
-     * @throws InvalidArgumentException
+     * @throws ThrowableAlias
      */
     public function __invoke(AreaStoreRequest $request): RedirectResponse
     {
@@ -27,6 +21,6 @@ final class AreaStoreController extends Controller
 
         return redirect()
             ->route('areas.index')
-            ->with('success', "Bereich '{$area->name}' wurde erfolgreich erstellt.");
+            ->with('success', "Bereich '$area->name' wurde erfolgreich erstellt.");
     }
 }

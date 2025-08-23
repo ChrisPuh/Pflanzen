@@ -5,16 +5,12 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Area;
 
 use App\DTOs\Area\AreaDeleteDTO;
-use App\Http\Controllers\Controller;
 use App\Http\Requests\Area\AreaDeleteRequest;
 use App\Models\Area;
-use App\Services\AreaService;
 use Illuminate\Http\RedirectResponse;
 
-final class AreaDeleteController extends Controller
+final class AreaDeleteController extends AreaController
 {
-    public function __construct(private readonly AreaService $areaService) {}
-
     /**
      * Soft delete the specified area.
      */
