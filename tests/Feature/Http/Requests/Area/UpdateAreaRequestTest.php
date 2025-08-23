@@ -58,7 +58,7 @@ describe('AreaUpdateRequest', function (): void {
         });
 
         it('authorizes admin to update any area', function (): void {
-            Role::firstOrCreate(['name' => 'admin']);
+            Role::query()->firstOrCreate(['name' => 'admin']);
             $admin = User::factory()->create();
             $admin->assignRole('admin');
 
@@ -88,8 +88,7 @@ describe('AreaUpdateRequest', function (): void {
                 ->and($rules['size_sqm'])->toContain('nullable')
                 ->and($rules['coordinates_x'])->toContain('nullable')
                 ->and($rules['coordinates_y'])->toContain('nullable')
-                ->and($rules['color'])->toContain('nullable')
-                ->and($rules['is_active'])->toContain('nullable');
+                ->and($rules['color'])->toContain('nullable');
         });
 
         it('validates field constraints', function (): void {
@@ -155,7 +154,7 @@ describe('AreaUpdateRequest', function (): void {
         });
 
         it('allows admin users to update any area and garden assignment', function (): void {
-            Role::firstOrCreate(['name' => 'admin']);
+            Role::query()->firstOrCreate(['name' => 'admin']);
             $admin = User::factory()->create();
             $admin->assignRole('admin');
 
@@ -163,6 +162,7 @@ describe('AreaUpdateRequest', function (): void {
                 'name' => 'Test Area',
                 'garden_id' => $this->otherGarden->id,
                 'type' => 'flower_bed',
+                'is_active' => true
             ];
 
             $request = AreaUpdateRequest::create('/areas/'.$this->area->id, 'PUT', $data);
@@ -180,6 +180,7 @@ describe('AreaUpdateRequest', function (): void {
                 'name' => 'Updated Test Area',
                 'garden_id' => $this->garden->id,
                 'type' => 'flower_bed',
+                'is_active' => true
             ];
 
             $request = AreaUpdateRequest::create('/areas/'.$this->area->id, 'PUT', $data);

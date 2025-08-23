@@ -44,6 +44,7 @@ final class Garden extends Model
     protected $table = 'gardens';
 
     protected $fillable = [
+        'user_id',
         'name',
         'type',
         'location',

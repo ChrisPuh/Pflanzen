@@ -89,6 +89,7 @@ describe('PUT /areas/{area}', function () {
             'name' => 'Minimal Updated Area',
             'garden_id' => $this->garden->id,
             'type' => AreaTypeEnum::Lawn->value,
+            'is_active' => true,
         ];
 
         $response = $this->actingAs($this->user)->put(route('areas.update', $this->area), $updateData);
@@ -226,6 +227,7 @@ describe('PUT /areas/{area}', function () {
             'name' => 'Moved Area',
             'garden_id' => $secondGarden->id,
             'type' => AreaTypeEnum::FlowerBed->value,
+            'is_active' => true,
         ];
 
         $response = $this->actingAs($this->user)->put(route('areas.update', $this->area), $updateData);
