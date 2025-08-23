@@ -29,7 +29,7 @@ describe('AreaRepository', function () {
                 color: '#00FF00'
             );
 
-            $area = $this->repository->create($dto);
+            $area = $this->repository->store($dto);
 
             expect($area)
                 ->toBeInstanceOf(Area::class)
@@ -62,7 +62,7 @@ describe('AreaRepository', function () {
                 isActive: false
             );
 
-            $area = $this->repository->create($dto);
+            $area = $this->repository->store($dto);
 
             expect($area)
                 ->toBeInstanceOf(Area::class)
@@ -85,7 +85,7 @@ describe('AreaRepository', function () {
                 coordinates: $coordinates
             );
 
-            $area = $this->repository->create($dto);
+            $area = $this->repository->store($dto);
 
             expect($area->coordinates)->toBe($coordinates);
 
@@ -103,7 +103,7 @@ describe('AreaRepository', function () {
                 type: AreaTypeEnum::VegetableBed
             );
 
-            $area = $this->repository->create($dto);
+            $area = $this->repository->store($dto);
 
             expect($area->created_at)->not->toBeNull()
                 ->and($area->updated_at)->not->toBeNull()

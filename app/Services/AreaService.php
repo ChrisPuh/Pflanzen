@@ -7,6 +7,7 @@ namespace App\Services;
 use App\Actions\AreaDeleteAction;
 use App\Actions\AreaStoreAction;
 use App\Actions\AreaUpdateAction;
+use App\DTOs\Area\AreaDeleteDTO;
 use App\DTOs\Area\AreaStoreDTO;
 use App\DTOs\Area\AreaUpdateDTO;
 use App\Enums\Area\AreaTypeEnum;
@@ -189,8 +190,10 @@ final readonly class AreaService
 
     /**
      * Soft delete (delete) an area.
+     *
+     * @throws Throwable
      */
-    public function deleteArea(Area $area): bool
+    public function deleteArea(Area $area, AreaDeleteDTO $data): bool
     {
         // 1. Action ausführen (macht die eigentliche Arbeit)
         // $area = $this->deleteAction->execute($area);
@@ -201,7 +204,7 @@ final readonly class AreaService
         // 3. TODO  implement Benachrichtigung senden
         // $this->notifications->sendAreaDeletedNotification($area);
 
-        return $this->deleteAction->execute($area);
+        return $this->deleteAction->execute($area, $data);
     }
 
     /**
