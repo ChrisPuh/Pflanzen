@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use App\DTOs\Area\AreaFormDataDTO;
+use App\Actions\AreaCreateAction;
+use App\DTOs\Area\AreaCreateDTO;
 use App\Enums\Area\AreaTypeEnum;
 use App\Models\Area;
 use App\Models\Garden;
@@ -16,8 +17,12 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
 
-final class AreaService
+final readonly class AreaService
 {
+    public function __construct(
+        private AreaCreateAction $createAction,
+    ) {}
+
     /**
      * Get user's gardens for area form dropdown.
      *
@@ -139,10 +144,18 @@ final class AreaService
     /**
      * Create a new area.
      */
-    public function createArea(AreaFormDataDTO $data): Area
+    public function createArea(AreaCreateDTO $data): Area
     {
+        // 1. Action ausführen (macht die eigentliche Arbeit)
+        // $area = $this->createAction->execute($data);
 
-        return Area::create($data->toModelData());
+        // 2. TODO implement Cache invalidieren
+        // $this->cache->clearAreaCache();
+
+        // 3. TODO  implement Benachrichtigung senden
+        // $this->notifications->sendAreaCreatedNotification($area);
+
+        return $this->createAction->execute($data);
     }
 
     /**

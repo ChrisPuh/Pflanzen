@@ -36,9 +36,9 @@ denke ans testen. generell gilt php 8.4 typesafety, laravel 12, nutze vorhandene
 
 ## Refactoring
 - [ ] implement Data Transfer Objects (DTOs) für die Kommunikation zwischen Controllern und Services
-    - [AreaEditController.php](app/Http/Controllers/Area/AreaEditController.php)
-    - [AreaPlantController.php](app/Http/Controllers/Area/AreaPlantController.php)
-    - [AreasIndexController.php](app/Http/Controllers/Area/AreasIndexController.php)
-    - [GardenCreateController.php](app/Http/Controllers/Garden/GardenCreateController.php)
-    - [GardenEditController.php](app/Http/Controllers/Garden/GardenEditController.php)
-    - [PlantsIndexController.php](app/Http/Controllers/Plants/PlantsIndexController.php)
+    - [ ] [AreaEditController.php](app/Http/Controllers/Area/AreaEditController.php)
+    - [ ] [AreaPlantController.php](app/Http/Controllers/Area/AreaPlantController.php)
+    - [ ] [AreasIndexController.php](app/Http/Controllers/Area/AreasIndexController.php)
+    - [ ] [GardenCreateController.php](app/Http/Controllers/Garden/GardenCreateController.php)
+    - [ ] [GardenEditController.php](app/Http/Controllers/Garden/GardenEditController.php)
+    - [ ] [PlantsIndexController.php](app/Http/Controllers/Plants/PlantsIndexController.php)
