@@ -24,27 +24,27 @@ final readonly class AreaCreateDTO
     /**
      * Create an instance of AreaCreateDTO from request data.
      *
-     * @param  array  $data  <string, mixed>
-     *
+     * @param array $validated
+     * @return AreaCreateDTO
      * @throws InvalidArgumentException
      */
-    public static function fromValidatedRequest(array $data): self
+    public static function fromValidatedRequest(array $validated): self
     {
         return new self(
-            name: (string) $data['name'],
-            gardenId: (int) $data['garden_id'],
-            type: AreaTypeEnum::tryFrom($data['type'] ?? throw new InvalidArgumentException('Invalid area type')) ?? throw new InvalidArgumentException('Invalid area type'),
-            isActive: (bool) $data['is_active'],
+            name: (string) $validated['name'],
+            gardenId: (int) $validated['garden_id'],
+            type: AreaTypeEnum::tryFrom($validated['type'] ?? throw new InvalidArgumentException('Invalid area type')) ?? throw new InvalidArgumentException('Invalid area type'),
+            isActive: (bool) $validated['is_active'],
 
-            description: isset($data['description'])
-                ? (string) $data['description']
+            description: isset($validated['description'])
+                ? (string) $validated['description']
                 : null,
-            sizeSqm: isset($data['size_sqm'])
-                ? (float) $data['size_sqm']
+            sizeSqm: isset($validated['size_sqm'])
+                ? (float) $validated['size_sqm']
                 : null,
-            coordinates: self::prepareCoordinates($data),
-            color: isset($data['color'])
-                ? (string) $data['color']
+            coordinates: self::prepareCoordinates($validated),
+            color: isset($validated['color'])
+                ? (string) $validated['color']
                 : null,
         );
     }
