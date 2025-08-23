@@ -7,7 +7,6 @@ use App\Enums\Area\AreaTypeEnum;
 use App\Models\Area;
 use App\Models\Garden;
 use App\Repositories\AreaRepository;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 
 describe('AreaRepository', function () {
 
