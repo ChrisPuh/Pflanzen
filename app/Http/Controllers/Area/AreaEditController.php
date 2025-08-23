@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Area;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Area\UpdateAreaRequest;
+use App\Http\Requests\Area\AreaUpdateRequest;
 use App\Models\Area;
 use App\Services\AreaService;
 use App\Traits\AuthenticatedUser;
@@ -30,7 +30,7 @@ final class AreaEditController extends Controller
         return view('areas.edit', $editData);
     }
 
-    public function update(UpdateAreaRequest $request, Area $area): RedirectResponse
+    public function update(AreaUpdateRequest $request, Area $area): RedirectResponse
     {
         // TODO implement Data Transfer Object (DTO) pattern for request data
         $area = $this->areaService->updateArea($area, $request->validated());

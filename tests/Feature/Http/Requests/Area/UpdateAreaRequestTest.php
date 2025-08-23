@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-use App\Http\Requests\Area\UpdateAreaRequest;
+use App\Http\Requests\Area\AreaUpdateRequest;
 use App\Models\Area;
 use App\Models\Garden;
 use App\Models\User;
 use Illuminate\Support\Facades\Validator;
 use Spatie\Permission\Models\Role;
 
-describe('UpdateAreaRequest', function (): void {
+describe('AreaUpdateRequest', function (): void {
     beforeEach(function (): void {
         $this->user = User::factory()->create();
         $this->garden = Garden::factory()->create(['user_id' => $this->user->id]);
@@ -34,7 +34,7 @@ describe('UpdateAreaRequest', function (): void {
 
     describe('Authorization', function (): void {
         it('authorizes user to update their own area', function (): void {
-            $request = UpdateAreaRequest::create('/areas/'.$this->area->id, 'PUT');
+            $request = AreaUpdateRequest::create('/areas/'.$this->area->id, 'PUT');
             $request->setUserResolver(fn () => $this->user);
             $request->setRouteResolver(fn () => ($this->createMockRoute)($this->area));
 
@@ -42,7 +42,7 @@ describe('UpdateAreaRequest', function (): void {
         });
 
         it('denies authorization for non-area route parameter', function (): void {
-            $request = UpdateAreaRequest::create('/areas/invalid', 'PUT');
+            $request = AreaUpdateRequest::create('/areas/invalid', 'PUT');
             $request->setUserResolver(fn () => $this->user);
             $request->setRouteResolver(fn () => ($this->createMockRoute)('invalid'));
 
@@ -50,7 +50,7 @@ describe('UpdateAreaRequest', function (): void {
         });
 
         it('denies authorization for other users area', function (): void {
-            $request = UpdateAreaRequest::create('/areas/'.$this->otherArea->id, 'PUT');
+            $request = AreaUpdateRequest::create('/areas/'.$this->otherArea->id, 'PUT');
             $request->setUserResolver(fn () => $this->user);
             $request->setRouteResolver(fn () => ($this->createMockRoute)($this->otherArea));
 
@@ -62,7 +62,7 @@ describe('UpdateAreaRequest', function (): void {
             $admin = User::factory()->create();
             $admin->assignRole('admin');
 
-            $request = UpdateAreaRequest::create('/areas/'.$this->otherArea->id, 'PUT');
+            $request = AreaUpdateRequest::create('/areas/'.$this->otherArea->id, 'PUT');
             $request->setUserResolver(fn () => $admin);
             $request->setRouteResolver(fn () => ($this->createMockRoute)($this->otherArea));
 
@@ -72,7 +72,7 @@ describe('UpdateAreaRequest', function (): void {
 
     describe('Validation Rules', function (): void {
         it('validates required fields', function (): void {
-            $request = new UpdateAreaRequest();
+            $request = new AreaUpdateRequest();
             $rules = $request->rules();
 
             expect($rules['name'])->toContain('required')
@@ -81,7 +81,7 @@ describe('UpdateAreaRequest', function (): void {
         });
 
         it('validates optional fields', function (): void {
-            $request = new UpdateAreaRequest();
+            $request = new AreaUpdateRequest();
             $rules = $request->rules();
 
             expect($rules['description'])->toContain('nullable')
@@ -93,7 +93,7 @@ describe('UpdateAreaRequest', function (): void {
         });
 
         it('validates field constraints', function (): void {
-            $request = new UpdateAreaRequest();
+            $request = new AreaUpdateRequest();
             $rules = $request->rules();
 
             expect($rules['name'])->toContain('max:255')
@@ -105,7 +105,7 @@ describe('UpdateAreaRequest', function (): void {
 
     describe('Custom Validation Messages', function (): void {
         it('provides German error messages', function (): void {
-            $request = new UpdateAreaRequest();
+            $request = new AreaUpdateRequest();
             $messages = $request->messages();
 
             expect($messages['name.required'])->toBe('Der Name des Bereichs ist erforderlich.')
@@ -123,7 +123,7 @@ describe('UpdateAreaRequest', function (): void {
                 'type' => 'flower_bed',
             ];
 
-            $request = UpdateAreaRequest::create('/areas/'.$this->area->id, 'PUT', $data);
+            $request = AreaUpdateRequest::create('/areas/'.$this->area->id, 'PUT', $data);
             $request->setUserResolver(fn () => $this->user);
             $request->setRouteResolver(fn () => ($this->createMockRoute)($this->area));
 
@@ -142,7 +142,7 @@ describe('UpdateAreaRequest', function (): void {
                 'type' => 'flower_bed',
             ];
 
-            $request = UpdateAreaRequest::create('/areas/'.$this->otherArea->id, 'PUT', $data);
+            $request = AreaUpdateRequest::create('/areas/'.$this->otherArea->id, 'PUT', $data);
             $request->setUserResolver(fn () => $this->user);
             $request->setRouteResolver(fn () => ($this->createMockRoute)($this->otherArea));
 
@@ -165,7 +165,7 @@ describe('UpdateAreaRequest', function (): void {
                 'type' => 'flower_bed',
             ];
 
-            $request = UpdateAreaRequest::create('/areas/'.$this->area->id, 'PUT', $data);
+            $request = AreaUpdateRequest::create('/areas/'.$this->area->id, 'PUT', $data);
             $request->setUserResolver(fn () => $admin);
             $request->setRouteResolver(fn () => ($this->createMockRoute)($this->area));
 
@@ -182,7 +182,7 @@ describe('UpdateAreaRequest', function (): void {
                 'type' => 'flower_bed',
             ];
 
-            $request = UpdateAreaRequest::create('/areas/'.$this->area->id, 'PUT', $data);
+            $request = AreaUpdateRequest::create('/areas/'.$this->area->id, 'PUT', $data);
             $request->setUserResolver(fn () => $this->user);
             $request->setRouteResolver(fn () => ($this->createMockRoute)($this->area));
 
@@ -202,7 +202,7 @@ describe('UpdateAreaRequest', function (): void {
                 'color' => '',
             ];
 
-            $request = UpdateAreaRequest::create('/areas/'.$this->area->id, 'PUT', $data);
+            $request = AreaUpdateRequest::create('/areas/'.$this->area->id, 'PUT', $data);
             $request->setUserResolver(fn () => $this->user);
             $request->setRouteResolver(fn () => ($this->createMockRoute)($this->area));
 
@@ -226,7 +226,7 @@ describe('UpdateAreaRequest', function (): void {
                 'color' => '#ff0000',
             ];
 
-            $request = UpdateAreaRequest::create('/areas/'.$this->area->id, 'PUT', $data);
+            $request = AreaUpdateRequest::create('/areas/'.$this->area->id, 'PUT', $data);
             $request->setUserResolver(fn () => $this->user);
             $request->setRouteResolver(fn () => ($this->createMockRoute)($this->area));
 
