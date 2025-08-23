@@ -9,7 +9,7 @@ use App\Models\Garden;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-final class StoreAreaRequest extends FormRequest
+final class AreaCreateRequest extends FormRequest
 {
     public function authorize(): bool
     {
@@ -25,7 +25,7 @@ final class StoreAreaRequest extends FormRequest
             'name' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string', 'max:1000'],
             'garden_id' => ['required', 'numeric', 'exists:gardens,id'],
-            'type' => ['required', 'string', Rule::in(array_column(AreaTypeEnum::cases(), 'value'))],
+            'type' => ['required', 'string', Rule::enum(AreaTypeEnum::class)],
             'size_sqm' => ['nullable', 'numeric', 'min:0', 'max:999999.99'],
             'coordinates_x' => ['nullable', 'numeric', 'min:-999999.99', 'max:999999.99'],
             'coordinates_y' => ['nullable', 'numeric', 'min:-999999.99', 'max:999999.99'],

@@ -6,7 +6,7 @@ namespace App\Http\Controllers\Area;
 
 use App\DTOs\Area\AreaCreateDTO;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Area\StoreAreaRequest;
+use App\Http\Requests\Area\AreaCreateRequest;
 use App\Services\AreaService;
 use App\Traits\AuthenticatedUser;
 use Illuminate\Contracts\View\View;
@@ -28,9 +28,9 @@ final class AreaCreateController extends Controller
         return view('areas.create', $createData);
     }
 
-    public function store(StoreAreaRequest $request): RedirectResponse
+    public function store(AreaCreateRequest $request): RedirectResponse
     {
-        $area = $this->areaService->createArea(AreaCreateDTO::fromRequest($request->validated()));
+        $area = $this->areaService->createArea(AreaCreateDTO::fromValidatedRequest($request->validated()));
 
         return redirect()
             ->route('areas.index')

@@ -4,33 +4,48 @@ declare(strict_types=1);
 
 namespace App\DTOs\Area;
 
+use App\Enums\Area\AreaTypeEnum;
+use OpenSpout\Common\Exception\InvalidArgumentException;
+
 final readonly class AreaCreateDTO
 {
     public function __construct(
         public string $name,
-        public ?string $description,
         public int $gardenId,
-        public string $type,
+        public AreaTypeEnum $type,
+        public bool $isActive = true,
+
+        public ?string $description = null,
         public ?float $sizeSqm = null,
         public ?array $coordinates = null,
         public ?string $color = null,
-        public bool $isActive = true,
     ) {}
 
     /**
      * Create an instance of AreaCreateDTO from request data.
+     *
+     * @param  array  $data  <string, mixed>
+     *
+     * @throws InvalidArgumentException
      */
-    public static function fromRequest(array $data): self
+    public static function fromValidatedRequest(array $data): self
     {
         return new self(
-            name: $data['name'],
-            description: $data['description'] ?? null,
-            gardenId: (int) ($data['garden_id'] ?? null),
-            type: $data['type'],
-            sizeSqm: isset($data['size_sqm']) ? (float) $data['size_sqm'] : null,
+            name: (string) $data['name'],
+            gardenId: (int) $data['garden_id'],
+            type: AreaTypeEnum::tryFrom($data['type'] ?? throw new InvalidArgumentException('Invalid area type')) ?? throw new InvalidArgumentException('Invalid area type'),
+            isActive: (bool) $data['is_active'],
+
+            description: isset($data['description'])
+                ? (string) $data['description']
+                : null,
+            sizeSqm: isset($data['size_sqm'])
+                ? (float) $data['size_sqm']
+                : null,
             coordinates: self::prepareCoordinates($data),
-            color: $data['color'] ?? null,
-            isActive: (bool) ($data['is_active'] ?? false),
+            color: isset($data['color'])
+                ? (string) $data['color']
+                : null,
         );
     }
 
