@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Actions\AreaStoreAction;
+use App\Actions\AreaUpdateAction;
 use App\DTOs\Area\AreaStoreDTO;
 use App\DTOs\Area\AreaUpdateDTO;
 use App\Enums\Area\AreaTypeEnum;
@@ -16,11 +17,13 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Throwable;
 
 final readonly class AreaService
 {
     public function __construct(
-        private AreaStoreAction $createAction,
+        private AreaStoreAction $storeAction,
+        private AreaUpdateAction $updateAction,
     ) {}
 
     /**
@@ -143,6 +146,10 @@ final readonly class AreaService
 
     /**
      * Create a new area.
+     *
+     * TODO handle exceptions and errors
+     *
+     * @throws Throwable
      */
     public function storeArea(AreaStoreDTO $data): Area
     {
@@ -155,17 +162,27 @@ final readonly class AreaService
         // 3. TODO  implement Benachrichtigung senden
         // $this->notifications->sendAreaCreatedNotification($area);
 
-        return $this->createAction->execute($data);
+        return $this->storeAction->execute($data);
     }
 
     /**
      * Update an existing area.
+     *
+     *  TODO handle exceptions and errors
+     *
+     * @throws Throwable
      */
     public function updateArea(Area $area, AreaUpdateDTO $data): Area
     {
-        $area->update($data->toModelData());
+        // 1. Action ausführen (macht die eigentliche Arbeit)
+        // $area = $this->createAction->execute($data);
 
-        return $area->fresh();
+        // 2. TODO implement Cache invalidieren
+        // $this->cache->clearAreaCache();
+
+        // 3. TODO  implement Benachrichtigung senden
+        // $this->notifications->sendAreaUpdatedNotification($area);
+        return $area = $this->updateAction->execute($area, $data);
     }
 
     /**

@@ -19,7 +19,7 @@ return new class extends Migration
             $table->foreignId('plant_id')->constrained()->cascadeOnDelete();
             $table->timestamp('planted_at')->nullable();
             $table->text('notes')->nullable();
-            $table->integer('quantity')->default(1)->after('plant_id');
+            $table->integer('quantity')->default(1);
 
             $table->timestamps();
 
