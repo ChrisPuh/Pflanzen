@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Repositories\Contracts;
 
 use App\DTOs\Area\AreaStoreDTO;
+use App\DTOs\Area\AreaUpdateDTO;
 use App\Models\Area;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
@@ -24,7 +25,7 @@ interface AreaRepositoryInterface
 
     public function create(AreaStoreDTO $data): Area;
 
-    public function update(Area $area, array $data): Area;
+    public function update(Area $area, AreaUpdateDTO $data): Area;
 
     public function delete(Area $area): bool;
 

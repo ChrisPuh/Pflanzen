@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Repositories;
 
+use _PHPStan_f9a2208af\Nette\NotImplementedException;
 use App\DTOs\Area\AreaStoreDTO;
+use App\DTOs\Area\AreaUpdateDTO;
 use App\Models\Area;
 use App\Models\User;
 use App\Repositories\Contracts\AreaRepositoryInterface;
@@ -15,27 +17,31 @@ final class AreaRepository implements AreaRepositoryInterface
 {
     public function findById(int $id): ?Area
     {
-        // TODO: Implement findById() method.
+        throw new NotImplementedException('Method not implemented yet.');
+
     }
 
     public function findWithTrashed(int $id): ?Area
     {
-        // TODO: Implement findWithTrashed() method.
+        throw new NotImplementedException('Method not implemented yet.');
+
     }
 
     public function getUserAreas(User $user, array $filters = [], bool $isAdmin = false): LengthAwarePaginator
     {
-        // TODO: Implement getUserAreas() method.
+        throw new NotImplementedException('Method not implemented yet.');
+
     }
 
     public function getUserAreasQuery(User $user, bool $isAdmin = false): Builder
     {
-        // TODO: Implement getUserAreasQuery() method.
+        throw new NotImplementedException('Method not implemented yet.');
+
     }
 
     public function getAreaStatistics(User $user, bool $isAdmin = false): array
     {
-        // TODO: Implement getAreaStatistics() method.
+        throw new NotImplementedException('Method not implemented yet.');
     }
 
     public function create(AreaStoreDTO $data): Area
@@ -43,23 +49,28 @@ final class AreaRepository implements AreaRepositoryInterface
         return Area::query()->create($data->toModelData());
     }
 
-    public function update(Area $area, array $data): Area
+    public function update(Area $area, AreaUpdateDTO $data): Area
     {
-        // TODO: Implement update() method.
+        $area->update($data->toModelData());
+
+        return $area->fresh();
     }
 
     public function delete(Area $area): bool
     {
-        // TODO: Implement delete() method.
+        throw new NotImplementedException('Method not implemented yet.');
+
     }
 
     public function restore(Area $area): bool
     {
-        // TODO: Implement restore() method.
+        throw new NotImplementedException('Method not implemented yet.');
+
     }
 
     public function forceDelete(Area $area): bool
     {
-        // TODO: Implement forceDelete() method.
+        throw new NotImplementedException('Method not implemented yet.');
+
     }
 }

@@ -6,12 +6,17 @@ namespace App\Actions;
 
 use App\DTOs\Area\AreaUpdateDTO;
 use App\Models\Area;
+use App\Repositories\Contracts\AreaRepositoryInterface;
 use DB;
 use Log;
 use Throwable;
 
 final readonly class AreaUpdateAction
 {
+    public function __construct(
+        private AreaRepositoryInterface $repository
+    ) {}
+
     /**
      * @throws Throwable
      */
@@ -20,7 +25,8 @@ final readonly class AreaUpdateAction
         try {
             Log::info('Updating area', ['area_id' => $area->id]);
 
-            DB::transaction(fn() => $area->update($data->toModelData()));
+            $area = DB::transaction(fn (): Area => $this->repository->update($area, $data));
+
             Log::info('Area updated successfully', ['area_id' => $area->id]);
 
         } catch (Throwable $exception) {
@@ -28,6 +34,6 @@ final readonly class AreaUpdateAction
             throw $exception;
         }
 
-        return $area->fresh();
+        return $area;
     }
 }

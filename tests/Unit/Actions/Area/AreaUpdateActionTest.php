@@ -14,7 +14,9 @@ describe('AreaUpdateAction', function () {
     uses(RefreshDatabase::class);
 
     beforeEach(function () {
-        $this->action = new AreaUpdateAction();
+        $this->action = new AreaUpdateAction(
+            app(App\Repositories\Contracts\AreaRepositoryInterface::class)
+        );
         $this->garden = Garden::factory()->create();
         $this->area = Area::factory()->create(['garden_id' => $this->garden->id]);
         $this->dto = new AreaUpdateDTO(
