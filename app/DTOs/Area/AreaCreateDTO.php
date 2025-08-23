@@ -25,12 +25,12 @@ final readonly class AreaCreateDTO
         return new self(
             name: $data['name'],
             description: $data['description'] ?? null,
-            gardenId: $data['garden_id'],
+            gardenId: (int) ($data['garden_id'] ?? null),
             type: $data['type'],
             sizeSqm: isset($data['size_sqm']) ? (float) $data['size_sqm'] : null,
             coordinates: self::prepareCoordinates($data),
             color: $data['color'] ?? null,
-            isActive: $data['is_active'] ?? true,
+            isActive: (bool) ($data['is_active'] ?? false),
         );
     }
 

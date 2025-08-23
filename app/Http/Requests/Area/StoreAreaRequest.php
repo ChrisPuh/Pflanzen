@@ -30,7 +30,7 @@ final class StoreAreaRequest extends FormRequest
             'coordinates_x' => ['nullable', 'numeric', 'min:-999999.99', 'max:999999.99'],
             'coordinates_y' => ['nullable', 'numeric', 'min:-999999.99', 'max:999999.99'],
             'color' => ['nullable', 'string', 'regex:/^#[0-9A-Fa-f]{6}$/'],
-            'is_active' => ['nullable', 'boolean'],
+            'is_active' => ['boolean'],
         ];
     }
 
