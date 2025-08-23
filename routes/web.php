@@ -70,7 +70,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('{area}/edit', Area\AreaEditController::class)->name('edit');
         Route::put('{area}', Area\AreaUpdateController::class)->name('update');
 
-
         // Plant Management Routes
         Route::post('{area}/plants', [Area\AreaPlantController::class, 'store'])->name('plants.store');
         Route::delete('{area}/plants/{plant}', [Area\AreaPlantController::class, 'destroy'])->name('plants.destroy');
@@ -124,4 +123,4 @@ Route::middleware(['auth', 'verified'])->group(function () {
 |--------------------------------------------------------------------------
 */
 
-require __DIR__ . '/auth.php';
+require __DIR__.'/auth.php';

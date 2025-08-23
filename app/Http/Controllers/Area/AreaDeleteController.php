@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Area;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Area\AreaDeleteRequest;
 use App\Models\Area;
 use App\Services\AreaService;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Gate;
 
 final class AreaDeleteController extends Controller
 {
@@ -17,10 +17,8 @@ final class AreaDeleteController extends Controller
     /**
      * Soft delete the specified area.
      */
-    public function __invoke(Area $area): RedirectResponse
+    public function __invoke(AreaDeleteRequest $request, Area $area): RedirectResponse
     {
-        Gate::authorize('delete', $area);
-
         $this->areaService->archiveArea($area);
 
         return redirect()
