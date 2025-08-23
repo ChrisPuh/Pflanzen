@@ -29,10 +29,11 @@ final readonly class AreaUpdateDTO
             gardenId: (int)$validated['garden_id'],
             type: AreaTypeEnum::from($validated['type']),
             isActive: (bool)$validated['is_active'],
-            description: (string)$validated['description'] ?? null,
-            sizeSqm: (float)$validated['size_sqm'] ?? null,
+
+            description: isset($validated['description']) ? (string)$validated['description'] : null,
+            sizeSqm: isset($validated['size_sqm']) ? (float)$validated['size_sqm'] : null,
             coordinates: self::prepareCoordinatesFromArray($validated),
-            color: (string)$validated['color'] ?? null,
+            color: isset($validated['color']) ? (string)$validated['color'] : null,
         );
     }
 
@@ -62,8 +63,8 @@ final readonly class AreaUpdateDTO
      */
     private static function prepareCoordinatesFromArray(array $validated): ?array
     {
-        $x = $validated['coordinates_x'] ?? null;
-        $y = $validated['coordinates_y'] ?? null;
+        $x = isset($validated['coordinates_x']) ? (float)$validated['coordinates_x'] : null;
+        $y = isset($validated['coordinates_y']) ? (float)$validated['coordinates_y'] : null;
 
         if ($x === null && $y === null) {
             return null;
