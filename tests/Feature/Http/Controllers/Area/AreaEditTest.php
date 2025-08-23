@@ -230,7 +230,8 @@ describe('PUT /areas/{area}', function () {
             'is_active' => true,
         ];
 
-        $response = $this->actingAs($this->user)->put(route('areas.update', $this->area), $updateData);
+        $response = $this->actingAs($this->user)
+            ->put(route('areas.update', $this->area), $updateData);
 
         $response->assertRedirect(route('areas.show', $this->area))
             ->assertSessionHas('success');

@@ -69,7 +69,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::get('{area}/edit', Area\AreaEditController::class)->name('edit');
         Route::put('{area}', Area\AreaUpdateController::class)->name('update');
-        
+
         Route::delete('{area}', [Area\AreaDeleteController::class, 'destroy'])->name('destroy');
 
         // Plant Management Routes

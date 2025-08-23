@@ -6,13 +6,13 @@ namespace App\Services;
 
 use App\Actions\AreaStoreAction;
 use App\DTOs\Area\AreaStoreDTO;
+use App\DTOs\Area\AreaUpdateDTO;
 use App\Enums\Area\AreaTypeEnum;
 use App\Models\Area;
 use App\Models\Garden;
 use App\Models\Plant;
 use App\Models\PlantType;
 use App\Models\User;
-use Deprecated;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -160,23 +160,10 @@ final readonly class AreaService
 
     /**
      * Update an existing area.
-     *
-     * @param  array<string, mixed>  $data
      */
-    public function updateArea(Area $area, array $data): Area
+    public function updateArea(Area $area, AreaUpdateDTO $data): Area
     {
-        $coordinates = $this->prepareCoordinates($data);
-
-        $area->update([
-            'name' => $data['name'],
-            'description' => $data['description'] ?? null,
-            'garden_id' => (int) $data['garden_id'],
-            'type' => AreaTypeEnum::from($data['type']),
-            'size_sqm' => $data['size_sqm'] ?? null,
-            'coordinates' => $coordinates,
-            'color' => $data['color'] ?? null,
-            'is_active' => $data['is_active'] ?? true,
-        ]);
+        $area->update($data->toModelData());
 
         return $area->fresh();
     }
@@ -316,25 +303,6 @@ final readonly class AreaService
     public function getArchivedArea(int $areaId): Area
     {
         return Area::withTrashed()->findOrFail($areaId);
-    }
-
-    /**
-     * Prepare coordinates array from request data.
-     *
-     * @param  array<string, mixed>  $data
-     * @return array<string, float|int|null>|null
-     */
-    #[Deprecated]
-    private function prepareCoordinates(array $data): ?array
-    {
-        if (! isset($data['coordinates_x']) && ! isset($data['coordinates_y'])) {
-            return null;
-        }
-
-        return [
-            'x' => $data['coordinates_x'] ?? null,
-            'y' => $data['coordinates_y'] ?? null,
-        ];
     }
 
     /**
