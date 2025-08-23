@@ -7,14 +7,16 @@ namespace App\Http\Controllers\Garden;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Garden\GardenEditRequest;
 use App\Models\Garden;
-use App\Models\User;
 use App\Services\GardenService;
+use App\Traits\AuthenticatedUser;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
 
 final class GardenEditController extends Controller
 {
+    use AuthenticatedUser;
+
     public function __construct(
         private readonly GardenService $gardenService
     ) {}
@@ -38,13 +40,8 @@ final class GardenEditController extends Controller
     {
         // Authorization handled by GardenEditRequest::authorize()
 
-        /** @var User $user */
-        $request->user();
-
-        $garden = $this->gardenService->updateGarden(
-            garden: $garden,
-            data: $request->validated()
-        );
+        // TODO implement Data Transfer Object (DTO) pattern here
+        $garden = $this->gardenService->updateGarden(garden: $garden, data: $request->validated());
 
         return redirect()
             ->route('gardens.show', $garden)

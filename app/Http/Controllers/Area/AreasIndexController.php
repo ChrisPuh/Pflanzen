@@ -20,7 +20,7 @@ final class AreasIndexController extends Controller
     {
         ['user' => $user, 'isAdmin' => $isAdmin] = $this->getUserAndAdminStatus();
 
-        // Extract filters from request
+        // TODO implement Data Transfer Object (DTO::fromRequest) pattern here
         $filters = [
             'garden_id' => $request->filled('garden_id') ? $request->integer('garden_id') : null,
             'type' => $request->filled('type') ? $request->string('type') : null,

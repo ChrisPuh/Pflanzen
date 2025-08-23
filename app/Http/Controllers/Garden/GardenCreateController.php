@@ -42,10 +42,8 @@ final class GardenCreateController extends Controller
 
         $user = $this->getUser();
 
-        $garden = $this->gardenService->createGarden(
-            user: $user,
-            data: $request->validated()
-        );
+        // TODO implement Data Transfer Object (DTO) pattern here
+        $garden = $this->gardenService->createGarden(user: $user, data: $request->validated());
 
         return redirect()
             ->route('gardens.show', $garden)

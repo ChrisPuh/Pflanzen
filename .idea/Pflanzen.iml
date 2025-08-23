@@ -149,6 +149,8 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/voku/portable-ascii" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/webmozart/assert" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/dyrynda/laravel-cascade-soft-deletes" />
+      <excludeFolder url="file://$MODULE_DIR$/storage/debugbar" />
+      <excludeFolder url="file://$MODULE_DIR$/storage/pail" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

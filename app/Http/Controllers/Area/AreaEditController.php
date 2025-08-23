@@ -32,8 +32,7 @@ final class AreaEditController extends Controller
 
     public function update(UpdateAreaRequest $request, Area $area): RedirectResponse
     {
-        // Authorization is handled by UpdateAreaRequest::authorize()
-
+        // TODO implement Data Transfer Object (DTO) pattern for request data
         $area = $this->areaService->updateArea($area, $request->validated());
 
         return redirect()

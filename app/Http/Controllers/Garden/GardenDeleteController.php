@@ -37,7 +37,7 @@ final class GardenDeleteController extends Controller
      */
     public function restore(int $gardenId): RedirectResponse
     {
-        $garden = Garden::onlyTrashed()->findOrFail($gardenId);
+        $garden = $this->gardenService->getArchivedGardenById($gardenId);
 
         Gate::authorize('restore', $garden);
 

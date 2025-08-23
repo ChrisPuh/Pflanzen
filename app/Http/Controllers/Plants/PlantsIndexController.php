@@ -17,7 +17,7 @@ final class PlantsIndexController extends Controller
 
     public function __invoke(PlantsIndexRequest $request): View
     {
-        // Extract filters from request
+        // TODO implement Data Transfer Object (DTO) for filters
         $filters = [
             'search' => $request->getSearch(),
             'type' => $request->getType(),

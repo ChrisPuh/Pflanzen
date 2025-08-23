@@ -35,7 +35,6 @@ final class GardensIndexController extends Controller
             isAdmin: $isAdmin,
             perPage: 12
         );
-
         $indexData['isAdmin'] = $isAdmin;
 
         return view('gardens.index', $indexData);

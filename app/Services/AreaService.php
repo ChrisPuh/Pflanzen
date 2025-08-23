@@ -285,8 +285,8 @@ final class AreaService
                 $searchLower = mb_strtolower($search);
 
                 return str_contains(mb_strtolower($plant->name), $searchLower) ||
-                       ($plant->latin_name && str_contains(mb_strtolower($plant->latin_name), $searchLower)) ||
-                       ($plant->description && str_contains(mb_strtolower($plant->description), $searchLower));
+                    ($plant->latin_name && str_contains(mb_strtolower($plant->latin_name), $searchLower)) ||
+                    ($plant->description && str_contains(mb_strtolower($plant->description), $searchLower));
             });
         }
 
@@ -309,6 +309,11 @@ final class AreaService
             ->get()
             ->mapWithKeys(fn (PlantType $type): array => [$type->id => $type->name->getLabel()])
             ->toArray();
+    }
+
+    public function getArchivedArea(int $areaId): Area
+    {
+        return Area::withTrashed()->findOrFail($areaId);
     }
 
     /**

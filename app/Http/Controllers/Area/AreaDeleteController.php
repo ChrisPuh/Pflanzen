@@ -33,7 +33,7 @@ final class AreaDeleteController extends Controller
      */
     public function restore(int $areaId): RedirectResponse
     {
-        $area = Area::withTrashed()->findOrFail($areaId);
+        $area = $this->areaService->getArchivedArea($areaId);
 
         Gate::authorize('restore', $area);
 
@@ -49,7 +49,7 @@ final class AreaDeleteController extends Controller
      */
     public function forceDelete(int $areaId): RedirectResponse
     {
-        $area = Area::withTrashed()->findOrFail($areaId);
+        $area = $this->areaService->getArchivedArea($areaId);
 
         Gate::authorize('forceDelete', $area);
 

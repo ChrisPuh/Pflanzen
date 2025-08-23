@@ -415,4 +415,9 @@ final class GardenService
             ->latest()
             ->get();
     }
+
+    public function getArchivedGardenById(int $gardenId): Garden
+    {
+        return Garden::onlyTrashed()->findOrFail($gardenId);
+    }
 }

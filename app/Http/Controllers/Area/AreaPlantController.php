@@ -23,10 +23,8 @@ final class AreaPlantController extends Controller
     {
         Gate::authorize('update', $area);
 
-        $this->areaService->addPlantsToArea(
-            $area,
-            $request->validated()
-        );
+        // TODO implement Data Transfer Object (DTO::fromRequest) pattern here
+        $this->areaService->addPlantsToArea($area, $request->validated());
 
         return redirect()
             ->route('areas.show', $area)
