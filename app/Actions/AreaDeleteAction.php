@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Actions;
 
+use App\DTOs\Area\AreaDeleteDTO;
 use App\Models\Area;
 use App\Repositories\Contracts\AreaRepositoryInterface;
 use DB;
@@ -21,14 +22,14 @@ final readonly class AreaDeleteAction
      *
      * @throws Throwable
      */
-    public function execute(Area $area): bool
+    public function execute(Area $area, AreaDeleteDTO $data): bool
     {
         $areaId = $area->id;
         try {
             Log::info('Deleting area', ['area_id' => $areaId]);
 
             // TODO: implement Repository pattern for delete action
-            $isDeleted = DB::transaction(fn(): bool => $this->repository->delete($area));
+            $isDeleted = DB::transaction(fn (): bool => $this->repository->delete($area, $data));
 
             Log::info('Area deleted successfully', ['area_id' => $areaId]);
 

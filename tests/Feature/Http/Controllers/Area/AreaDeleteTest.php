@@ -279,7 +279,8 @@ describe('Edge cases and error handling', function () {
         $plant = App\Models\Plant::factory()->create();
         $this->area->plants()->attach($plant->id);
 
-        $response = $this->actingAs($this->user)->delete(route('areas.destroy', $this->area));
+        $response = $this->actingAs($this->user)
+            ->delete(route('areas.destroy', $this->area));
 
         $response->assertRedirect(route('areas.index'));
 
