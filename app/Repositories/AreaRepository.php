@@ -54,7 +54,10 @@ final class AreaRepository implements AreaRepositoryInterface
 
     public function delete(Area $area): bool
     {
-        throw new NotImplementedException('Method not implemented yet.');
+        // TODO handle update withe DeleteDTO
+        $area->update(['is_active' => false]);
+
+        return $area->delete();
     }
 
     public function restore(Area $area): bool

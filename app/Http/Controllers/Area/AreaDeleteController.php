@@ -19,7 +19,7 @@ final class AreaDeleteController extends Controller
      */
     public function __invoke(AreaDeleteRequest $request, Area $area): RedirectResponse
     {
-        $this->areaService->archiveArea($area);
+        $this->areaService->deleteArea($area);
 
         return redirect()
             ->route('areas.index')

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services;
 
+use App\Actions\AreaDeleteAction;
 use App\Actions\AreaStoreAction;
 use App\Actions\AreaUpdateAction;
 use App\DTOs\Area\AreaStoreDTO;
@@ -24,6 +25,7 @@ final readonly class AreaService
     public function __construct(
         private AreaStoreAction $storeAction,
         private AreaUpdateAction $updateAction,
+        private AreaDeleteAction $deleteAction,
     ) {}
 
     /**
@@ -186,14 +188,20 @@ final readonly class AreaService
     }
 
     /**
-     * Soft delete (archive) an area.
+     * Soft delete (delete) an area.
      */
-    public function archiveArea(Area $area): bool
+    public function deleteArea(Area $area): bool
     {
-        // Set area as inactive before archiving
-        $area->update(['is_active' => false]);
+        // 1. Action ausführen (macht die eigentliche Arbeit)
+        // $area = $this->deleteAction->execute($area);
 
-        return $area->delete();
+        // 2. TODO implement Cache invalidieren
+        // $this->cache->clearAreaCache();
+
+        // 3. TODO  implement Benachrichtigung senden
+        // $this->notifications->sendAreaDeletedNotification($area);
+
+        return $this->deleteAction->execute($area);
     }
 
     /**
