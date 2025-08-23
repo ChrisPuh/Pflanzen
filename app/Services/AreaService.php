@@ -4,12 +4,15 @@ declare(strict_types=1);
 
 namespace App\Services;
 
+use App\DTOs\Area\AreaFormDataDTO;
 use App\Enums\Area\AreaTypeEnum;
 use App\Models\Area;
 use App\Models\Garden;
 use App\Models\Plant;
 use App\Models\PlantType;
 use App\Models\User;
+use Deprecated;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
 
@@ -23,7 +26,7 @@ final class AreaService
     public function getUserGardens(User $user, bool $isAdmin = false): Collection
     {
         return Garden::query()
-            ->when(! $isAdmin, function (\Illuminate\Database\Eloquent\Builder $query) use ($user): void {
+            ->when(! $isAdmin, function (Builder $query) use ($user): void {
                 $query->where('user_id', $user->id);
             })
             ->select('id', 'name', 'type')
@@ -135,23 +138,11 @@ final class AreaService
 
     /**
      * Create a new area.
-     *
-     * @param  array<string, mixed>  $data
      */
-    public function createArea(array $data): Area
+    public function createArea(AreaFormDataDTO $data): Area
     {
-        $coordinates = $this->prepareCoordinates($data);
 
-        return Area::create([
-            'name' => $data['name'],
-            'description' => $data['description'] ?? null,
-            'garden_id' => (int) $data['garden_id'],
-            'type' => AreaTypeEnum::from($data['type']),
-            'size_sqm' => $data['size_sqm'] ?? null,
-            'coordinates' => $coordinates,
-            'color' => $data['color'] ?? null,
-            'is_active' => $data['is_active'] ?? true,
-        ]);
+        return Area::create($data->toModelData());
     }
 
     /**
@@ -269,10 +260,8 @@ final class AreaService
 
     /**
      * Get filtered plants for area excluding already planted ones.
-     *
-     * @return Collection<int, Plant>
      */
-    public function getFilteredPlantsForArea(Area $area, string $search = '', ?int $plantTypeId = null): Collection
+    public function getFilteredPlantsForArea(Area $area, string $search = '', ?int $plantTypeId = null): \Illuminate\Support\Collection
     {
         $plants = $this->getAvailablePlantsForArea();
 
@@ -317,6 +306,25 @@ final class AreaService
     }
 
     /**
+     * Prepare coordinates array from request data.
+     *
+     * @param  array<string, mixed>  $data
+     * @return array<string, float|int|null>|null
+     */
+    #[Deprecated]
+    private function prepareCoordinates(array $data): ?array
+    {
+        if (! isset($data['coordinates_x']) && ! isset($data['coordinates_y'])) {
+            return null;
+        }
+
+        return [
+            'x' => $data['coordinates_x'] ?? null,
+            'y' => $data['coordinates_y'] ?? null,
+        ];
+    }
+
+    /**
      * Get filtered and paginated areas.
      *
      * @param  array<string, mixed>  $filters
@@ -325,7 +333,7 @@ final class AreaService
     {
         $areasQuery = Area::query()
             ->with(['garden:id,name,type', 'plants:id,name'])
-            ->whereHas('garden', function (\Illuminate\Database\Eloquent\Builder $query) use ($isAdmin, $user): void {
+            ->whereHas('garden', function (Builder $query) use ($isAdmin, $user): void {
                 if (! $isAdmin) {
                     $query->where('user_id', $user->id);
                 }
@@ -347,9 +355,9 @@ final class AreaService
 
         if (! empty($filters['search'])) {
             $search = (string) $filters['search'];
-            $areasQuery->where(function (\Illuminate\Database\Eloquent\Builder $query) use ($search): void {
-                $query->where('name', 'like', "%{$search}%")
-                    ->orWhere('description', 'like', "%{$search}%");
+            $areasQuery->where(function (Builder $query) use ($search): void {
+                $query->where('name', 'like', "%$search%")
+                    ->orWhere('description', 'like', "%$search%");
             });
         }
 
@@ -372,7 +380,7 @@ final class AreaService
      */
     private function getAreaStatistics(User $user, bool $isAdmin): array
     {
-        $baseQuery = (fn (): \Illuminate\Database\Eloquent\Builder => Area::query()->whereHas('garden', function (\Illuminate\Database\Eloquent\Builder $query) use ($isAdmin, $user): void {
+        $baseQuery = (fn (): Builder => Area::query()->whereHas('garden', function (Builder $query) use ($isAdmin, $user): void {
             if (! $isAdmin) {
                 $query->where('user_id', $user->id);
             }
@@ -424,24 +432,6 @@ final class AreaService
             'gardens' => $gardenOptions,
             'areaTypes' => $areaTypeOptions,
             'categories' => $areaCategoryOptions,
-        ];
-    }
-
-    /**
-     * Prepare coordinates array from request data.
-     *
-     * @param  array<string, mixed>  $data
-     * @return array<string, float|int|null>|null
-     */
-    private function prepareCoordinates(array $data): ?array
-    {
-        if (! isset($data['coordinates_x']) && ! isset($data['coordinates_y'])) {
-            return null;
-        }
-
-        return [
-            'x' => $data['coordinates_x'] ?? null,
-            'y' => $data['coordinates_y'] ?? null,
         ];
     }
 }

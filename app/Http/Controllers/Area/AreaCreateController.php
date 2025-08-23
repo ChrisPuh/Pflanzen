@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Area;
 
+use App\DTOs\Area\AreaFormDataDTO;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Area\StoreAreaRequest;
 use App\Services\AreaService;
@@ -29,7 +30,7 @@ final class AreaCreateController extends Controller
 
     public function store(StoreAreaRequest $request): RedirectResponse
     {
-        $area = $this->areaService->createArea($request->validated());
+        $area = $this->areaService->createArea(AreaFormDataDTO::fromRequest($request->validated()));
 
         return redirect()
             ->route('areas.index')
