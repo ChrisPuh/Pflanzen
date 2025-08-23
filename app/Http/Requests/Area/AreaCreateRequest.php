@@ -23,14 +23,15 @@ final class AreaCreateRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:255'],
-            'description' => ['nullable', 'string', 'max:1000'],
             'garden_id' => ['required', 'numeric', 'exists:gardens,id'],
             'type' => ['required', 'string', Rule::enum(AreaTypeEnum::class)],
+            'is_active' => ['required', 'boolean'],
+
+            'description' => ['nullable', 'string', 'max:1000'],
             'size_sqm' => ['nullable', 'numeric', 'min:0', 'max:999999.99'],
             'coordinates_x' => ['nullable', 'numeric', 'min:-999999.99', 'max:999999.99'],
             'coordinates_y' => ['nullable', 'numeric', 'min:-999999.99', 'max:999999.99'],
             'color' => ['nullable', 'string', 'regex:/^#[0-9A-Fa-f]{6}$/'],
-            'is_active' => ['boolean'],
         ];
     }
 
