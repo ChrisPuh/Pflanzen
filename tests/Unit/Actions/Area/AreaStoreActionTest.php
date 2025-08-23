@@ -38,7 +38,7 @@ describe('AreaCreateAction', function () {
             });
 
         $this->repository
-            ->shouldReceive('create')
+            ->shouldReceive('store')
             ->once()
             ->with($this->dto)
             ->andReturn($area);
@@ -67,7 +67,7 @@ describe('AreaCreateAction', function () {
             });
 
         $this->repository
-            ->shouldReceive('create')
+            ->shouldReceive('store')
             ->once()
             ->with($this->dto)
             ->andThrow($exception);

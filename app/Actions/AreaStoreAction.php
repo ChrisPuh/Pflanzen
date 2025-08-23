@@ -25,7 +25,7 @@ final readonly class AreaStoreAction
         try {
             Log::info('Creating new area', ['name' => $data->name]);
 
-            $area = DB::transaction(fn (): Area => $this->repository->create($data));
+            $area = DB::transaction(fn (): Area => $this->repository->store($data));
 
             Log::info('Area created successfully', ['area_id' => $area->id, 'name' => $data->name]);
 

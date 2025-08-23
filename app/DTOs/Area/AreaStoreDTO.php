@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace App\DTOs\Area;
 
+use App\DTOs\Shared\Contracts\WritableDTOInterface;
 use App\Enums\Area\AreaTypeEnum;
 use OpenSpout\Common\Exception\InvalidArgumentException;
 
-final readonly class AreaStoreDTO
+final readonly class AreaStoreDTO implements WritableDTOInterface
 {
     public function __construct(
         public string $name,
