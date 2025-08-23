@@ -70,15 +70,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('{area}/edit', Area\AreaEditController::class)->name('edit');
         Route::put('{area}', Area\AreaUpdateController::class)->name('update');
 
-        Route::delete('{area}', [Area\AreaDeleteController::class, 'destroy'])->name('destroy');
 
         // Plant Management Routes
         Route::post('{area}/plants', [Area\AreaPlantController::class, 'store'])->name('plants.store');
         Route::delete('{area}/plants/{plant}', [Area\AreaPlantController::class, 'destroy'])->name('plants.destroy');
 
         // Soft Delete Management
-        Route::post('{area}/restore', [Area\AreaDeleteController::class, 'restore'])->name('restore');
-        Route::delete('{area}/force', [Area\AreaDeleteController::class, 'forceDelete'])->name('force-delete');
+        Route::delete('{area}', Area\AreaDeleteController::class)->name('destroy');
+        Route::post('{area}/restore', Area\AreaRestoreController::class)->name('restore');
+        Route::delete('{area}/force', Area\AreaForceDeleteController::class)->name('force-delete');
     });
 
     // Gardens Resource Routes
@@ -124,4 +124,4 @@ Route::middleware(['auth', 'verified'])->group(function () {
 |--------------------------------------------------------------------------
 */
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
