@@ -16,7 +16,7 @@ final class AreaUpdateRequest extends FormRequest
     {
         $area = $this->route('area');
 
-        if (! $area instanceof Area) {
+        if (!$area instanceof Area) {
             return false;
         }
 
@@ -30,14 +30,15 @@ final class AreaUpdateRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:255'],
-            'description' => ['nullable', 'string', 'max:1000'],
             'garden_id' => ['required', 'numeric', 'exists:gardens,id'],
             'type' => ['required', 'string', Rule::in(array_column(AreaTypeEnum::cases(), 'value'))],
+            'is_active' => ['required', 'boolean'],
+
+            'description' => ['nullable', 'string', 'max:1000'],
             'size_sqm' => ['nullable', 'numeric', 'min:0', 'max:999999.99'],
             'coordinates_x' => ['nullable', 'numeric', 'min:-999999.99', 'max:999999.99'],
             'coordinates_y' => ['nullable', 'numeric', 'min:-999999.99', 'max:999999.99'],
             'color' => ['nullable', 'string', 'regex:/^#[0-9A-Fa-f]{6}$/'],
-            'is_active' => ['nullable', 'boolean'],
         ];
     }
 
@@ -71,12 +72,12 @@ final class AreaUpdateRequest extends FormRequest
                 $garden = Garden::find($this->integer('garden_id'));
                 $area = $this->route('area');
 
-                if ($garden && ! $this->user()->hasRole('admin') && $garden->user_id !== $this->user()->id) {
+                if ($garden && !$this->user()->hasRole('admin') && $garden->user_id !== $this->user()->id) {
                     $validator->errors()->add('garden_id', 'Sie haben keine Berechtigung, diesem Garten Bereiche zuzuweisen.');
                 }
 
                 // Check if the area belongs to the same user as the new garden
-                if ($area instanceof Area && $garden && ! $this->user()->hasRole('admin') && $area->garden->user_id !== $this->user()->id) {
+                if ($area instanceof Area && $garden && !$this->user()->hasRole('admin') && $area->garden->user_id !== $this->user()->id) {
                     $validator->errors()->add('area', 'Sie haben keine Berechtigung, diesen Bereich zu bearbeiten.');
                 }
             }
