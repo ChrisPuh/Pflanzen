@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\DTOs\Area\AreaDeleteDTO;
 use App\DTOs\Area\AreaStoreDTO;
 use App\DTOs\Area\AreaUpdateDTO;
 use App\Enums\Area\AreaTypeEnum;
@@ -178,6 +179,116 @@ describe('AreaRepository', function () {
 
             expect($updatedArea->updated_at)->not->toBe($originalUpdatedAt)
                 ->and($updatedArea->updated_at)->toBeGreaterThan($originalUpdatedAt);
+        });
+    });
+
+    describe('delete', function () {
+        it('soft deletes area successfully', function () {
+            $area = Area::factory()->create([
+                'name' => 'Area to Delete',
+                'garden_id' => $this->garden->id,
+                'type' => AreaTypeEnum::VegetableBed,
+                'is_active' => true,
+
+            ]);
+
+            $dto = new AreaDeleteDTO(isActive: false);
+
+            $result = $this->repository->delete($area, $dto);
+
+            expect($result)->toBeTrue();
+
+            // Verify area was soft deleted
+            $this->assertSoftDeleted('areas', [
+                'id' => $area->id,
+                'name' => 'Area to Delete',
+            ]);
+
+            // Verify is_active was updated before deletion
+            $this->assertDatabaseHas('areas', [
+                'id' => $area->id,
+                'is_active' => false,
+            ]);
+        });
+
+        it('updates is_active before soft deletion', function () {
+            $area = Area::factory()->create([
+                'name' => 'Active Area',
+                'garden_id' => $this->garden->id,
+                'type' => AreaTypeEnum::HerbBed,
+                'is_active' => true,
+            ]);
+
+            $dto = new AreaDeleteDTO(isActive: false);
+
+            $result = $this->repository->delete($area, $dto);
+
+            expect($result)->toBeTrue();
+
+            // Check that area was deactivated before soft deletion
+            $deletedArea = Area::withTrashed()->find($area->id);
+            expect($deletedArea->is_active)->toBeFalse()
+                ->and($deletedArea->deleted_at)->not->toBeNull();
+        });
+
+        it('handles already inactive area deletion', function () {
+            $area = Area::factory()->create([
+                'name' => 'Inactive Area',
+                'garden_id' => $this->garden->id,
+                'type' => AreaTypeEnum::FlowerBed,
+                'is_active' => false, // Already inactive
+            ]);
+
+            $dto = new AreaDeleteDTO(isActive: false);
+
+            $result = $this->repository->delete($area, $dto);
+
+            expect($result)->toBeTrue();
+
+            $this->assertSoftDeleted('areas', [
+                'id' => $area->id,
+                'is_active' => false,
+            ]);
+        });
+
+        it('sets deleted_at timestamp correctly', function () {
+            $area = Area::factory()->create([
+                'name' => 'Timestamp Delete Test',
+                'garden_id' => $this->garden->id,
+                'type' => AreaTypeEnum::VegetableBed,
+                'is_active' => true,
+            ]);
+
+            expect($area->deleted_at)->toBeNull();
+
+            $dto = new AreaDeleteDTO(isActive: false);
+            $result = $this->repository->delete($area, $dto);
+
+            expect($result)->toBeTrue();
+
+            $deletedArea = Area::withTrashed()->find($area->id);
+            expect($deletedArea->deleted_at)->not->toBeNull()
+                ->and($deletedArea->deleted_at)->toBeInstanceOf(Carbon\Carbon::class);
+        });
+
+        it('can activate area during deletion process', function () {
+            // Edge case: someone passes isActive: true to delete method
+            $area = Area::factory()->create([
+                'name' => 'Edge Case Area',
+                'garden_id' => $this->garden->id,
+                'type' => AreaTypeEnum::HerbBed,
+                'is_active' => false,
+            ]);
+
+            $dto = new AreaDeleteDTO(isActive: true); // Activate before delete
+
+            $result = $this->repository->delete($area, $dto);
+
+            expect($result)->toBeTrue();
+
+            $deletedArea = Area::withTrashed()->find($area->id);
+            expect($deletedArea->is_active)->toBeTrue() // Was activated
+                ->and($deletedArea->deleted_at)->not->toBeNull(); // But then deleted
         });
     });
 

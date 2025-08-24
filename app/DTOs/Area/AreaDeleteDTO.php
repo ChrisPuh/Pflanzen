@@ -18,7 +18,7 @@ final class AreaDeleteDTO implements WritableDTOInterface
     public static function fromValidatedRequest(array $validated): self
     {
         return new self(
-            isActive: $validated['is_active']
+            isActive: (bool) $validated['is_active']
             // reason: isset($validated['reason']) ? (string) $validated['reason'] : null,
         );
     }

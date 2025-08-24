@@ -28,7 +28,6 @@ final readonly class AreaDeleteAction
         try {
             Log::info('Deleting area', ['area_id' => $areaId]);
 
-            // TODO: implement Repository pattern for delete action
             $isDeleted = DB::transaction(fn (): bool => $this->repository->delete($area, $data));
 
             Log::info('Area deleted successfully', ['area_id' => $areaId]);
