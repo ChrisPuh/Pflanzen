@@ -76,7 +76,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::delete('{area}/force', Area\AreaForceDeleteController::class)->name('force-delete');
 
         // Plant Management Routes
-        Route::post('{area}/plants', Area\Actions\AttachPlantToAreaController::class)->name('plants.store');
+        /** @deprecated use app/Livewire/Area/PlantSelectionModal.php */
+        Route::post('{area}/plants', Area\Actions\AttachPlantToAreaController::class)
+            ->name('plants.store');
         Route::delete('{area}/plants/{plant}', Area\Actions\DetachPlantFromAreaController::class)->name('plants.destroy');
     });
 
