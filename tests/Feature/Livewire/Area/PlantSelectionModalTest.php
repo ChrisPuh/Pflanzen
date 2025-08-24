@@ -8,6 +8,7 @@ use App\Models\Garden;
 use App\Models\Plant;
 use App\Models\PlantType;
 use App\Models\User;
+use Illuminate\Support\Carbon;
 use Livewire\Livewire;
 
 describe('PlantSelectionModal', function (): void {
@@ -158,14 +159,24 @@ describe('PlantSelectionModal', function (): void {
 
     describe('Plant Selection', function (): void {
         it('can toggle plant selection', function (): void {
+            $planted_at = now();
+
+            // Zeit "einfrieren" für den gesamten Test
+            Carbon::setTestNow($planted_at);
+
             Livewire::test(PlantSelectionModal::class, ['area' => $this->area])
                 ->call('togglePlant', $this->plant1->id)
                 ->assertSet('selectedPlants', [
                     $this->plant1->id => [
                         'quantity' => 1,
                         'notes' => '',
+                        'planted_at' => $planted_at,
+                        'plant_id' => $this->plant1->id
                     ],
                 ]);
+
+            // Zeit wieder "auftauen" nach dem Test
+            Carbon::setTestNow();
         });
 
         it('can deselect plant by toggling again', function (): void {
@@ -175,21 +186,38 @@ describe('PlantSelectionModal', function (): void {
                 ->assertSet('selectedPlants', []);
         });
 
-        it('can select multiple plants', function (): void {
-            Livewire::test(PlantSelectionModal::class, ['area' => $this->area])
-                ->call('togglePlant', $this->plant1->id)
-                ->call('togglePlant', $this->plant2->id)
-                ->assertSet('selectedPlants', [
-                    $this->plant1->id => [
-                        'quantity' => 1,
-                        'notes' => '',
-                    ],
-                    $this->plant2->id => [
-                        'quantity' => 1,
-                        'notes' => '',
-                    ],
-                ]);
+        it('can select multiple plants - Fix 1', function (): void {
+            // Microsekunden entfernen für Livewire-Kompatibilität
+            $planted_at = now()->startOfSecond();
+
+            $component = Livewire::test(PlantSelectionModal::class, ['area' => $this->area]);
+
+            // DIESELBE Zeit für beide Calls verwenden
+            Carbon::setTestNow($planted_at);
+            $component->call('togglePlant', $this->plant1->id);
+
+            // DIESELBE Zeit nochmal setzen (nicht neu generieren!)
+            Carbon::setTestNow($planted_at);
+            $component->call('togglePlant', $this->plant2->id);
+
+            $component->assertSet('selectedPlants', [
+                $this->plant1->id => [
+                    'quantity' => 1,
+                    'notes' => '',
+                    'planted_at' => $planted_at,
+                    'plant_id' => $this->plant1->id
+                ],
+                $this->plant2->id => [
+                    'quantity' => 1,
+                    'notes' => '',
+                    'planted_at' => $planted_at, // DIESELBE Zeit!
+                    'plant_id' => $this->plant2->id
+                ],
+            ]);
+
+            Carbon::setTestNow();
         });
+
     });
 
     describe('Plant Data Management', function (): void {
@@ -201,43 +229,60 @@ describe('PlantSelectionModal', function (): void {
         it('can update plant quantity', function (): void {
             $this->component
                 ->call('updateQuantity', $this->plant1->id, 5)
-                ->assertSet('selectedPlants.'.$this->plant1->id.'.quantity', 5);
+                ->assertSet('selectedPlants.' . $this->plant1->id . '.quantity', 5);
         });
 
         it('ignores invalid quantity updates', function (): void {
             $this->component
                 ->call('updateQuantity', $this->plant1->id, 0)
-                ->assertSet('selectedPlants.'.$this->plant1->id.'.quantity', 1)
+                ->assertSet('selectedPlants.' . $this->plant1->id . '.quantity', 1)
                 ->call('updateQuantity', $this->plant1->id, -1)
-                ->assertSet('selectedPlants.'.$this->plant1->id.'.quantity', 1);
+                ->assertSet('selectedPlants.' . $this->plant1->id . '.quantity', 1);
         });
 
         it('ignores quantity updates for unselected plants', function (): void {
+
+            $planted_at = now()->startOfSecond();;
+
+            Carbon::setTestNow($planted_at);
+
             $this->component
                 ->call('updateQuantity', $this->plant2->id, 5)
                 ->assertSet('selectedPlants', [
                     $this->plant1->id => [
                         'quantity' => 1,
                         'notes' => '',
+                        'planted_at' => $planted_at,
+                        'plant_id' => $this->plant1->id,
                     ],
                 ]);
+
+            Carbon::setTestNow();
         });
 
         it('can update plant notes', function (): void {
             $this->component
                 ->call('updateNotes', $this->plant1->id, 'Test notes')
-                ->assertSet('selectedPlants.'.$this->plant1->id.'.notes', 'Test notes');
+                ->assertSet('selectedPlants.' . $this->plant1->id . '.notes', 'Test notes');
         });
 
         it('ignores notes updates for unselected plants', function (): void {
+
+            $planted_at = now()->startOfSecond();;
+
+            Carbon::setTestNow($planted_at);
             $this->component
                 ->call('updateNotes', $this->plant2->id, 'Test notes')
                 ->assertSet('selectedPlants', [
                     $this->plant1->id => [
                         'quantity' => 1,
                         'notes' => '',
+                        'planted_at' => $planted_at,
+                        'plant_id' => $this->plant1->id,
                     ],
                 ]);
+
+            Carbon::setTestNow();
         });
     });
 

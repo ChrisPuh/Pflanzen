@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace App\Livewire\Area;
 
+use App\DTOs\Area\Actions\AttachPlantToAreaDTO;
 use App\Models\Area;
 use App\Models\Plant;
+use App\Services\AreaPlantService;
 use App\Services\AreaService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Collection;
@@ -22,6 +24,36 @@ final class PlantSelectionModal extends Component
     public ?int $selectedPlantTypeId = null;
 
     public array $selectedPlants = [];
+
+    public function rules(): array
+    {
+        return [
+            'selectedPlants' => ['required', 'array', 'min:1'],
+            'selectedPlants.*' => ['required', 'array'],
+            'selectedPlants.*.quantity' => ['required', 'integer', 'min:1', 'max:9999'],
+            'selectedPlants.*.notes' => ['nullable', 'string', 'max:500'],
+            'selectedPlants.*.planted_at' => ['date'],
+            'selectedPlants.*.plant_id' => ['required', 'integer', 'exists:plants,id'],
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'selectedPlants.required' => 'Bitte wählen Sie mindestens eine Pflanze aus.',
+            'selectedPlants.array' => 'Ungültige Pflanzenauswahl.',
+            'selectedPlants.min' => 'Bitte wählen Sie mindestens eine Pflanze aus.',
+            'selectedPlants.*.quantity.required' => 'Bitte geben Sie eine Anzahl an.',
+            'selectedPlants.*.quantity.integer' => 'Die Anzahl muss eine ganze Zahl sein.',
+            'selectedPlants.*.quantity.min' => 'Die Anzahl muss mindestens 1 sein.',
+            'selectedPlants.*.quantity.max' => 'Die Anzahl darf maximal 9999 sein.',
+            'selectedPlants.*.notes.max' => 'Die Notizen dürfen maximal 500 Zeichen lang sein.',
+            'selectedPlants.*.planted_at.date' => 'Das Pflanzdatum ist ungültig.',
+            'selectedPlants.*.plant_id.required' => 'Bitte wählen Sie eine Pflanze aus.',
+            'selectedPlants.*.plant_id.integer' => 'Ungültige Pflanzen-ID.',
+            'selectedPlants.*.plant_id.exists' => 'Die ausgewählte Pflanze existiert nicht.',
+        ];
+    }
 
     public function mount(Area $area): void
     {
@@ -48,6 +80,8 @@ final class PlantSelectionModal extends Component
             $this->selectedPlants[$plantId] = [
                 'quantity' => 1,
                 'notes' => '',
+                'planted_at' => now(),
+                'plant_id' => $plantId,
             ];
         }
     }
@@ -66,7 +100,7 @@ final class PlantSelectionModal extends Component
         }
     }
 
-    public function addSelectedPlants(): void
+    public function addSelectedPlants(AreaPlantService $service): void
     {
         if ($this->selectedPlants === []) {
             return;
@@ -77,16 +111,20 @@ final class PlantSelectionModal extends Component
             $plantData[$plantId] = [
                 'quantity' => $data['quantity'],
                 'notes' => $data['notes'],
-                'planted_at' => now(),
+                'planted_at' => $data['planted_at'] ?? now(),
+                'plant_id' => $plantId,
             ];
         }
+        try {
+            $service->attachPlantsToArea($this->area, AttachPlantToAreaDTO::fromValidatedRequest($plantData));
+            session()->flash('success', 'Pflanzen wurden erfolgreich hinzugefügt.');
+            $this->dispatch('plants-added');
+        } catch (\Exception $exception) {
+            session()->flash('error', 'Fehler beim Hinzufügen der Pflanzen: ' . $exception->getMessage());
 
-        $this->area->plants()->syncWithoutDetaching($plantData);
+        }
 
-        $this->dispatch('plants-added');
         $this->closeModal();
-
-        session()->flash('success', 'Pflanzen wurden erfolgreich hinzugefügt.');
     }
 
     public function clearFilters(): void
