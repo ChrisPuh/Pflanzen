@@ -19,7 +19,8 @@ final readonly class AttachPlantToAreaDTO implements WritableDTOInterface
     public static function fromValidatedRequest(array $validated): self
     {
         $plants = [];
-        foreach ($validated ?? [] as $plantData) {
+
+        foreach ($validated as $plantData) {
             $plants[] = new PlantSelectionData(
                 plantId: (int) $plantData['plant_id'],
                 quantity: (int) $plantData['quantity'],
