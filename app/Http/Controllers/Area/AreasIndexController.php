@@ -13,16 +13,9 @@ final class AreasIndexController extends AreaController
     {
         ['user' => $user, 'isAdmin' => $isAdmin] = $this->getUserAndAdminStatus();
 
-        // TODO implement Data Transfer Object (DTO::fromRequest) pattern here
-        $filters = [
-            'garden_id' => $request->filled('garden_id') ? $request->integer('garden_id') : null,
-            'type' => $request->filled('type') ? $request->string('type') : null,
-            'category' => $request->filled('category') ? $request->string('category') : null,
-            'search' => $request->filled('search') ? $request->string('search') : null,
-            'active' => $request->has('active') ? $request->boolean('active') : null,
-        ];
+        $filter = $request->toDTO();
 
-        $indexData = $this->areaService->getIndexData($user, $filters, $isAdmin);
+        $indexData = $this->areaService->getIndexData($user, $filter, $isAdmin);
 
         return view('areas.index', $indexData);
     }

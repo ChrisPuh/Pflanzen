@@ -8,6 +8,7 @@ use App\Actions\Area\AreaDeleteAction;
 use App\Actions\Area\AreaStoreAction;
 use App\Actions\Area\AreaUpdateAction;
 use App\DTOs\Area\AreaDeleteDTO;
+use App\DTOs\Area\AreaIndexFilterDTO;
 use App\DTOs\Area\AreaStoreDTO;
 use App\DTOs\Area\AreaUpdateDTO;
 use App\Enums\Area\AreaTypeEnum;
@@ -105,13 +106,12 @@ final readonly class AreaService
     /**
      * Get all data needed for areas index page.
      *
-     * @param  array<string, mixed>  $filters
      * @return array<string, mixed>
      */
-    public function getIndexData(User $user, array $filters, bool $isAdmin = false): array
+    public function getIndexData(User $user, AreaIndexFilterDTO $filter, bool $isAdmin = false): array
     {
         // Get filtered and paginated areas
-        $areas = $this->getFilteredAreas($user, $filters, $isAdmin);
+        $areas = $this->getFilteredAreas($user, $filter, $isAdmin);
 
         // Get statistics
         $statistics = $this->getAreaStatistics($user, $isAdmin);
@@ -128,7 +128,7 @@ final readonly class AreaService
             'totalAreas' => $statistics['total'],
             'activeAreas' => $statistics['active'],
             'plantingAreas' => $statistics['planting'],
-            'filters' => $filters,
+            'filters' => $filter,
         ];
     }
 
@@ -335,10 +335,8 @@ final readonly class AreaService
 
     /**
      * Get filtered and paginated areas.
-     *
-     * @param  array<string, mixed>  $filters
      */
-    private function getFilteredAreas(User $user, array $filters, bool $isAdmin): LengthAwarePaginator
+    private function getFilteredAreas(User $user, AreaIndexFilterDTO $filter, bool $isAdmin): LengthAwarePaginator
     {
         $areasQuery = Area::query()
             ->with(['garden:id,name,type', 'plants:id,name'])
@@ -350,33 +348,25 @@ final readonly class AreaService
             ->latest();
 
         // Apply filters
-        if (! empty($filters['garden_id'])) {
-            $areasQuery->where('garden_id', (int) $filters['garden_id']);
+        if ($filter->garden_id !== null && $filter->garden_id !== 0) {
+            $areasQuery->where('garden_id', (int) $filter->garden_id);
         }
 
-        if (! empty($filters['type'])) {
-            $areasQuery->where('type', (string) $filters['type']);
+        if ($filter->type instanceof \App\Enums\Area\AreaTypeEnum) {
+            $areasQuery->where('type', (string) $filter->type->value);
+
         }
 
-        if (! empty($filters['category'])) {
-            $areasQuery->byCategory((string) $filters['category']);
+        if ($filter->category !== null && $filter->category !== '' && $filter->category !== '0') {
+            $areasQuery->byCategory($filter->category);
         }
 
-        if (! empty($filters['search'])) {
-            $search = (string) $filters['search'];
+        if ($filter->search !== null && $filter->search !== '' && $filter->search !== '0') {
+            $search = $filter->search;
             $areasQuery->where(function (Builder $query) use ($search): void {
                 $query->where('name', 'like', "%$search%")
                     ->orWhere('description', 'like', "%$search%");
             });
-        }
-
-        if (isset($filters['active']) && $filters['active'] !== '') {
-            $activeValue = $filters['active'];
-            if ($activeValue === '1' || $activeValue === 1 || $activeValue === true) {
-                $areasQuery->active();
-            } elseif ($activeValue === '0' || $activeValue === 0 || $activeValue === false) {
-                $areasQuery->where('is_active', false);
-            }
         }
 
         return $areasQuery->paginate(12)->withQueryString();

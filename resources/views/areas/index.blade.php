@@ -45,7 +45,7 @@
                 label="Suchen"
                 name="search"
                 type="search"
-                :value="$filters['search']"
+                :value="$filters->search"
                 placeholder="Nach Name oder Beschreibung suchen..."
             />
 
@@ -55,7 +55,7 @@
                     label="Garten"
                     name="garden_id"
                     placeholder="Alle Gärten"
-                    :selected="$filters['garden_id']"
+                    :selected="$filters->garden_id"
                     :options="$gardenOptions"
                 />
 
@@ -64,7 +64,7 @@
                     label="Typ"
                     name="type"
                     placeholder="Alle Typen"
-                    :selected="$filters['type']"
+                    :selected="$filters->type"
                     :options="$areaTypeOptions"
                 />
 
@@ -73,33 +73,12 @@
                     label="Kategorie"
                     name="category"
                     placeholder="Alle Kategorien"
-                    :selected="$filters['category']"
+                    :selected="$filters->category"
                     :options="$areaCategoryOptions"
                 />
             </div>
 
-            <!-- Active Status Filter -->
-            <div class="flex items-center space-x-4">
-                <span class="text-sm font-medium text-foreground">Status:</span>
-                <label class="flex items-center">
-                    <input type="radio" name="active" value=""
-                           {{ $filters['active'] === null ? 'checked' : '' }}
-                           class="h-4 w-4 text-primary focus:ring-primary border-border">
-                    <span class="ml-2 text-sm text-foreground">Alle</span>
-                </label>
-                <label class="flex items-center">
-                    <input type="radio" name="active" value="1"
-                           {{ $filters['active'] === true ? 'checked' : '' }}
-                           class="h-4 w-4 text-primary focus:ring-primary border-border">
-                    <span class="ml-2 text-sm text-foreground">Aktiv</span>
-                </label>
-                <label class="flex items-center">
-                    <input type="radio" name="active" value="0"
-                           {{ $filters['active'] === false ? 'checked' : '' }}
-                           class="h-4 w-4 text-primary focus:ring-primary border-border">
-                    <span class="ml-2 text-sm text-foreground">Inaktiv</span>
-                </label>
-            </div>
+
         </x-filter-card>
     </x-slot:filters>
 
