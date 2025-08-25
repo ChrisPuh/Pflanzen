@@ -38,16 +38,19 @@ denke ans testen. generell gilt php 8.4 typesafety, laravel 12, nutze vorhandene
 
 ## Refactoring
 
-- [ ] implement invokable Controller, extends AreaController, Data Transfer Objects (DTOs) , Requests, Action, Respositories
+- [ ] implement invokable Controller, extends AreaController, Data Transfer Objects (DTOs) , Requests, Action,
+  Repositories
     - [x] [AreaEditController.php](app/Http/Controllers/Area/AreaEditController.php)
     - [x] [AreaDeleteController.php](app/Http/Controllers/Area/AreaDeleteController.php)
     - [x] [AreaStoreController.php](app/Http/Controllers/Area/AreaStoreController.php)
     - [x] [AreaUpdateController.php](app/Http/Controllers/Area/AreaUpdateController.php)
+    - [x] [AttachPlantToAreaController.php](app/Http/Controllers/Area/Actions/AttachPlantToAreaController.php)
+    - [x] [PlantSelectionModal.php](app/Livewire/Area/PlantSelectionModal.php)
     - [ ] [AreasIndexController.php](app/Http/Controllers/Area/AreasIndexController.php)
+    - [ ] [DetachPlantFromAreaController.php](app/Http/Controllers/Area/Actions/DetachPlantFromAreaController.php)
     - [ ] [AreaShowController.php](app/Http/Controllers/Area/AreaShowController.php)
     - [ ] [GardenCreateController.php](app/Http/Controllers/Garden/GardenCreateController.php)
     - [ ] [GardenEditController.php](app/Http/Controllers/Garden/GardenEditController.php)
     - [ ] [PlantsIndexController.php](app/Http/Controllers/Plants/PlantsIndexController.php)
-    - [ ] [AreaPlantController.php](app/Http/Controllers/Area/AreaPlantController.php)
     - [ ] [AreaForceDeleteController.php](app/Http/Controllers/Area/AreaForceDeleteController.php)
     - [ ] [AreaRestoreController.php](app/Http/Controllers/Area/AreaRestoreController.php)

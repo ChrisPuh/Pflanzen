@@ -4,19 +4,12 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Area;
 
-use App\Http\Controllers\Controller;
-use App\Http\Requests\Area\IndexAreaRequest;
-use App\Services\Area\AreaService;
-use App\Traits\AuthenticatedUser;
+use App\Http\Requests\Area\AreaIndexRequest;
 use Illuminate\Contracts\View\View;
 
-final class AreasIndexController extends Controller
+final class AreasIndexController extends AreaController
 {
-    use AuthenticatedUser;
-
-    public function __construct(private readonly AreaService $areaService) {}
-
-    public function __invoke(IndexAreaRequest $request): View
+    public function __invoke(AreaIndexRequest $request): View
     {
         ['user' => $user, 'isAdmin' => $isAdmin] = $this->getUserAndAdminStatus();
 

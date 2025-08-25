@@ -8,7 +8,7 @@ use App\Enums\Area\AreaTypeEnum;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-final class IndexAreaRequest extends FormRequest
+final class AreaIndexRequest extends FormRequest
 {
     public function authorize(): bool
     {
