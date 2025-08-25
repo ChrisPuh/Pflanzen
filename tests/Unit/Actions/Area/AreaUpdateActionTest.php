@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Actions\AreaUpdateAction;
+use App\Actions\Area\AreaUpdateAction;
 use App\DTOs\Area\AreaUpdateDTO;
 use App\Enums\Area\AreaTypeEnum;
 use App\Models\Area;
@@ -13,7 +13,7 @@ describe('AreaUpdateAction', function () {
 
     beforeEach(function () {
         $this->action = new AreaUpdateAction(
-            app(App\Repositories\Contracts\AreaRepositoryInterface::class)
+            app(App\Repositories\Area\Contracts\AreaRepositoryInterface::class)
         );
         $this->garden = Garden::factory()->create();
         $this->area = Area::factory()->create(['garden_id' => $this->garden->id]);
@@ -56,7 +56,7 @@ describe('AreaUpdateAction', function () {
         $this->expectExceptionMessage('Database error');
 
         // Mock the repository to throw an exception
-        $mockRepo = Mockery::mock(App\Repositories\Contracts\AreaRepositoryInterface::class);
+        $mockRepo = Mockery::mock(App\Repositories\Area\Contracts\AreaRepositoryInterface::class);
         $mockRepo->shouldReceive('update')
             ->andThrow($exception);
 

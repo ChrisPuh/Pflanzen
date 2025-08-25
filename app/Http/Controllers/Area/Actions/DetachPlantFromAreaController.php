@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Area\Actions;
 
 use App\Http\Controllers\Area\AreaController;
@@ -8,7 +10,7 @@ use App\Models\Plant;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Gate;
 
-class DetachPlantFromAreaController extends AreaController
+final class DetachPlantFromAreaController extends AreaController
 {
     public function __invoke(Area $area, Plant $plant): RedirectResponse
     {

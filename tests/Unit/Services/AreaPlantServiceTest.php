@@ -1,16 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 use App\DTOs\Area\Actions\AttachPlantToAreaDTO;
 use App\Models\Area;
 use App\Models\Plant;
-use App\Services\AreaPlantService;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-
-uses(RefreshDatabase::class);
+use App\Services\Area\Contracts\AreaPlantServiceInterface;
 
 describe('AreaPlantService', function () {
     beforeEach(function () {
-        $this->service = new AreaPlantService();
+        $this->service = app(AreaPlantServiceInterface::class);
         $this->area = Area::factory()->create();
         $this->plant1 = Plant::factory()->create();
         $this->plant2 = Plant::factory()->create();
@@ -26,14 +25,13 @@ describe('AreaPlantService', function () {
                     'notes' => 'Test notes for plant 1',
                     'planted_at' => now(),
                     'plant_id' => $this->plant1->id, // Included for completeness
-                ]
+                ],
             ];
 
             $dto = AttachPlantToAreaDTO::fromValidatedRequest($plantData);
 
             // Act
             $this->service->attachPlantsToArea($this->area, $dto);
-
 
             // Assert
             expect($this->area->plants()->get())->toHaveCount(1)
@@ -59,7 +57,7 @@ describe('AreaPlantService', function () {
                     'notes' => 'Second plant',
                     'planted_at' => $plantedAt,
                     'plant_id' => $this->plant2->id,
-                ]
+                ],
             ];
 
             $dto = AttachPlantToAreaDTO::fromValidatedRequest($plantData);
@@ -99,7 +97,7 @@ describe('AreaPlantService', function () {
                     'notes' => 'New plant',
                     'planted_at' => now(),
                     'plant_id' => $this->plant2->id,
-                ]
+                ],
             ];
 
             $dto = AttachPlantToAreaDTO::fromValidatedRequest($plantData);
@@ -129,7 +127,7 @@ describe('AreaPlantService', function () {
                     'notes' => 'Updated notes',
                     'planted_at' => $newPlantedAt,
                     'plant_id' => $this->plant1->id,
-                ]
+                ],
             ];
 
             $dto = AttachPlantToAreaDTO::fromValidatedRequest($plantData);
@@ -153,7 +151,7 @@ describe('AreaPlantService', function () {
                     'notes' => '',
                     'planted_at' => now(),
                     'plant_id' => $this->plant1->id,
-                ]
+                ],
             ];
 
             $dto = AttachPlantToAreaDTO::fromValidatedRequest($plantData);
@@ -175,7 +173,7 @@ describe('AreaPlantService', function () {
                     'notes' => 'Historical planting',
                     'planted_at' => $specificTime,
                     'plant_id' => $this->plant1->id,
-                ]
+                ],
             ];
 
             $dto = AttachPlantToAreaDTO::fromValidatedRequest($plantData);
@@ -194,7 +192,7 @@ describe('AreaPlantService', function () {
                     'notes' => 'Maximum quantity test',
                     'planted_at' => now(),
                     'plant_id' => $this->plant1->id,
-                ]
+                ],
             ];
 
             $dto = AttachPlantToAreaDTO::fromValidatedRequest($plantData);
@@ -215,7 +213,7 @@ describe('AreaPlantService', function () {
                     'notes' => 'Test',
                     'planted_at' => now(),
                     'plant_id' => $this->plant1->id,
-                ]
+                ],
             ];
 
             $dto = AttachPlantToAreaDTO::fromValidatedRequest($plantData);

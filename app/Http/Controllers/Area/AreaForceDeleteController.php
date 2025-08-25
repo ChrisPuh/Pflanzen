@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Gate;
 final class AreaForceDeleteController extends Controller
 {
     // TODO implement AreaController and move common logic there
-    public function __construct(private readonly \App\Services\AreaService $areaService) {}
+    public function __construct(private readonly \App\Services\Area\AreaService $areaService) {}
 
     /**
      * Permanently delete the specified area.

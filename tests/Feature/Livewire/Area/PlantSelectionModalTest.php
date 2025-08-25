@@ -171,7 +171,7 @@ describe('PlantSelectionModal', function (): void {
                         'quantity' => 1,
                         'notes' => '',
                         'planted_at' => $planted_at,
-                        'plant_id' => $this->plant1->id
+                        'plant_id' => $this->plant1->id,
                     ],
                 ]);
 
@@ -205,13 +205,13 @@ describe('PlantSelectionModal', function (): void {
                     'quantity' => 1,
                     'notes' => '',
                     'planted_at' => $planted_at,
-                    'plant_id' => $this->plant1->id
+                    'plant_id' => $this->plant1->id,
                 ],
                 $this->plant2->id => [
                     'quantity' => 1,
                     'notes' => '',
                     'planted_at' => $planted_at, // DIESELBE Zeit!
-                    'plant_id' => $this->plant2->id
+                    'plant_id' => $this->plant2->id,
                 ],
             ]);
 
@@ -229,20 +229,20 @@ describe('PlantSelectionModal', function (): void {
         it('can update plant quantity', function (): void {
             $this->component
                 ->call('updateQuantity', $this->plant1->id, 5)
-                ->assertSet('selectedPlants.' . $this->plant1->id . '.quantity', 5);
+                ->assertSet('selectedPlants.'.$this->plant1->id.'.quantity', 5);
         });
 
         it('ignores invalid quantity updates', function (): void {
             $this->component
                 ->call('updateQuantity', $this->plant1->id, 0)
-                ->assertSet('selectedPlants.' . $this->plant1->id . '.quantity', 1)
+                ->assertSet('selectedPlants.'.$this->plant1->id.'.quantity', 1)
                 ->call('updateQuantity', $this->plant1->id, -1)
-                ->assertSet('selectedPlants.' . $this->plant1->id . '.quantity', 1);
+                ->assertSet('selectedPlants.'.$this->plant1->id.'.quantity', 1);
         });
 
         it('ignores quantity updates for unselected plants', function (): void {
 
-            $planted_at = now()->startOfSecond();;
+            $planted_at = now()->startOfSecond();
 
             Carbon::setTestNow($planted_at);
 
@@ -263,12 +263,12 @@ describe('PlantSelectionModal', function (): void {
         it('can update plant notes', function (): void {
             $this->component
                 ->call('updateNotes', $this->plant1->id, 'Test notes')
-                ->assertSet('selectedPlants.' . $this->plant1->id . '.notes', 'Test notes');
+                ->assertSet('selectedPlants.'.$this->plant1->id.'.notes', 'Test notes');
         });
 
         it('ignores notes updates for unselected plants', function (): void {
 
-            $planted_at = now()->startOfSecond();;
+            $planted_at = now()->startOfSecond();
 
             Carbon::setTestNow($planted_at);
             $this->component

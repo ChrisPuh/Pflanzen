@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Area;
 
 use App\Http\Controllers\Controller;
-use App\Services\AreaService;
+use App\Services\Area\AreaService;
 use App\Traits\AuthenticatedUser;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;

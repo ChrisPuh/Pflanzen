@@ -8,7 +8,7 @@ use App\DTOs\Area\AreaUpdateDTO;
 use App\Enums\Area\AreaTypeEnum;
 use App\Models\Area;
 use App\Models\Garden;
-use App\Repositories\AreaRepository;
+use App\Repositories\Area\AreaRepository;
 
 describe('AreaRepository', function () {
 

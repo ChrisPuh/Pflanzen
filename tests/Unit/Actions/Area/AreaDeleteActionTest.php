@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-use App\Actions\AreaDeleteAction;
+use App\Actions\Area\AreaDeleteAction;
 use App\DTOs\Area\AreaDeleteDTO;
 use App\Models\Area;
-use App\Repositories\Contracts\AreaRepositoryInterface;
+use App\Repositories\Area\Contracts\AreaRepositoryInterface;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 

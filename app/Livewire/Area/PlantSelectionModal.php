@@ -7,8 +7,9 @@ namespace App\Livewire\Area;
 use App\DTOs\Area\Actions\AttachPlantToAreaDTO;
 use App\Models\Area;
 use App\Models\Plant;
-use App\Services\AreaPlantService;
-use App\Services\AreaService;
+use App\Services\Area\AreaPlantService;
+use App\Services\Area\AreaService;
+use Exception;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Collection;
 use Livewire\Component;
@@ -119,8 +120,8 @@ final class PlantSelectionModal extends Component
             $service->attachPlantsToArea($this->area, AttachPlantToAreaDTO::fromValidatedRequest($plantData));
             session()->flash('success', 'Pflanzen wurden erfolgreich hinzugefügt.');
             $this->dispatch('plants-added');
-        } catch (\Exception $exception) {
-            session()->flash('error', 'Fehler beim Hinzufügen der Pflanzen: ' . $exception->getMessage());
+        } catch (Exception $exception) {
+            session()->flash('error', 'Fehler beim Hinzufügen der Pflanzen: '.$exception->getMessage());
 
         }
 

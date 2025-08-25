@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-use App\Actions\AreaStoreAction;
+use App\Actions\Area\AreaStoreAction;
 use App\DTOs\Area\AreaStoreDTO;
 use App\Enums\Area\AreaTypeEnum;
 use App\Models\Area;
-use App\Repositories\Contracts\AreaRepositoryInterface;
+use App\Repositories\Area\Contracts\AreaRepositoryInterface;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
