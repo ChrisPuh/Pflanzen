@@ -17,9 +17,9 @@ use App\Models\Garden;
 use App\Models\Plant;
 use App\Models\PlantType;
 use App\Models\User;
+use App\Queries\Area\AreaIndexQuery;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Pagination\LengthAwarePaginator;
 use Throwable;
 
 final readonly class AreaService
@@ -28,6 +28,7 @@ final readonly class AreaService
         private AreaStoreAction $storeAction,
         private AreaUpdateAction $updateAction,
         private AreaDeleteAction $deleteAction,
+        private AreaIndexQuery $indexQuery,
     ) {}
 
     /**
@@ -111,7 +112,12 @@ final readonly class AreaService
     public function getIndexData(User $user, AreaIndexFilterDTO $filter, bool $isAdmin = false): array
     {
         // Get filtered and paginated areas
-        $areas = $this->getFilteredAreas($user, $filter, $isAdmin);
+        $areas = $this->indexQuery
+            ->execute(
+                user: $user,
+                filter: $filter,
+                isAdmin: $isAdmin
+            );
 
         // Get statistics
         $statistics = $this->getAreaStatistics($user, $isAdmin);
@@ -331,45 +337,6 @@ final readonly class AreaService
     public function getArchivedArea(int $areaId): Area
     {
         return Area::withTrashed()->findOrFail($areaId);
-    }
-
-    /**
-     * Get filtered and paginated areas.
-     */
-    private function getFilteredAreas(User $user, AreaIndexFilterDTO $filter, bool $isAdmin): LengthAwarePaginator
-    {
-        $areasQuery = Area::query()
-            ->with(['garden:id,name,type', 'plants:id,name'])
-            ->whereHas('garden', function (Builder $query) use ($isAdmin, $user): void {
-                if (! $isAdmin) {
-                    $query->where('user_id', $user->id);
-                }
-            })
-            ->latest();
-
-        // Apply filters
-        if ($filter->garden_id !== null && $filter->garden_id !== 0) {
-            $areasQuery->where('garden_id', (int) $filter->garden_id);
-        }
-
-        if ($filter->type instanceof \App\Enums\Area\AreaTypeEnum) {
-            $areasQuery->where('type', (string) $filter->type->value);
-
-        }
-
-        if ($filter->category !== null && $filter->category !== '' && $filter->category !== '0') {
-            $areasQuery->byCategory($filter->category);
-        }
-
-        if ($filter->search !== null && $filter->search !== '' && $filter->search !== '0') {
-            $search = $filter->search;
-            $areasQuery->where(function (Builder $query) use ($search): void {
-                $query->where('name', 'like', "%$search%")
-                    ->orWhere('description', 'like', "%$search%");
-            });
-        }
-
-        return $areasQuery->paginate(12)->withQueryString();
     }
 
     /**

@@ -8,6 +8,8 @@ use App\DTOs\Area\AreaUpdateDTO;
 use App\Enums\Area\AreaTypeEnum;
 use App\Models\Area;
 use App\Models\Garden;
+use App\Models\Plant;
+use App\Models\User;
 use App\Repositories\Area\AreaRepository;
 
 describe('AreaRepository', function () {
@@ -17,7 +19,188 @@ describe('AreaRepository', function () {
         $this->garden = Garden::factory()->create();
     });
 
-    describe('create', function () {
+
+// Diese Tests sollten in Ihren bestehenden AreaRepositoryTest.php eingefügt werden
+
+    describe('queryForUser', function () {
+
+        beforeEach(function () {
+            // Zusätzliche Setup-Daten für queryForUser Tests
+            $this->user = User::factory()->user()->create();
+            $this->adminUser = User::factory()->admin()->create();
+            $this->otherUser = User::factory()->user()->create();
+
+            // Gärten für verschiedene Benutzer erstellen
+            $this->userGarden = Garden::factory()->create(['user_id' => $this->user->id]);
+            $this->otherUserGarden = Garden::factory()->create(['user_id' => $this->otherUser->id]);
+
+            // Areas für verschiedene Gärten erstellen
+            $this->userArea = Area::factory()->create([
+                'garden_id' => $this->userGarden->id,
+                'name' => 'User Area'
+            ]);
+
+            $this->otherUserArea = Area::factory()->create([
+                'garden_id' => $this->otherUserGarden->id,
+                'name' => 'Other User Area'
+            ]);
+
+            // Plants für Relationship-Tests - Many-to-Many über Pivot
+            if (method_exists(Area::class, 'plants')) {
+                $this->userPlant = Plant::factory()->create([
+                    'name' => 'User Plant'
+                ]);
+
+                // Attach plant to area via pivot table
+                $this->userArea->plants()->attach($this->userPlant->id, [
+                    'planted_at' => now(),
+                    'notes' => 'Test plant',
+                    'quantity' => 5
+                ]);
+            }
+        });
+
+        it('returns query with proper eager loading', function () {
+            $query = $this->repository->queryForUser($this->user, false);
+
+            // Prüfen ob die richtigen Relationships geladen werden
+            $eagerLoads = $query->getEagerLoads();
+
+            expect($eagerLoads)->toHaveKey('garden')
+                ->and($eagerLoads)->toHaveKey('plants');
+
+            // Prüfen der spezifischen Select-Felder für garden
+            expect($eagerLoads['garden'])->toBeCallable();
+        });
+
+        it('returns only user areas for regular user', function () {
+            $query = $this->repository->queryForUser($this->user, false);
+            $areas = $query->get();
+
+            expect($areas)->toHaveCount(1)
+                ->and($areas->first()->id)->toBe($this->userArea->id)
+                ->and($areas->first()->name)->toBe('User Area');
+
+            // Sicherstellen, dass andere Benutzer-Areas nicht enthalten sind
+            $areaIds = $areas->pluck('id')->toArray();
+            expect($areaIds)->not->toContain($this->otherUserArea->id);
+        });
+
+        it('returns all areas for admin user', function () {
+            $query = $this->repository->queryForUser($this->adminUser, true);
+            $areas = $query->get();
+
+            expect($areas)->toHaveCount(2);
+
+            $areaIds = $areas->pluck('id')->toArray();
+            expect($areaIds)->toContain($this->userArea->id)
+                ->and($areaIds)->toContain($this->otherUserArea->id);
+        });
+
+        it('loads garden relationship with correct select fields', function () {
+            $query = $this->repository->queryForUser($this->user, false);
+            $area = $query->first();
+
+            expect($area->garden)->not->toBeNull()
+                ->and($area->garden->id)->toBe($this->userGarden->id)
+                ->and($area->garden->name)->toBe($this->userGarden->name)
+                ->and($area->garden->type)->toBe($this->userGarden->type);
+
+            // Prüfen, dass nur die spezifizierten Felder geladen wurden
+            expect($area->garden->getAttributes())->toHaveKeys(['id', 'name', 'type']);
+        });
+
+        it('loads plants relationship correctly', function () {
+            // Nur ausführen wenn Plants-Relationship existiert
+            if (!method_exists(Area::class, 'plants')) {
+                $this->markTestSkipped('Plants relationship not available');
+            }
+
+            $query = $this->repository->queryForUser($this->user, false);
+            $area = $query->first();
+
+            expect($area->plants)->not->toBeNull();
+
+            if ($area->plants->isNotEmpty()) {
+                $plant = $area->plants->first();
+                expect($plant->getAttributes())->toHaveKeys(['id', 'name']);
+            }
+        });
+
+        it('applies user filter correctly with whereHas', function () {
+            // Einen weiteren Garten für denselben Benutzer erstellen
+            $anotherUserGarden = Garden::factory()->forUser($this->user)->create();
+            $anotherUserArea = Area::factory()
+                ->forGarden($anotherUserGarden)
+                ->create(['name' => 'Another User Area']);
+
+            $query = $this->repository->queryForUser($this->user, false);
+            $areas = $query->get();
+
+            expect($areas)->toHaveCount(2);
+
+            // Da user_id nicht im Select ist, müssen wir die Beziehung neu laden
+            foreach ($areas as $area) {
+                $fullGarden = $area->garden()->first();
+                expect($fullGarden->user_id)->toBe($this->user->id);
+            }
+        });
+
+        it('returns empty collection when user has no gardens', function () {
+            $userWithoutGardens = User::factory()->create();
+
+            $query = $this->repository->queryForUser($userWithoutGardens, false);
+            $areas = $query->get();
+
+            expect($areas)->toHaveCount(0);
+        });
+
+        it('preserves query builder functionality', function () {
+            $query = $this->repository->queryForUser($this->user, false);
+
+            // Zusätzliche Where-Klauseln hinzufügen
+            $filteredQuery = $query->where('name', 'User Area');
+            $areas = $filteredQuery->get();
+
+            expect($areas)->toHaveCount(1)
+                ->and($areas->first()->name)->toBe('User Area');
+        });
+
+        it('handles soft deleted areas correctly', function () {
+            // Area soft delete
+            $this->userArea->delete();
+
+            $query = $this->repository->queryForUser($this->user, false);
+            $areas = $query->get();
+
+            // Soft deleted Areas sollten nicht enthalten sein
+            expect($areas)->toHaveCount(0);
+
+            // Mit withTrashed() sollten sie sichtbar sein
+            $queryWithTrashed = $this->repository->queryForUser($this->user, false)->withTrashed();
+            $areasWithTrashed = $queryWithTrashed->get();
+
+            expect($areasWithTrashed)->toHaveCount(1);
+        });
+
+        it('returns Builder instance', function () {
+            $query = $this->repository->queryForUser($this->user, false);
+
+            expect($query)->toBeInstanceOf(\Illuminate\Database\Eloquent\Builder::class);
+        });
+
+        it('admin flag overrides user restriction', function () {
+            // Sicherstellen, dass Admin-Flag die Benutzerfilterung überschreibt
+            $query1 = $this->repository->queryForUser($this->user, true); // Als Admin
+            $query2 = $this->repository->queryForUser($this->user, false); // Als regulärer Benutzer
+
+            $adminAreas = $query1->get();
+            $userAreas = $query2->get();
+
+            expect($adminAreas->count())->toBeGreaterThanOrEqual($userAreas->count());
+        });
+    });
+    describe('store', function () {
         it('creates area with all data', function () {
             $dto = new AreaStoreDTO(
                 name: 'Test Vegetable Patch',
@@ -288,7 +471,7 @@ describe('AreaRepository', function () {
 
             $deletedArea = Area::withTrashed()->find($area->id);
             expect($deletedArea->is_active)->toBeTrue() // Was activated
-                ->and($deletedArea->deleted_at)->not->toBeNull(); // But then deleted
+            ->and($deletedArea->deleted_at)->not->toBeNull(); // But then deleted
         });
     });
 

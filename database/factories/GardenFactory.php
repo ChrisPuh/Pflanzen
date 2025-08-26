@@ -82,16 +82,23 @@ final class GardenFactory extends Factory
 
     public function vegetableGarden(): self
     {
-        return $this->state(fn (array $attributes): array => [
+        return $this->state(fn(array $attributes): array => [
             'type' => GardenTypeEnum::VegetableGarden,
             'name' => 'Mein Gemüsegarten',
             'size_sqm' => fake()->randomFloat(2, 10, 200),
         ]);
     }
 
+    public function forUser(User $user): self
+    {
+        return $this->state(fn(array $attributes): array => [
+            'user_id' => $user->id,
+        ]);
+    }
+
     public function flowerGarden(): self
     {
-        return $this->state(fn (array $attributes): array => [
+        return $this->state(fn(array $attributes): array => [
             'type' => GardenTypeEnum::FlowerGarden,
             'name' => 'Blumengarten',
             'size_sqm' => fake()->randomFloat(2, 5, 100),
@@ -100,7 +107,7 @@ final class GardenFactory extends Factory
 
     public function herbGarden(): self
     {
-        return $this->state(fn (array $attributes): array => [
+        return $this->state(fn(array $attributes): array => [
             'type' => GardenTypeEnum::HerbGarden,
             'name' => 'Kräutergarten',
             'size_sqm' => fake()->randomFloat(2, 2, 50),
@@ -109,7 +116,7 @@ final class GardenFactory extends Factory
 
     public function balconyGarden(): self
     {
-        return $this->state(fn (array $attributes): array => [
+        return $this->state(fn(array $attributes): array => [
             'type' => GardenTypeEnum::BalconyGarden,
             'name' => 'Balkongarten',
             'location' => 'Balkon',
@@ -119,7 +126,7 @@ final class GardenFactory extends Factory
 
     public function withCoordinates(?float $lat = null, ?float $lng = null): self
     {
-        return $this->state(fn (array $attributes): array => [
+        return $this->state(fn(array $attributes): array => [
             'coordinates' => [
                 'lat' => $lat ?? fake()->latitude(47.0, 55.0),
                 'lng' => $lng ?? fake()->longitude(5.0, 15.0),
@@ -129,35 +136,35 @@ final class GardenFactory extends Factory
 
     public function withoutCoordinates(): self
     {
-        return $this->state(fn (array $attributes): array => [
+        return $this->state(fn(array $attributes): array => [
             'coordinates' => null,
         ]);
     }
 
     public function inactive(): self
     {
-        return $this->state(fn (array $attributes): array => [
+        return $this->state(fn(array $attributes): array => [
             'is_active' => false,
         ]);
     }
 
     public function large(): self
     {
-        return $this->state(fn (array $attributes): array => [
+        return $this->state(fn(array $attributes): array => [
             'size_sqm' => fake()->randomFloat(2, 200, 1000),
         ]);
     }
 
     public function small(): self
     {
-        return $this->state(fn (array $attributes): array => [
+        return $this->state(fn(array $attributes): array => [
             'size_sqm' => fake()->randomFloat(2, 1, 10),
         ]);
     }
 
     public function established(string $date): self
     {
-        return $this->state(fn (array $attributes): array => [
+        return $this->state(fn(array $attributes): array => [
             'established_at' => $date,
         ]);
     }

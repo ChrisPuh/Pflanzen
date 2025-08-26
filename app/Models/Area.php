@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Enums\Area\AreaTypeEnum;
+use App\Models\Area\Traits\HasAreaScopes;
 use Carbon\Carbon;
 use Database\Factories\AreaFactory;
 use Illuminate\Database\Eloquent\Builder;
@@ -31,11 +32,16 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property Carbon|null $deleted_at
  * @property-read Garden $garden
  * @property-read Plant[] $plants
+ *
+ * @method static Builder|self forGarden(?int $gardenId)
+ * @method static Builder|self byType(?AreaTypeEnum $type)
+ * @method static Builder|self byCategory(?string $category)
+ * @method static Builder|self search(?string $term)
  */
 final class Area extends Model
 {
     /** @use HasFactory<AreaFactory> */
-    use HasFactory, SoftDeletes;
+    use HasAreaScopes, HasFactory, SoftDeletes;
 
     protected $table = 'areas';
 
@@ -67,7 +73,7 @@ final class Area extends Model
 
     public function garden(): BelongsTo
     {
-        return $this->belongsTo(Garden::class);
+        return $this->belongsTo(Garden::class, 'garden_id', 'id', 'gardens');
     }
 
     public function plants(): BelongsToMany
@@ -77,38 +83,13 @@ final class Area extends Model
             ->withTimestamps();
     }
 
-    public function scopeActive(Builder $query): Builder
-    {
-        return $query->where('is_active', true);
-    }
-
-    public function scopeByType(Builder $query, AreaTypeEnum $type): Builder
-    {
-        return $query->where('type', $type);
-    }
-
-    public function scopeByCategory(Builder $query, string $category): Builder
-    {
-        $typesInCategory = collect(AreaTypeEnum::cases())
-            ->filter(fn (AreaTypeEnum $type): bool => $type->category() === $category)
-            ->pluck('value')
-            ->toArray();
-
-        return $query->whereIn('type', $typesInCategory);
-    }
-
-    public function scopeForGarden(Builder $query, Garden $garden): Builder
-    {
-        return $query->where('garden_id', $garden->id);
-    }
-
     public function getFormattedSizeAttribute(): string
     {
         if ($this->size_sqm === null) {
             return 'Größe nicht angegeben';
         }
 
-        return number_format((float) $this->size_sqm, 2, ',', '.').' m²';
+        return number_format((float)$this->size_sqm, 2, ',', '.') . ' m²';
     }
 
     public function hasCoordinates(): bool
@@ -120,12 +101,12 @@ final class Area extends Model
 
     public function getXCoordinate(): ?float
     {
-        return $this->hasCoordinates() ? (float) $this->coordinates['x'] : null;
+        return $this->hasCoordinates() ? (float)$this->coordinates['x'] : null;
     }
 
     public function getYCoordinate(): ?float
     {
-        return $this->hasCoordinates() ? (float) $this->coordinates['y'] : null;
+        return $this->hasCoordinates() ? (float)$this->coordinates['y'] : null;
     }
 
     public function setCoordinates(float $x, float $y): void
@@ -145,21 +126,21 @@ final class Area extends Model
     public function getLength(): ?float
     {
         return $this->hasDimensions() && isset($this->dimensions['length'])
-            ? (float) $this->dimensions['length']
+            ? (float)$this->dimensions['length']
             : null;
     }
 
     public function getWidth(): ?float
     {
         return $this->hasDimensions() && isset($this->dimensions['width'])
-            ? (float) $this->dimensions['width']
+            ? (float)$this->dimensions['width']
             : null;
     }
 
     public function getHeight(): ?float
     {
         return $this->hasDimensions() && isset($this->dimensions['height'])
-            ? (float) $this->dimensions['height']
+            ? (float)$this->dimensions['height']
             : null;
     }
 

@@ -50,7 +50,7 @@ final class AreaFactory extends Factory
      */
     public function plantingArea(): static
     {
-        return $this->state(fn (array $attributes): array => [
+        return $this->state(fn(array $attributes): array => [
             'type' => fake()->randomElement([
                 AreaTypeEnum::FlowerBed,
                 AreaTypeEnum::VegetableBed,
@@ -61,12 +61,19 @@ final class AreaFactory extends Factory
         ]);
     }
 
+    public function forGarden(Garden $garden): self
+    {
+        return $this->state(fn(array $attributes): array => [
+            'garden_id' => $garden->id,
+        ]);
+    }
+
     /**
      * Create a building area.
      */
     public function building(): static
     {
-        return $this->state(fn (array $attributes): array => [
+        return $this->state(fn(array $attributes): array => [
             'type' => fake()->randomElement([
                 AreaTypeEnum::House,
                 AreaTypeEnum::Greenhouse,
@@ -86,7 +93,7 @@ final class AreaFactory extends Factory
      */
     public function waterFeature(): static
     {
-        return $this->state(fn (array $attributes): array => [
+        return $this->state(fn(array $attributes): array => [
             'type' => fake()->randomElement([
                 AreaTypeEnum::Pool,
                 AreaTypeEnum::Pond,
@@ -109,7 +116,7 @@ final class AreaFactory extends Factory
      */
     public function active(): static
     {
-        return $this->state(fn (array $attributes): array => [
+        return $this->state(fn(array $attributes): array => [
             'is_active' => true,
         ]);
     }
@@ -119,7 +126,7 @@ final class AreaFactory extends Factory
      */
     public function inactive(): static
     {
-        return $this->state(fn (array $attributes): array => [
+        return $this->state(fn(array $attributes): array => [
             'is_active' => false,
         ]);
     }
@@ -129,7 +136,7 @@ final class AreaFactory extends Factory
      */
     public function withCoordinates(float $x, float $y): static
     {
-        return $this->state(fn (array $attributes): array => [
+        return $this->state(fn(array $attributes): array => [
             'coordinates' => ['x' => $x, 'y' => $y],
         ]);
     }
@@ -139,7 +146,7 @@ final class AreaFactory extends Factory
      */
     public function withColor(string $color): static
     {
-        return $this->state(fn (array $attributes): array => [
+        return $this->state(fn(array $attributes): array => [
             'color' => $color,
         ]);
     }

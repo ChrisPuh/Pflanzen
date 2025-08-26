@@ -29,13 +29,14 @@ namespace App\Models{
  * @property Carbon|null $deleted_at
  * @property-read Garden $garden
  * @property-read Plant[] $plants
+ * @method static Builder|self forGarden(?int $gardenId)
+ * @method static Builder|self byType(?AreaTypeEnum $type)
+ * @method static Builder|self byCategory(?string $category)
+ * @method static Builder|self search(?string $term)
  * @property-read string $formatted_size
  * @property-read int|null $plants_count
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Area active()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Area byCategory(string $category)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Area byType(\App\Enums\Area\AreaTypeEnum $type)
  * @method static \Database\Factories\AreaFactory factory($count = null, $state = [])
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Area forGarden(\App\Models\Garden $garden)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Area newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Area newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Area onlyTrashed()
