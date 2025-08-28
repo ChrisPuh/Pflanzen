@@ -34,12 +34,39 @@ enum AreaTypeEnum: string
 
     public static function options(): Collection
     {
-        return collect(self::cases())->map(fn (self $case): array => [
+        return collect(self::cases())->map(fn(self $case): array => [
             'value' => $case->value,
             'label' => $case->getLabel(),
             'description' => $case->description(),
             'category' => $case->category(),
         ]);
+    }
+
+    /**
+     * Get all planting area type values.
+     *
+     * @return array<string>
+     */
+    public static function getPlantingAreaValues(): array
+    {
+        return collect(self::cases())
+            ->filter(fn(self $case): bool => $case->isPlantingArea())
+            ->map(fn(self $case): string => $case->value)
+            ->values()
+            ->toArray();
+    }
+
+    /**
+     * Get all planting area type cases.
+     *
+     * @return array<self>
+     */
+    public static function getPlantingAreaCases(): array
+    {
+        return collect(self::cases())
+            ->filter(fn(self $case): bool => $case->isPlantingArea())
+            ->values()
+            ->toArray();
     }
 
     public function getLabel(): string
@@ -137,5 +164,30 @@ enum AreaTypeEnum: string
             self::Shed,
             self::Storage,
         ]);
+    }
+
+    /**
+     * Get area type options for filter dropdown.
+     *
+     * @return Collection<string, string>
+     */
+    public static function getFilterOptions(): Collection
+    {
+        return collect(self::options())
+            ->mapWithKeys(fn(array $type): array => [$type['value'] => $type['label']]);
+    }
+
+    /**
+     * Get area category options for filter dropdown.
+     *
+     * @return Collection<string, string>
+     */
+    public static function getCategoryFilterOptions(): Collection
+    {
+        return collect(self::cases())
+            ->map(fn(self $type): string => $type->category())
+            ->unique()
+            ->values()
+            ->mapWithKeys(fn(string $category): array => [$category => $category]);
     }
 }

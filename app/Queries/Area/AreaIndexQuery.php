@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Queries\Area;
 
 use App\DTOs\Area\AreaIndexFilterDTO;
-use App\Models\User;
 use App\Repositories\Area\Contracts\AreaRepositoryInterface;
 use Illuminate\Pagination\LengthAwarePaginator;
 
@@ -15,10 +14,10 @@ final readonly class AreaIndexQuery
     {
     }
 
-    public function execute(User $user, AreaIndexFilterDTO $filter, bool $isAdmin): LengthAwarePaginator
+    public function execute(int $user_id, AreaIndexFilterDTO $filter, bool $isAdmin): LengthAwarePaginator
     {
         $query = $this->repository
-            ->queryForUser($user, $isAdmin)
+            ->queryForUser(user_id: $user_id, isAdmin: $isAdmin)
             ->latest()
             ->forGarden($filter->garden_id)
             ->byType($filter->type)

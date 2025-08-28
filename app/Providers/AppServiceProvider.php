@@ -4,6 +4,12 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
+use App\Repositories\Area\AreaPlantRepository;
+use App\Repositories\Area\AreaRepository;
+use App\Repositories\Area\Contracts\AreaPlantRepositoryInterface;
+use App\Repositories\Area\Contracts\AreaRepositoryInterface;
+use App\Repositories\Garden\Contracts\GardenRepositoryInterface;
+use App\Repositories\Garden\GardenRepository;
 use App\Services\Area\AreaPlantService;
 use App\Services\Area\Contracts\AreaPlantServiceInterface;
 use Illuminate\Support\ServiceProvider;
@@ -16,14 +22,15 @@ final class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind(
-            \App\Repositories\Area\Contracts\AreaRepositoryInterface::class,
-            \App\Repositories\Area\AreaRepository::class
+            AreaRepositoryInterface::class,
+            AreaRepository::class
         );
         $this->app->bind(
-            \App\Repositories\Area\Contracts\AreaPlantRepositoryInterface::class,
-            \App\Repositories\Area\AreaPlantRepository::class
+            AreaPlantRepositoryInterface::class,
+            AreaPlantRepository::class
         );
         $this->app->singleton(AreaPlantServiceInterface::class, AreaPlantService::class);
+        $this->app->singleton(GardenRepositoryInterface::class, GardenRepository::class);
     }
 
     /**

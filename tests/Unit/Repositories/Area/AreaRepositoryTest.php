@@ -61,7 +61,7 @@ describe('AreaRepository', function () {
         });
 
         it('returns query with proper eager loading', function () {
-            $query = $this->repository->queryForUser($this->user, false);
+            $query = $this->repository->queryForUser($this->user->id, false);
 
             // Prüfen ob die richtigen Relationships geladen werden
             $eagerLoads = $query->getEagerLoads();
@@ -74,7 +74,7 @@ describe('AreaRepository', function () {
         });
 
         it('returns only user areas for regular user', function () {
-            $query = $this->repository->queryForUser($this->user, false);
+            $query = $this->repository->queryForUser($this->user->id, false);
             $areas = $query->get();
 
             expect($areas)->toHaveCount(1)
@@ -87,7 +87,7 @@ describe('AreaRepository', function () {
         });
 
         it('returns all areas for admin user', function () {
-            $query = $this->repository->queryForUser($this->adminUser, true);
+            $query = $this->repository->queryForUser($this->adminUser->id, true);
             $areas = $query->get();
 
             expect($areas)->toHaveCount(2);
@@ -98,7 +98,7 @@ describe('AreaRepository', function () {
         });
 
         it('loads garden relationship with correct select fields', function () {
-            $query = $this->repository->queryForUser($this->user, false);
+            $query = $this->repository->queryForUser($this->user->id, false);
             $area = $query->first();
 
             expect($area->garden)->not->toBeNull()
@@ -116,7 +116,7 @@ describe('AreaRepository', function () {
                 $this->markTestSkipped('Plants relationship not available');
             }
 
-            $query = $this->repository->queryForUser($this->user, false);
+            $query = $this->repository->queryForUser($this->user->id, false);
             $area = $query->first();
 
             expect($area->plants)->not->toBeNull();
@@ -134,7 +134,7 @@ describe('AreaRepository', function () {
                 ->forGarden($anotherUserGarden)
                 ->create(['name' => 'Another User Area']);
 
-            $query = $this->repository->queryForUser($this->user, false);
+            $query = $this->repository->queryForUser($this->user->id, false);
             $areas = $query->get();
 
             expect($areas)->toHaveCount(2);
@@ -149,14 +149,14 @@ describe('AreaRepository', function () {
         it('returns empty collection when user has no gardens', function () {
             $userWithoutGardens = User::factory()->create();
 
-            $query = $this->repository->queryForUser($userWithoutGardens, false);
+            $query = $this->repository->queryForUser($userWithoutGardens->id, false);
             $areas = $query->get();
 
             expect($areas)->toHaveCount(0);
         });
 
         it('preserves query builder functionality', function () {
-            $query = $this->repository->queryForUser($this->user, false);
+            $query = $this->repository->queryForUser($this->user->id, false);
 
             // Zusätzliche Where-Klauseln hinzufügen
             $filteredQuery = $query->where('name', 'User Area');
@@ -170,29 +170,29 @@ describe('AreaRepository', function () {
             // Area soft delete
             $this->userArea->delete();
 
-            $query = $this->repository->queryForUser($this->user, false);
+            $query = $this->repository->queryForUser($this->user->id, false);
             $areas = $query->get();
 
             // Soft deleted Areas sollten nicht enthalten sein
             expect($areas)->toHaveCount(0);
 
             // Mit withTrashed() sollten sie sichtbar sein
-            $queryWithTrashed = $this->repository->queryForUser($this->user, false)->withTrashed();
+            $queryWithTrashed = $this->repository->queryForUser($this->user->id, false)->withTrashed();
             $areasWithTrashed = $queryWithTrashed->get();
 
             expect($areasWithTrashed)->toHaveCount(1);
         });
 
         it('returns Builder instance', function () {
-            $query = $this->repository->queryForUser($this->user, false);
+            $query = $this->repository->queryForUser($this->user->id, false);
 
             expect($query)->toBeInstanceOf(\Illuminate\Database\Eloquent\Builder::class);
         });
 
         it('admin flag overrides user restriction', function () {
             // Sicherstellen, dass Admin-Flag die Benutzerfilterung überschreibt
-            $query1 = $this->repository->queryForUser($this->user, true); // Als Admin
-            $query2 = $this->repository->queryForUser($this->user, false); // Als regulärer Benutzer
+            $query1 = $this->repository->queryForUser($this->user->id, true); // Als Admin
+            $query2 = $this->repository->queryForUser($this->user->id, false); // Als regulärer Benutzer
 
             $adminAreas = $query1->get();
             $userAreas = $query2->get();

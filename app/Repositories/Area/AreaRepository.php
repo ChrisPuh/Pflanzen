@@ -6,23 +6,26 @@ namespace App\Repositories\Area;
 
 use App\DTOs\Shared\Contracts\WritableDTOInterface;
 use App\Models\Area;
-use App\Models\User;
 use App\Repositories\Area\Contracts\AreaRepositoryInterface;
+use App\Repositories\Shared\AbstractEloquentRepository;
 use Illuminate\Database\Eloquent\Builder;
 
-final class AreaRepository implements AreaRepositoryInterface
+final class AreaRepository extends AbstractEloquentRepository implements AreaRepositoryInterface
 {
-    public function queryForUser(User $user, bool $isAdmin): Builder
+    public function queryForUser(int $user_id, bool $isAdmin): Builder
     {
-        return Area::query()
-            ->with(['garden:id,name,type', 'plants:id,name'])
-            ->when(! $isAdmin, fn ($q) => $q->whereHas('garden', fn ($q2) => $q2->where('user_id', $user->id)
-            ));
+        return $this->queryForUserBase(user_id: $user_id, isAdmin: $isAdmin)
+            ->with(['garden:id,name,type', 'plants:id,name']);
+    }
+
+    public function queryForUserStatistics(int $user_id, bool $isAdmin): Builder
+    {
+        return $this->queryForUserBase(user_id: $user_id, isAdmin: $isAdmin);
     }
 
     public function store(WritableDTOInterface $data): Area
     {
-        return Area::query()->create($data->toModelData());
+        return $this->baseQuery()->create($data->toModelData());
     }
 
     public function update(Area $area, WritableDTOInterface $data): Area
@@ -38,4 +41,10 @@ final class AreaRepository implements AreaRepositoryInterface
 
         return $area->delete();
     }
+
+    public function getModelClass(): string
+    {
+        return Area::class;
+    }
 }
+

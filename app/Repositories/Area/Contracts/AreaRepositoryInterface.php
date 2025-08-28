@@ -6,12 +6,15 @@ namespace App\Repositories\Area\Contracts;
 
 use App\DTOs\Shared\Contracts\WritableDTOInterface;
 use App\Models\Area;
-use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 
 interface AreaRepositoryInterface
 {
-    public function queryForUser(User $user, bool $isAdmin): Builder;
+
+
+    public function queryForUser(int $user_id, bool $isAdmin): Builder;
+
+    public function queryForUserStatistics(int $user_id, bool $isAdmin): Builder;
 
     public function store(WritableDTOInterface $data): Area;
 

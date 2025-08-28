@@ -17,7 +17,9 @@ use App\Models\Garden;
 use App\Models\Plant;
 use App\Models\PlantType;
 use App\Models\User;
+use App\Queries\Area\AreaFilterOptionsQuery;
 use App\Queries\Area\AreaIndexQuery;
+use App\Queries\Area\AreaStatisticsQuery;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Throwable;
@@ -25,11 +27,15 @@ use Throwable;
 final readonly class AreaService
 {
     public function __construct(
-        private AreaStoreAction $storeAction,
-        private AreaUpdateAction $updateAction,
-        private AreaDeleteAction $deleteAction,
-        private AreaIndexQuery $indexQuery,
-    ) {}
+        private AreaStoreAction        $storeAction,
+        private AreaUpdateAction       $updateAction,
+        private AreaDeleteAction       $deleteAction,
+        private AreaIndexQuery         $indexQuery,
+        private AreaStatisticsQuery    $statisticsQuery,
+        private AreaFilterOptionsQuery $filterOptionsQuery,
+    )
+    {
+    }
 
     /**
      * Get user's gardens for area form dropdown.
@@ -39,7 +45,7 @@ final readonly class AreaService
     public function getUserGardens(User $user, bool $isAdmin = false): Collection
     {
         return Garden::query()
-            ->when(! $isAdmin, function (Builder $query) use ($user): void {
+            ->when(!$isAdmin, function (Builder $query) use ($user): void {
                 $query->where('user_id', $user->id);
             })
             ->select('id', 'name', 'type')
@@ -114,26 +120,29 @@ final readonly class AreaService
         // Get filtered and paginated areas
         $areas = $this->indexQuery
             ->execute(
-                user: $user,
+                user_id: $user->id,
                 filter: $filter,
                 isAdmin: $isAdmin
             );
 
         // Get statistics
-        $statistics = $this->getAreaStatistics($user, $isAdmin);
+        $statistics = $this->statisticsQuery
+            ->execute(user_id: $user->id, isAdmin: $isAdmin);
 
         // Get filter options
-        $filterOptions = $this->getFilterOptions($user, $isAdmin);
+        $filterOptions = $this->filterOptionsQuery
+            ->execute(user_id: $user->id, isAdmin: $isAdmin);
+
 
         return [
             'areas' => $areas,
-            'gardenOptions' => $filterOptions['gardens'],
-            'areaTypeOptions' => $filterOptions['areaTypes'],
-            'areaCategoryOptions' => $filterOptions['categories'],
+            'gardenOptions' => $filterOptions->getGardens(),
+            'areaTypeOptions' => $filterOptions->getAreaTypes(),
+            'areaCategoryOptions' => $filterOptions->getCategories(),
+            'totalAreas' => $statistics->total,
+            'activeAreas' => $statistics->active,
+            'plantingAreas' => $statistics->planting,
             'isAdmin' => $isAdmin,
-            'totalAreas' => $statistics['total'],
-            'activeAreas' => $statistics['active'],
-            'plantingAreas' => $statistics['planting'],
             'filters' => $filter,
         ];
     }
@@ -239,13 +248,13 @@ final readonly class AreaService
     /**
      * Add plants to an area.
      *
-     * @param  array<string, mixed>  $data
+     * @param array<string, mixed> $data
      */
     public function addPlantsToArea(Area $area, array $data): void
     {
         foreach ($data['plants'] as $plantData) {
-            $plantId = (int) $plantData['plant_id'];
-            $quantity = (int) $plantData['quantity'];
+            $plantId = (int)$plantData['plant_id'];
+            $quantity = (int)$plantData['quantity'];
             $notes = $plantData['notes'] ?? null;
 
             // Check if plant is already in this area
@@ -300,7 +309,7 @@ final readonly class AreaService
         $plants = $this->getAvailablePlantsForArea();
 
         // Filter already planted plants in this area
-        $plants = $plants->filter(fn (Plant $plant): bool => ! $area->plants()->where('plant_id', $plant->id)->exists());
+        $plants = $plants->filter(fn(Plant $plant): bool => !$area->plants()->where('plant_id', $plant->id)->exists());
 
         // Apply search filter
         if ($search !== '' && $search !== '0') {
@@ -315,7 +324,7 @@ final readonly class AreaService
 
         // Apply plant type filter
         if ($plantTypeId !== null && $plantTypeId !== 0) {
-            $plants = $plants->filter(fn (Plant $plant): bool => $plant->plant_type_id === $plantTypeId);
+            $plants = $plants->filter(fn(Plant $plant): bool => $plant->plant_type_id === $plantTypeId);
         }
 
         return $plants->sortBy('name')->values();
@@ -330,74 +339,12 @@ final readonly class AreaService
     {
         return PlantType::orderBy('name')
             ->get()
-            ->mapWithKeys(fn (PlantType $type): array => [$type->id => $type->name->getLabel()])
+            ->mapWithKeys(fn(PlantType $type): array => [$type->id => $type->name->getLabel()])
             ->toArray();
     }
 
     public function getArchivedArea(int $areaId): Area
     {
         return Area::withTrashed()->findOrFail($areaId);
-    }
-
-    /**
-     * Get area statistics.
-     *
-     * @return array<string, int>
-     */
-    private function getAreaStatistics(User $user, bool $isAdmin): array
-    {
-        $baseQuery = (fn (): Builder => Area::query()->whereHas('garden', function (Builder $query) use ($isAdmin, $user): void {
-            if (! $isAdmin) {
-                $query->where('user_id', $user->id);
-            }
-        }));
-
-        return [
-            'total' => $baseQuery()->count(),
-            'active' => $baseQuery()->active()->count(),
-            'planting' => $baseQuery()->whereIn('type', [
-                AreaTypeEnum::FlowerBed->value,
-                AreaTypeEnum::VegetableBed->value,
-                AreaTypeEnum::HerbBed->value,
-                AreaTypeEnum::Meadow->value,
-                AreaTypeEnum::TreeArea->value,
-            ])->count(),
-        ];
-    }
-
-    /**
-     * Get filter options for the index page.
-     *
-     * @return array<string, mixed>
-     */
-    private function getFilterOptions(User $user, bool $isAdmin): array
-    {
-        $userGardens = $this->getUserGardens($user, $isAdmin);
-
-        // Format garden options
-        $gardenOptions = $userGardens->mapWithKeys(function (Garden $garden) use ($isAdmin) {
-            $label = $garden->name;
-            if ($isAdmin) {
-                $label .= ' ('.$garden->type->getLabel().')';
-            }
-
-            return [$garden->id => $label];
-        });
-
-        // Format area type options
-        $areaTypeOptions = collect(AreaTypeEnum::options())->mapWithKeys(fn (array $type): array => [$type['value'] => $type['label']]);
-
-        // Format area category options
-        $areaCategoryOptions = collect(AreaTypeEnum::cases())
-            ->map(fn (AreaTypeEnum $type): string => $type->category())
-            ->unique()
-            ->values()
-            ->mapWithKeys(fn (string $category): array => [$category => $category]);
-
-        return [
-            'gardens' => $gardenOptions,
-            'areaTypes' => $areaTypeOptions,
-            'categories' => $areaCategoryOptions,
-        ];
     }
 }
