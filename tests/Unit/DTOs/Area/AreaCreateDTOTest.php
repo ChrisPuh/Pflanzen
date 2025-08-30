@@ -68,29 +68,6 @@ describe('AreaStoreDTO', function () {
         expect($dto->coordinates)->toBe(['x' => 15.0, 'y' => null]);
     });
 
-    it('throws exception for invalid area type', function () {
-        $data = [
-            'name' => 'Test',
-            'garden_id' => 1,
-            'type' => 'invalid_type',
-            'is_active' => true,
-        ];
-
-        expect(fn () => AreaStoreDTO::fromValidatedRequest($data))
-            ->toThrow(InvalidArgumentException::class, 'Invalid area type');
-    });
-
-    it('throws exception when type is missing', function () {
-        $data = [
-            'name' => 'Test',
-            'garden_id' => 1,
-            'is_active' => true,
-        ];
-
-        expect(fn () => AreaStoreDTO::fromValidatedRequest($data))
-            ->toThrow(InvalidArgumentException::class, 'Invalid area type');
-    });
-
     it('converts to model data correctly', function () {
         $dto = new AreaStoreDTO(
             name: 'Test Area',

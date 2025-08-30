@@ -31,11 +31,11 @@ final class AreaDeleteRequest extends FormRequest
 
     protected function prepareForValidation(): void
     {
-        $area = $this->route('area');
+        $area =$this->route('area');
         // User gibt das NICHT vor → wir setzen es hier
         $this->merge([
             'is_active' => false,
-            'id'=> $area->id,
+            'id' => (int)$area->id,
             'name' => $area->name,
         ]);
 
