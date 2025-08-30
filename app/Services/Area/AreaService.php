@@ -17,9 +17,12 @@ use App\Models\Garden;
 use App\Models\Plant;
 use App\Models\PlantType;
 use App\Models\User;
+use App\Queries\Area\AreaEditQuery;
 use App\Queries\Area\AreaFilterOptionsQuery;
 use App\Queries\Area\AreaIndexQuery;
+use App\Queries\Area\AreaShowQuery;
 use App\Queries\Area\AreaStatisticsQuery;
+use App\Services\PlantService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Throwable;
@@ -31,6 +34,7 @@ final readonly class AreaService
         private AreaUpdateAction       $updateAction,
         private AreaDeleteAction       $deleteAction,
         private AreaIndexQuery         $indexQuery,
+        private AreaShowQuery          $showQuery,
         private AreaStatisticsQuery    $statisticsQuery,
         private AreaFilterOptionsQuery $filterOptionsQuery,
     )
@@ -154,12 +158,7 @@ final readonly class AreaService
      */
     public function getShowData(Area $area): array
     {
-        $area->load(['garden', 'plants.plantType']);
-
-        return [
-            'area' => $area,
-            'availablePlants' => $this->getAvailablePlantsForArea(),
-        ];
+        return $this->showQuery->execute($area->id);
     }
 
     /**
@@ -294,11 +293,8 @@ final readonly class AreaService
      */
     public function getAvailablePlantsForArea(): Collection
     {
-        return Plant::query()
-            ->with('plantType')
-            ->select('id', 'name', 'latin_name', 'description', 'plant_type_id')
-            ->orderBy('name')
-            ->get();
+        // This method is deprecated - use PlantService directly
+        return app(PlantService::class)->getAvailablePlantsForArea();
     }
 
     /**

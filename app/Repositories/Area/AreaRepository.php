@@ -12,6 +12,13 @@ use Illuminate\Database\Eloquent\Builder;
 
 final class AreaRepository extends AbstractEloquentRepository implements AreaRepositoryInterface
 {
+    public function queryForShow(int $areaId): Builder
+    {
+        return $this->baseQuery()
+            ->with(['garden', 'plants.plantType'])
+            ->where('id', $areaId);
+    }
+
     public function queryForUser(int $user_id, bool $isAdmin): Builder
     {
         return $this->queryForUserBase(user_id: $user_id, isAdmin: $isAdmin)

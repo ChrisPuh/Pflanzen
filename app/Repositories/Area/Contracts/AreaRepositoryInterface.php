@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Builder;
 
 interface AreaRepositoryInterface
 {
-
+    public function queryForShow(int $areaId): Builder;
 
     public function queryForUser(int $user_id, bool $isAdmin): Builder;
 

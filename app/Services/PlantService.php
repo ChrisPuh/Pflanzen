@@ -9,6 +9,7 @@ use App\Enums\PlantTypeEnum;
 use App\Models\Plant;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 
 final class PlantService
 {
@@ -31,6 +32,20 @@ final class PlantService
             ->orderBy('name')
             ->paginate($perPage)
             ->withQueryString();
+    }
+
+    /**
+     * Get all available plants for area selection.
+     *
+     * @return Collection<int, Plant>
+     */
+    public function getAvailablePlantsForArea(): Collection
+    {
+        return Plant::query()
+            ->with('plantType')
+            ->select('id', 'name', 'latin_name', 'description', 'plant_type_id')
+            ->orderBy('name')
+            ->get();
     }
 
     /**
