@@ -232,6 +232,25 @@ describe('Removing plants from area', function () {
         ]);
     });
 
+    it('uses proper service layer for plant removal', function (): void {
+        $plant = Plant::factory()->create();
+        $this->area->plants()->attach($plant->id, [
+            'quantity' => 2,
+            'notes' => 'Test notes',
+            'planted_at' => now(),
+        ]);
+
+        $response = $this->actingAs($this->user)->delete(route('areas.plants.destroy', [$this->area, $plant]));
+
+        $response->assertRedirect(route('areas.show', $this->area))
+            ->assertSessionHas('success');
+
+        $this->assertDatabaseMissing('area_plant', [
+            'area_id' => $this->area->id,
+            'plant_id' => $plant->id,
+        ]);
+    });
+
     it('requires authentication', function (): void {
         $plant = Plant::factory()->create();
         $this->area->plants()->attach($plant->id, [
