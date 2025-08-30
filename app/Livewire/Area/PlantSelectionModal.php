@@ -34,6 +34,7 @@ final class PlantSelectionModal extends Component
         return view('livewire.area.plant-selection-modal');
     }
 
+    /** @return array<string, string> */
     protected function getListeners(): array
     {
         return [

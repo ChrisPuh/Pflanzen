@@ -11,7 +11,7 @@ use App\Services\Area\AreaPlantService;
 use App\Services\Area\AreaService;
 use Exception;
 use Illuminate\Contracts\View\View;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Collection;
 use Livewire\Component;
 
 final class PlantSelection extends Component
@@ -22,8 +22,10 @@ final class PlantSelection extends Component
 
     public ?int $selectedPlantTypeId = null;
 
+    /** @var array<int, array<string, mixed>> */
     public array $selectedPlants = [];
 
+    /** @return array<string, mixed> */
     public function rules(): array
     {
         return [
@@ -36,6 +38,7 @@ final class PlantSelection extends Component
         ];
     }
 
+    /** @return array<string, string> */
     public function messages(): array
     {
         return [
@@ -124,6 +127,7 @@ final class PlantSelection extends Component
         $this->reset(['search', 'selectedPlantTypeId']);
     }
 
+    /** @return Collection<int, Plant> */
     public function getAvailablePlantsProperty(): Collection
     {
         return app(AreaService::class)->getFilteredPlantsForArea(
@@ -133,11 +137,13 @@ final class PlantSelection extends Component
         );
     }
 
+    /** @return array<int, string> */
     public function getPlantTypeOptionsProperty(): array
     {
         return app(AreaService::class)->getPlantTypeOptions();
     }
 
+    /** @return Collection<int, Plant> */
     public function getSelectedPlantsDataProperty(): Collection
     {
         if ($this->selectedPlants === []) {

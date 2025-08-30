@@ -10,6 +10,7 @@ use App\Models\PlantType;
 use App\Models\User;
 use Illuminate\Support\Carbon;
 use Livewire\Livewire;
+use ReflectionClass;
 
 describe('PlantSelection', function (): void {
     beforeEach(function (): void {
@@ -357,6 +358,84 @@ describe('PlantSelection', function (): void {
             expect($options)->toBeArray();
             expect($options)->toHaveKey($this->plantType->id);
             expect($options[$this->plantType->id])->toBe($this->plantType->name->getLabel());
+        });
+    });
+
+    describe('Validation', function (): void {
+        it('has validation rules defined', function (): void {
+            $plantSelection = new PlantSelection();
+            $plantSelection->area = $this->area;
+
+            // Use reflection to access protected rules method
+            $reflection = new ReflectionClass($plantSelection);
+            $rulesMethod = $reflection->getMethod('rules');
+            $rulesMethod->setAccessible(true);
+            $rules = $rulesMethod->invoke($plantSelection);
+
+            expect($rules)->toBeArray();
+            expect($rules)->toHaveKey('selectedPlants');
+        });
+
+        it('has validation messages defined', function (): void {
+            $plantSelection = new PlantSelection();
+            $plantSelection->area = $this->area;
+
+            // Use reflection to access protected messages method
+            $reflection = new ReflectionClass($plantSelection);
+            $messagesMethod = $reflection->getMethod('messages');
+            $messagesMethod->setAccessible(true);
+            $messages = $messagesMethod->invoke($plantSelection);
+
+            expect($messages)->toBeArray();
+            expect($messages)->toHaveKey('selectedPlants.required');
+        });
+
+        it('validates individual plant data', function (): void {
+            $component = Livewire::test(PlantSelection::class, ['area' => $this->area])
+                ->call('togglePlant', $this->plant1->id)
+                ->call('updateQuantity', $this->plant1->id, -1); // Invalid quantity
+
+            // The component should handle invalid quantities gracefully
+            expect($component->get('selectedPlants')[$this->plant1->id]['quantity'])->toBe(1);
+        });
+    });
+
+    describe('Error Handling', function (): void {
+        it('handles service exceptions gracefully', function (): void {
+            // We'll simulate an exception by using an invalid area or plant configuration
+            // Create an area from a different user that should cause authorization issues
+            $otherUser = User::factory()->create();
+            $otherGarden = Garden::factory()->create(['user_id' => $otherUser->id]);
+            $restrictedArea = Area::factory()->create(['garden_id' => $otherGarden->id]);
+
+            $component = Livewire::test(PlantSelection::class, ['area' => $restrictedArea])
+                ->call('togglePlant', $this->plant1->id);
+
+            // Even if there are issues, the component should handle them gracefully
+            expect($component->get('selectedPlants'))->toBeArray();
+        });
+    });
+
+    describe('Edge Cases', function (): void {
+        it('handles empty selectedPlantsData when no plants selected', function (): void {
+            $component = Livewire::test(PlantSelection::class, ['area' => $this->area]);
+            $selectedData = $component->get('selectedPlantsData');
+
+            expect($selectedData)->toBeInstanceOf(Illuminate\Support\Collection::class);
+            expect($selectedData->count())->toBe(0);
+        });
+
+        it('resets selection properly', function (): void {
+            $component = Livewire::test(PlantSelection::class, ['area' => $this->area])
+                ->set('search', 'test')
+                ->set('selectedPlantTypeId', 1)
+                ->set('selectedPlants', [$this->plant1->id => ['quantity' => 1]])
+                ->call('resetSelection');
+
+            $component
+                ->assertSet('search', '')
+                ->assertSet('selectedPlantTypeId', null)
+                ->assertSet('selectedPlants', []);
         });
     });
 

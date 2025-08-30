@@ -40,6 +40,12 @@ abstract class AbstractEloquentRepository
     protected function queryForUserBase(int $user_id, bool $isAdmin): Builder
     {
         return $this->baseQuery()
-            ->when(! $isAdmin, fn ($q) => $q->whereHas('garden', fn ($q2) => $q2->where('user_id', $user_id)));
+            ->when(
+                ! $isAdmin,
+                fn (Builder $q) => $q->whereHas(
+                    'garden',
+                    fn (Builder $q2) => $q2->where('user_id', $user_id)
+                )
+            );
     }
 }
