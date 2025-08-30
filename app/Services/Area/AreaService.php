@@ -11,13 +11,10 @@ use App\DTOs\Area\AreaDeleteDTO;
 use App\DTOs\Area\AreaIndexFilterDTO;
 use App\DTOs\Area\AreaStoreDTO;
 use App\DTOs\Area\AreaUpdateDTO;
-use App\Enums\Area\AreaTypeEnum;
 use App\Models\Area;
-use App\Models\Garden;
 use App\Models\Plant;
 use App\Models\PlantType;
 use App\Models\User;
-use App\Queries\Area\AreaCreateQuery;
 use App\Queries\Area\AreaEditQuery;
 use App\Queries\Area\AreaFilterOptionsQuery;
 use App\Queries\Area\AreaIndexQuery;
@@ -25,7 +22,6 @@ use App\Queries\Area\AreaShowQuery;
 use App\Queries\Area\AreaStatisticsQuery;
 use App\Services\GardenService;
 use App\Services\PlantService;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Throwable;
 
@@ -37,47 +33,13 @@ final readonly class AreaService
         private AreaDeleteAction       $deleteAction,
         private AreaIndexQuery         $indexQuery,
         private AreaShowQuery          $showQuery,
-        private AreaCreateQuery        $createQuery,
         private AreaEditQuery          $editQuery,
         private AreaStatisticsQuery    $statisticsQuery,
         private AreaFilterOptionsQuery $filterOptionsQuery,
+        private GardenService          $gardenService,
+        private PlantService           $plantService,
     )
     {
-    }
-
-    /**
-     * Get user's gardens for area form dropdown.
-     *
-     * @return Collection<int, Garden>
-     */
-    public function getUserGardens(User $user, bool $isAdmin = false): Collection
-    {
-        return Garden::query()
-            ->when(!$isAdmin, function (Builder $query) use ($user): void {
-                $query->where('user_id', $user->id);
-            })
-            ->select('id', 'name', 'type')
-            ->orderBy('name')
-            ->get();
-    }
-
-    /**
-     * Get selected garden from user's gardens by ID.
-     */
-    public function getSelectedGarden(Collection $userGardens, ?int $gardenId): ?Garden
-    {
-        // This method is deprecated - use GardenService directly
-        return app(GardenService::class)->getSelectedGarden($userGardens, $gardenId);
-    }
-
-    /**
-     * Get all available area types for forms.
-     *
-     * @return array<array{value: string, label: string, description: string, category: string}>
-     */
-    public function getAvailableAreaTypes(): array
-    {
-        return AreaTypeEnum::options()->toArray();
     }
 
     /**
@@ -87,7 +49,19 @@ final readonly class AreaService
      */
     public function getCreateData(User $user, bool $isAdmin = false, ?int $preselectedGardenId = null): array
     {
-        return $this->createQuery->execute($user->id, $isAdmin, $preselectedGardenId);
+        // Get user gardens
+        $userGardens = $this->gardenService->getUserGardensForDropdown($user->id, $isAdmin);
+        $selectedGarden = $this->gardenService->getSelectedGarden($userGardens, $preselectedGardenId);
+
+        // Get area types
+        $areaTypes = \App\Enums\Area\AreaTypeEnum::options()->toArray();
+
+        return [
+            'userGardens' => $userGardens,
+            'selectedGarden' => $selectedGarden,
+            'areaTypes' => $areaTypes,
+            'isAdmin' => $isAdmin,
+        ];
     }
 
     /**
@@ -97,7 +71,21 @@ final readonly class AreaService
      */
     public function getEditData(User $user, Area $area, bool $isAdmin = false): array
     {
-        return $this->editQuery->execute($user->id, $area->id, $isAdmin);
+        // Get area with relationships
+        $area = $this->editQuery->execute($area->id);
+
+        // Get user gardens
+        $userGardens = $this->gardenService->getUserGardensForDropdown($user->id, $isAdmin);
+
+        // Get area types
+        $areaTypes = \App\Enums\Area\AreaTypeEnum::options()->toArray();
+
+        return [
+            'area' => $area,
+            'userGardens' => $userGardens,
+            'areaTypes' => $areaTypes,
+            'isAdmin' => $isAdmin,
+        ];
     }
 
     /**
@@ -105,23 +93,23 @@ final readonly class AreaService
      *
      * @return array<string, mixed>
      */
-    public function getIndexData(User $user, AreaIndexFilterDTO $filter, bool $isAdmin = false): array
+    public function getIndexData(int $userId, AreaIndexFilterDTO $filter, bool $isAdmin = false): array
     {
         // Get filtered and paginated areas
         $areas = $this->indexQuery
             ->execute(
-                user_id: $user->id,
+                user_id: $userId,
                 filter: $filter,
                 isAdmin: $isAdmin
             );
 
         // Get statistics
         $statistics = $this->statisticsQuery
-            ->execute(user_id: $user->id, isAdmin: $isAdmin);
+            ->execute(user_id: $userId, isAdmin: $isAdmin);
 
         // Get filter options
         $filterOptions = $this->filterOptionsQuery
-            ->execute(user_id: $user->id, isAdmin: $isAdmin);
+            ->execute(user_id: $userId, isAdmin: $isAdmin);
 
 
         return [
@@ -144,7 +132,16 @@ final readonly class AreaService
      */
     public function getShowData(Area $area): array
     {
-        return $this->showQuery->execute($area->id);
+        // Get area with relationships
+        $area = $this->showQuery->execute($area->id);
+
+        // Get available plants
+        $availablePlants = $this->plantService->getAvailablePlantsForArea();
+
+        return [
+            'area' => $area,
+            'availablePlants' => $availablePlants,
+        ];
     }
 
     /**
@@ -273,22 +270,11 @@ final readonly class AreaService
     }
 
     /**
-     * Get available plants that can be added to an area.
-     *
-     * @return Collection<int, Plant>
-     */
-    public function getAvailablePlantsForArea(): Collection
-    {
-        // This method is deprecated - use PlantService directly
-        return app(PlantService::class)->getAvailablePlantsForArea();
-    }
-
-    /**
      * Get filtered plants for area excluding already planted ones.
      */
     public function getFilteredPlantsForArea(Area $area, string $search = '', ?int $plantTypeId = null): \Illuminate\Support\Collection
     {
-        $plants = $this->getAvailablePlantsForArea();
+        $plants = $this->plantService->getAvailablePlantsForArea();
 
         // Filter already planted plants in this area
         $plants = $plants->filter(fn(Plant $plant): bool => !$area->plants()->where('plant_id', $plant->id)->exists());

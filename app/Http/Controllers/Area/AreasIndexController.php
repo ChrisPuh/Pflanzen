@@ -15,7 +15,7 @@ final class AreasIndexController extends AreaController
 
         $filter = $request->toDTO();
 
-        $indexData = $this->areaService->getIndexData($user, $filter, $isAdmin);
+        $indexData = $this->areaService->getIndexData($user->id, $filter, $isAdmin);
 
         return view('areas.index', $indexData);
     }
