@@ -22,8 +22,7 @@ final readonly class AreaEditQuery
         $area = $this->repository->queryForShow($areaId)->firstOrFail();
 
         // Get user gardens via GardenService - need to create User instance
-        $user = \App\Models\User::findOrFail($userId);
-        $userGardens = $this->gardenService->getUserGardensForDropdown($user, $isAdmin);
+        $userGardens = $this->gardenService->getUserGardensForDropdown($userId, $isAdmin);
 
         return [
             'area' => $area,

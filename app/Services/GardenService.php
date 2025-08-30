@@ -18,15 +18,27 @@ final class GardenService
      *
      * @return Collection<int, Garden>
      */
-    public function getUserGardensForDropdown(User $user, bool $isAdmin = false): Collection
+    public function getUserGardensForDropdown(int $user_id, bool $isAdmin = false): Collection
     {
         return Garden::query()
-            ->when(!$isAdmin, function (Builder $query) use ($user): void {
-                $query->where('user_id', $user->id);
+            ->when(!$isAdmin, function (Builder $query) use ($user_id): void {
+                $query->where('user_id', $user_id);
             })
             ->select('id', 'name', 'type')
             ->orderBy('name')
             ->get();
+    }
+
+    /**
+     * Get selected garden from a collection by ID.
+     */
+    public function getSelectedGarden(Collection $userGardens, ?int $gardenId): ?Garden
+    {
+        if ($gardenId === null) {
+            return null;
+        }
+
+        return $userGardens->firstWhere('id', $gardenId);
     }
 
     /**

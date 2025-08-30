@@ -17,11 +17,13 @@ use App\Models\Garden;
 use App\Models\Plant;
 use App\Models\PlantType;
 use App\Models\User;
+use App\Queries\Area\AreaCreateQuery;
 use App\Queries\Area\AreaEditQuery;
 use App\Queries\Area\AreaFilterOptionsQuery;
 use App\Queries\Area\AreaIndexQuery;
 use App\Queries\Area\AreaShowQuery;
 use App\Queries\Area\AreaStatisticsQuery;
+use App\Services\GardenService;
 use App\Services\PlantService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
@@ -35,6 +37,7 @@ final readonly class AreaService
         private AreaDeleteAction       $deleteAction,
         private AreaIndexQuery         $indexQuery,
         private AreaShowQuery          $showQuery,
+        private AreaCreateQuery        $createQuery,
         private AreaEditQuery          $editQuery,
         private AreaStatisticsQuery    $statisticsQuery,
         private AreaFilterOptionsQuery $filterOptionsQuery,
@@ -63,11 +66,8 @@ final readonly class AreaService
      */
     public function getSelectedGarden(Collection $userGardens, ?int $gardenId): ?Garden
     {
-        if ($gardenId === null) {
-            return null;
-        }
-
-        return $userGardens->firstWhere('id', $gardenId);
+        // This method is deprecated - use GardenService directly
+        return app(GardenService::class)->getSelectedGarden($userGardens, $gardenId);
     }
 
     /**
@@ -87,15 +87,7 @@ final readonly class AreaService
      */
     public function getCreateData(User $user, bool $isAdmin = false, ?int $preselectedGardenId = null): array
     {
-        $userGardens = $this->getUserGardens($user, $isAdmin);
-        $selectedGarden = $this->getSelectedGarden($userGardens, $preselectedGardenId);
-
-        return [
-            'userGardens' => $userGardens,
-            'selectedGarden' => $selectedGarden,
-            'areaTypes' => $this->getAvailableAreaTypes(),
-            'isAdmin' => $isAdmin,
-        ];
+        return $this->createQuery->execute($user->id, $isAdmin, $preselectedGardenId);
     }
 
     /**
