@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\Area;
 
+use App\DTOs\Area\AreaDeleteDTO;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Gate;
 
@@ -22,15 +23,26 @@ final class AreaDeleteRequest extends FormRequest
     {
         return [
             'is_active' => ['required', 'boolean'],
+            'id' => ['required', 'integer', 'exists:areas,id'],
+            'name' => ['required', 'string', 'max:255'],
             // 'reason' => ['nullable', 'string', 'max:255'], // falls du später Reason nutzen willst
         ];
     }
 
     protected function prepareForValidation(): void
     {
+        $area = $this->route('area');
         // User gibt das NICHT vor → wir setzen es hier
         $this->merge([
             'is_active' => false,
+            'id'=> $area->id,
+            'name' => $area->name,
         ]);
+
+    }
+
+    public function toDTO(): AreaDeleteDTO
+    {
+        return AreaDeleteDTO::fromValidatedRequest($this->validated());
     }
 }

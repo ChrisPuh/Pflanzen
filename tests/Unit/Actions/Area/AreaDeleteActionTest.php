@@ -14,7 +14,11 @@ describe('AreaDeleteAction', function () {
         $this->repository = Mockery::mock(AreaRepositoryInterface::class);
         $this->action = new AreaDeleteAction($this->repository);
         $this->area = Area::factory()->make(['id' => 1]);
-        $this->dto = AreaDeleteDTO::fromValidatedRequest(['is_active' => false]);
+        $this->dto = AreaDeleteDTO::fromValidatedRequest([
+            'is_active' => false,
+            'name' => $this->area->name,
+            'id' => $this->area->id,
+        ]);
     });
 
     it('deletes area successfully', function () {
@@ -28,7 +32,7 @@ describe('AreaDeleteAction', function () {
         $this->repository
             ->shouldReceive('delete')
             ->once()
-            ->with($this->area, $this->dto)
+            ->with($this->dto)
             ->andReturn(true);
 
         Log::shouldReceive('info')
@@ -39,7 +43,7 @@ describe('AreaDeleteAction', function () {
             ->once()
             ->with('Area deleted successfully', ['area_id' => 1]);
 
-        $result = $this->action->execute($this->area, $this->dto);
+        $result = $this->action->execute($this->dto);
 
         expect($result)->toBeTrue();
     });
@@ -57,7 +61,7 @@ describe('AreaDeleteAction', function () {
         $this->repository
             ->shouldReceive('delete')
             ->once()
-            ->with($this->area, $this->dto)
+            ->with($this->dto)
             ->andThrow($exception);
 
         Log::shouldReceive('info')
@@ -68,7 +72,7 @@ describe('AreaDeleteAction', function () {
             ->once()
             ->with('Error deleting area', ['error' => 'Database error', 'area_id' => 1]);
 
-        $result = $this->action->execute($this->area, $this->dto);
+        $result = $this->action->execute($this->dto);
 
         expect($result)->toBeFalse();
     });
@@ -89,7 +93,7 @@ describe('AreaDeleteAction', function () {
             ->once()
             ->with('Error deleting area', ['error' => 'Transaction failed', 'area_id' => 1]);
 
-        $result = $this->action->execute($this->area, $this->dto);
+        $result = $this->action->execute($this->dto);
 
         expect($result)->toBeFalse();
     });
@@ -105,7 +109,7 @@ describe('AreaDeleteAction', function () {
         $this->repository
             ->shouldReceive('delete')
             ->once()
-            ->with($this->area, $this->dto)
+            ->with($this->dto)
             ->andReturn(false);
 
         Log::shouldReceive('info')
@@ -116,7 +120,7 @@ describe('AreaDeleteAction', function () {
             ->once()
             ->with('Area deleted successfully', ['area_id' => 1]);
 
-        $result = $this->action->execute($this->area, $this->dto);
+        $result = $this->action->execute( $this->dto);
 
         expect($result)->toBeFalse();
     });

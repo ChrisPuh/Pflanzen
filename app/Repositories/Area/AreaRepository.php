@@ -42,9 +42,12 @@ final class AreaRepository extends AbstractEloquentRepository implements AreaRep
         return $area->fresh();
     }
 
-    public function delete(Area $area, WritableDTOInterface $data): bool
+    public function delete(WritableDTOInterface $data): bool
     {
-        $area->update($data->toModelData());
+        $modelData = $data->toModelData();
+
+        $area = Area::findOrFail($modelData['id']);
+        $area->update(['is_active' => $modelData['is_active']]);
 
         return $area->delete();
     }

@@ -47,10 +47,10 @@ final readonly class AreaService
      *
      * @return array<string, mixed>
      */
-    public function getCreateData(User $user, bool $isAdmin = false, ?int $preselectedGardenId = null): array
+    public function getCreateData(int $userId, bool $isAdmin = false, ?int $preselectedGardenId = null): array
     {
         // Get user gardens
-        $userGardens = $this->gardenService->getUserGardensForDropdown($user->id, $isAdmin);
+        $userGardens = $this->gardenService->getUserGardensForDropdown($userId, $isAdmin);
         $selectedGarden = $this->gardenService->getSelectedGarden($userGardens, $preselectedGardenId);
 
         // Get area types
@@ -190,7 +190,7 @@ final readonly class AreaService
      *
      * @throws Throwable
      */
-    public function deleteArea(Area $area, AreaDeleteDTO $data): bool
+    public function deleteArea(AreaDeleteDTO $data): bool
     {
         // 1. Action ausführen (macht die eigentliche Arbeit)
         // $area = $this->deleteAction->execute($area);
@@ -201,7 +201,7 @@ final readonly class AreaService
         // 3. TODO  implement Benachrichtigung senden
         // $this->notifications->sendAreaDeletedNotification($area);
 
-        return $this->deleteAction->execute($area, $data);
+        return $this->deleteAction->execute($data);
     }
 
     /**

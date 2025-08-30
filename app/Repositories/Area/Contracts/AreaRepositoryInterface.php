@@ -20,5 +20,5 @@ interface AreaRepositoryInterface
 
     public function update(Area $area, WritableDTOInterface $data): Area;
 
-    public function delete(Area $area, WritableDTOInterface $data): bool;
+    public function delete(WritableDTOInterface $data): bool;
 }

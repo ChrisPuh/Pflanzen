@@ -20,7 +20,7 @@ final class AreaCreateController extends Controller
     {
         ['user' => $user, 'isAdmin' => $isAdmin] = $this->getUserAndAdminStatus();
 
-        $createData = $this->areaService->getCreateData($user, $isAdmin, $request->integer('garden_id'));
+        $createData = $this->areaService->getCreateData($user->id, $isAdmin, $request->integer('garden_id'));
 
         return view('areas.create', $createData);
     }

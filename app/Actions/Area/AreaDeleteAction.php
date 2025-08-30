@@ -15,25 +15,27 @@ final readonly class AreaDeleteAction
 {
     public function __construct(
         private AreaRepositoryInterface $repository
-    ) {}
+    )
+    {
+    }
 
     /**
      * Soft delete the specified area.
      *
      * @throws Throwable
      */
-    public function execute(Area $area, AreaDeleteDTO $data): bool
+    public function execute(AreaDeleteDTO $data): bool
     {
-        $areaId = $area->id;
+
         try {
-            Log::info('Deleting area', ['area_id' => $areaId]);
+            Log::info('Deleting area', ['area_id' => $data->areaId]);
 
-            $isDeleted = DB::transaction(fn (): bool => $this->repository->delete($area, $data));
+            $isDeleted = DB::transaction(fn(): bool => $this->repository->delete($data));
 
-            Log::info('Area deleted successfully', ['area_id' => $areaId]);
+            Log::info('Area deleted successfully', ['area_id' => $data->areaId]);
 
         } catch (Throwable $exception) {
-            Log::error('Error deleting area', ['error' => $exception->getMessage(), 'area_id' => $areaId]);
+            Log::error('Error deleting area', ['error' => $exception->getMessage(), 'area_id' => $data->areaId]);
         }
 
         return $isDeleted ?? false;

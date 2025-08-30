@@ -280,7 +280,7 @@ describe('Edge cases and error handling', function () {
         $this->area->plants()->attach($plant->id);
 
         $response = $this->actingAs($this->user)
-            ->delete(route('areas.destroy', $this->area));
+            ->delete(route('areas.destroy', ['area' => $this->area]));
 
         $response->assertRedirect(route('areas.index'));
 

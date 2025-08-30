@@ -375,9 +375,9 @@ describe('AreaRepository', function () {
 
             ]);
 
-            $dto = new AreaDeleteDTO(isActive: false);
+            $dto = new AreaDeleteDTO(areaId: $area->id, name: $area->name, isActive: false);
 
-            $result = $this->repository->delete($area, $dto);
+            $result = $this->repository->delete( $dto);
 
             expect($result)->toBeTrue();
 
@@ -402,9 +402,9 @@ describe('AreaRepository', function () {
                 'is_active' => true,
             ]);
 
-            $dto = new AreaDeleteDTO(isActive: false);
+            $dto = new AreaDeleteDTO(areaId: $area->id, name: $area->name, isActive: false);
 
-            $result = $this->repository->delete($area, $dto);
+            $result = $this->repository->delete( $dto);
 
             expect($result)->toBeTrue();
 
@@ -422,9 +422,9 @@ describe('AreaRepository', function () {
                 'is_active' => false, // Already inactive
             ]);
 
-            $dto = new AreaDeleteDTO(isActive: false);
+            $dto = new AreaDeleteDTO(areaId: $area->id, name: $area->name, isActive: false);
 
-            $result = $this->repository->delete($area, $dto);
+            $result = $this->repository->delete( $dto);
 
             expect($result)->toBeTrue();
 
@@ -444,8 +444,8 @@ describe('AreaRepository', function () {
 
             expect($area->deleted_at)->toBeNull();
 
-            $dto = new AreaDeleteDTO(isActive: false);
-            $result = $this->repository->delete($area, $dto);
+            $dto = new AreaDeleteDTO(areaId: $area->id, name: $area->name, isActive: false);
+            $result = $this->repository->delete($dto);
 
             expect($result)->toBeTrue();
 
@@ -463,9 +463,9 @@ describe('AreaRepository', function () {
                 'is_active' => false,
             ]);
 
-            $dto = new AreaDeleteDTO(isActive: true); // Activate before delete
+            $dto = new AreaDeleteDTO(areaId: $area->id, name: $area->name, isActive: true); // Activate before delete
 
-            $result = $this->repository->delete($area, $dto);
+            $result = $this->repository->delete($dto);
 
             expect($result)->toBeTrue();
 
