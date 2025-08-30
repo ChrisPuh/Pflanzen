@@ -13,9 +13,7 @@ final readonly class AreaFilterOptionsQuery
 {
     public function __construct(
         private GardenRepositoryInterface $gardenRepository,
-    )
-    {
-    }
+    ) {}
 
     /**
      * Get filter options for area index page.

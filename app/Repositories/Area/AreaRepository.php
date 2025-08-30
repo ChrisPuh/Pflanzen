@@ -57,4 +57,3 @@ final class AreaRepository extends AbstractEloquentRepository implements AreaRep
         return Area::class;
     }
 }
-

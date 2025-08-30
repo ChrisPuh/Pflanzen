@@ -15,29 +15,18 @@ final readonly class AreaFilterOptionsDTO
         public Collection $areaTypes,
         /** @var Collection<string, string> */
         public Collection $categories,
-    )
-    {
-    }
+    ) {}
 
-    /**
-     * @return Collection
-     */
     public function getGardens(): Collection
     {
         return $this->gardens;
     }
 
-    /**
-     * @return Collection
-     */
     public function getAreaTypes(): Collection
     {
         return $this->areaTypes;
     }
 
-    /**
-     * @return Collection
-     */
     public function getCategories(): Collection
     {
         return $this->categories;

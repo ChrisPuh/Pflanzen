@@ -29,20 +29,20 @@ final class AreaDeleteRequest extends FormRequest
         ];
     }
 
-    protected function prepareForValidation(): void
-    {
-        $area =$this->route('area');
-        // User gibt das NICHT vor → wir setzen es hier
-        $this->merge([
-            'is_active' => false,
-            'id' => (int)$area->id,
-            'name' => $area->name,
-        ]);
-
-    }
-
     public function toDTO(): AreaDeleteDTO
     {
         return AreaDeleteDTO::fromValidatedRequest($this->validated());
+    }
+
+    protected function prepareForValidation(): void
+    {
+        $area = $this->route('area');
+        // User gibt das NICHT vor → wir setzen es hier
+        $this->merge([
+            'is_active' => false,
+            'id' => (int) $area->id,
+            'name' => $area->name,
+        ]);
+
     }
 }

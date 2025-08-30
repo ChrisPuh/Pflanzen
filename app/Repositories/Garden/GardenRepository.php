@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Repositories\Garden;
 
 use App\Models\Garden;
@@ -9,10 +11,8 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Collection as SupportCollection;
 
-
-class GardenRepository extends AbstractEloquentRepository implements GardenRepositoryInterface
+final class GardenRepository extends AbstractEloquentRepository implements GardenRepositoryInterface
 {
-
     public function getModelClass(): string
     {
         return Garden::class;
@@ -21,7 +21,7 @@ class GardenRepository extends AbstractEloquentRepository implements GardenRepos
     public function getForDropdown(int $userId, bool $isAdmin): Collection
     {
         return $this->baseQuery()
-            ->when(!$isAdmin, fn(Builder $query) => $query->where('user_id', $userId))
+            ->when(! $isAdmin, fn (Builder $query) => $query->where('user_id', $userId))
             ->select('id', 'name', 'type')
             ->orderBy('name')
             ->get();
@@ -34,8 +34,9 @@ class GardenRepository extends AbstractEloquentRepository implements GardenRepos
         return $gardens->mapWithKeys(function (Garden $garden) use ($isAdmin) {
             $label = $garden->name;
             if ($isAdmin) {
-                $label .= ' (' . $garden->type->getLabel() . ')';
+                $label .= ' ('.$garden->type->getLabel().')';
             }
+
             return [$garden->id => $label];
         });
     }

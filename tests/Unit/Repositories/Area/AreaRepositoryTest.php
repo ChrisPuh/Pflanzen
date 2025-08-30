@@ -19,8 +19,7 @@ describe('AreaRepository', function () {
         $this->garden = Garden::factory()->create();
     });
 
-
-// Diese Tests sollten in Ihren bestehenden AreaRepositoryTest.php eingefügt werden
+    // Diese Tests sollten in Ihren bestehenden AreaRepositoryTest.php eingefügt werden
 
     describe('queryForUser', function () {
 
@@ -37,25 +36,25 @@ describe('AreaRepository', function () {
             // Areas für verschiedene Gärten erstellen
             $this->userArea = Area::factory()->create([
                 'garden_id' => $this->userGarden->id,
-                'name' => 'User Area'
+                'name' => 'User Area',
             ]);
 
             $this->otherUserArea = Area::factory()->create([
                 'garden_id' => $this->otherUserGarden->id,
-                'name' => 'Other User Area'
+                'name' => 'Other User Area',
             ]);
 
             // Plants für Relationship-Tests - Many-to-Many über Pivot
             if (method_exists(Area::class, 'plants')) {
                 $this->userPlant = Plant::factory()->create([
-                    'name' => 'User Plant'
+                    'name' => 'User Plant',
                 ]);
 
                 // Attach plant to area via pivot table
                 $this->userArea->plants()->attach($this->userPlant->id, [
                     'planted_at' => now(),
                     'notes' => 'Test plant',
-                    'quantity' => 5
+                    'quantity' => 5,
                 ]);
             }
         });
@@ -112,7 +111,7 @@ describe('AreaRepository', function () {
 
         it('loads plants relationship correctly', function () {
             // Nur ausführen wenn Plants-Relationship existiert
-            if (!method_exists(Area::class, 'plants')) {
+            if (! method_exists(Area::class, 'plants')) {
                 $this->markTestSkipped('Plants relationship not available');
             }
 
@@ -186,7 +185,7 @@ describe('AreaRepository', function () {
         it('returns Builder instance', function () {
             $query = $this->repository->queryForUser($this->user->id, false);
 
-            expect($query)->toBeInstanceOf(\Illuminate\Database\Eloquent\Builder::class);
+            expect($query)->toBeInstanceOf(Illuminate\Database\Eloquent\Builder::class);
         });
 
         it('admin flag overrides user restriction', function () {
@@ -377,7 +376,7 @@ describe('AreaRepository', function () {
 
             $dto = new AreaDeleteDTO(areaId: $area->id, name: $area->name, isActive: false);
 
-            $result = $this->repository->delete( $dto);
+            $result = $this->repository->delete($dto);
 
             expect($result)->toBeTrue();
 
@@ -404,7 +403,7 @@ describe('AreaRepository', function () {
 
             $dto = new AreaDeleteDTO(areaId: $area->id, name: $area->name, isActive: false);
 
-            $result = $this->repository->delete( $dto);
+            $result = $this->repository->delete($dto);
 
             expect($result)->toBeTrue();
 
@@ -424,7 +423,7 @@ describe('AreaRepository', function () {
 
             $dto = new AreaDeleteDTO(areaId: $area->id, name: $area->name, isActive: false);
 
-            $result = $this->repository->delete( $dto);
+            $result = $this->repository->delete($dto);
 
             expect($result)->toBeTrue();
 
@@ -471,7 +470,7 @@ describe('AreaRepository', function () {
 
             $deletedArea = Area::withTrashed()->find($area->id);
             expect($deletedArea->is_active)->toBeTrue() // Was activated
-            ->and($deletedArea->deleted_at)->not->toBeNull(); // But then deleted
+                ->and($deletedArea->deleted_at)->not->toBeNull(); // But then deleted
         });
     });
 

@@ -120,7 +120,7 @@ describe('AreaDeleteAction', function () {
             ->once()
             ->with('Area deleted successfully', ['area_id' => 1]);
 
-        $result = $this->action->execute( $this->dto);
+        $result = $this->action->execute($this->dto);
 
         expect($result)->toBeFalse();
     });

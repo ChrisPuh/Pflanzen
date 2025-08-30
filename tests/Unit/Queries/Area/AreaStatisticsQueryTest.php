@@ -13,12 +13,12 @@ use App\Repositories\Area\AreaRepository;
 describe('AreaStatisticsQuery', function () {
     beforeEach(function () {
         // Setup roles for tests
-        \Spatie\Permission\Models\Role::query()->firstOrCreate(['name' => 'admin']);
-        \Spatie\Permission\Models\Role::query()->firstOrCreate(['name' => 'user']);
+        Spatie\Permission\Models\Role::query()->firstOrCreate(['name' => 'admin']);
+        Spatie\Permission\Models\Role::query()->firstOrCreate(['name' => 'user']);
 
         $this->repository = new AreaRepository();
         $this->query = new AreaStatisticsQuery($this->repository);
-        
+
         $this->user = User::factory()->user()->create();
         $this->garden = Garden::factory()->create(['user_id' => $this->user->id]);
     });
@@ -28,12 +28,12 @@ describe('AreaStatisticsQuery', function () {
             // Create test areas
             Area::factory()->count(10)->create(['garden_id' => $this->garden->id, 'is_active' => true]);
             Area::factory()->count(3)->create(['garden_id' => $this->garden->id, 'is_active' => false]);
-            
+
             // Create planting areas
             Area::factory()->count(5)->create([
-                'garden_id' => $this->garden->id, 
+                'garden_id' => $this->garden->id,
                 'is_active' => true,
-                'type' => AreaTypeEnum::VegetableBed
+                'type' => AreaTypeEnum::VegetableBed,
             ]);
 
             $result = $this->query->execute($this->user->id, false);
@@ -60,11 +60,11 @@ describe('AreaStatisticsQuery', function () {
 
         it('returns AreaStatisticsDTO with correct counts for admin user', function () {
             $admin = User::factory()->admin()->create();
-            
+
             // Create areas for multiple users that admin can see
             $otherUser = User::factory()->user()->create();
             $otherGarden = Garden::factory()->create(['user_id' => $otherUser->id]);
-            
+
             Area::factory()->count(5)->create(['garden_id' => $this->garden->id, 'is_active' => true]);
             Area::factory()->count(3)->create(['garden_id' => $otherGarden->id, 'is_active' => true]);
 
@@ -78,19 +78,19 @@ describe('AreaStatisticsQuery', function () {
         it('correctly identifies planting areas using enum values', function () {
             // Create specific area types
             Area::factory()->create([
-                'garden_id' => $this->garden->id, 
+                'garden_id' => $this->garden->id,
                 'type' => AreaTypeEnum::VegetableBed,
-                'is_active' => true
+                'is_active' => true,
             ]);
             Area::factory()->create([
-                'garden_id' => $this->garden->id, 
+                'garden_id' => $this->garden->id,
                 'type' => AreaTypeEnum::HerbBed,
-                'is_active' => true
+                'is_active' => true,
             ]);
             Area::factory()->create([
-                'garden_id' => $this->garden->id, 
+                'garden_id' => $this->garden->id,
                 'type' => AreaTypeEnum::FlowerBed,
-                'is_active' => true
+                'is_active' => true,
             ]);
 
             $result = $this->query->execute($this->user->id, false);
@@ -103,21 +103,21 @@ describe('AreaStatisticsQuery', function () {
         it('handles mixed area types correctly', function () {
             // Create planting and non-planting areas
             Area::factory()->count(3)->create([
-                'garden_id' => $this->garden->id, 
+                'garden_id' => $this->garden->id,
                 'type' => AreaTypeEnum::VegetableBed, // planting area
-                'is_active' => true
+                'is_active' => true,
             ]);
-            
+
             // Assuming there are non-planting area types in the enum
             $plantingValues = AreaTypeEnum::getPlantingAreaValues();
             $allValues = collect(AreaTypeEnum::cases())->pluck('value')->toArray();
             $nonPlantingValues = array_values(array_diff($allValues, $plantingValues));
-            
-            if (!empty($nonPlantingValues)) {
+
+            if (! empty($nonPlantingValues)) {
                 Area::factory()->create([
-                    'garden_id' => $this->garden->id, 
+                    'garden_id' => $this->garden->id,
                     'type' => AreaTypeEnum::from($nonPlantingValues[0]), // non-planting area
-                    'is_active' => true
+                    'is_active' => true,
                 ]);
             }
 

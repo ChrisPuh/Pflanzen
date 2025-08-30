@@ -5,10 +5,8 @@ declare(strict_types=1);
 namespace App\Http\Requests\Area;
 
 use App\DTOs\Area\AreaStoreDTO;
-use App\Enums\Area\AreaTypeEnum;
 use App\Models\Garden;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
 final class AreaStoreRequest extends FormRequest
 {
@@ -39,7 +37,7 @@ final class AreaStoreRequest extends FormRequest
             if ($this->filled('garden_id')) {
                 $garden = Garden::find($this->integer('garden_id'));
 
-                if ($garden && !$this->user()->hasRole('admin') && $garden->user_id !== $this->user()->id) {
+                if ($garden && ! $this->user()->hasRole('admin') && $garden->user_id !== $this->user()->id) {
                     $validator->errors()->add('garden_id', 'Sie haben keine Berechtigung, Bereiche zu diesem Garten hinzuzufügen.');
                 }
             }

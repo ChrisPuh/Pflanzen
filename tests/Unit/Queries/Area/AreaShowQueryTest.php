@@ -12,12 +12,12 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 describe('AreaShowQuery', function () {
     beforeEach(function () {
         // Setup roles for tests
-        \Spatie\Permission\Models\Role::query()->firstOrCreate(['name' => 'admin']);
-        \Spatie\Permission\Models\Role::query()->firstOrCreate(['name' => 'user']);
+        Spatie\Permission\Models\Role::query()->firstOrCreate(['name' => 'admin']);
+        Spatie\Permission\Models\Role::query()->firstOrCreate(['name' => 'user']);
 
         $this->repository = new AreaRepository();
         $this->query = new AreaShowQuery($this->repository);
-        
+
         $this->user = User::factory()->user()->create();
         $this->garden = Garden::factory()->create(['user_id' => $this->user->id]);
     });
@@ -35,7 +35,7 @@ describe('AreaShowQuery', function () {
         it('throws ModelNotFoundException when area does not exist', function () {
             $nonExistentId = 99999;
 
-            expect(fn() => $this->query->execute($nonExistentId))
+            expect(fn () => $this->query->execute($nonExistentId))
                 ->toThrow(ModelNotFoundException::class);
         });
 
@@ -72,7 +72,7 @@ describe('AreaShowQuery', function () {
         it('returns the exact area requested', function () {
             $area = Area::factory()->create([
                 'garden_id' => $this->garden->id,
-                'name' => 'Specific Test Area'
+                'name' => 'Specific Test Area',
             ]);
 
             $result = $this->query->execute($area->id);
@@ -127,7 +127,7 @@ describe('AreaShowQuery', function () {
         it('propagates ModelNotFoundException for non-existent areas', function () {
             $nonExistentId = 404;
 
-            expect(fn() => $this->query->execute($nonExistentId))
+            expect(fn () => $this->query->execute($nonExistentId))
                 ->toThrow(ModelNotFoundException::class);
         });
 
@@ -135,7 +135,7 @@ describe('AreaShowQuery', function () {
             $nonExistentId = 0;
 
             // Should throw, not return null or empty model
-            expect(fn() => $this->query->execute($nonExistentId))
+            expect(fn () => $this->query->execute($nonExistentId))
                 ->toThrow(ModelNotFoundException::class);
         });
     });
@@ -156,7 +156,7 @@ describe('AreaShowQuery', function () {
 
             // The query should only retrieve the area, not modify it
             $originalName = $area->name;
-            
+
             $result = $this->query->execute($area->id);
 
             expect($result->name)->toBe($originalName)
@@ -179,7 +179,7 @@ describe('AreaShowQuery', function () {
             $area = Area::factory()->create([
                 'garden_id' => $this->garden->id,
                 'name' => 'Complete Test Area',
-                'description' => 'A complete area for testing'
+                'description' => 'A complete area for testing',
             ]);
 
             $result = $this->query->execute($area->id);
@@ -193,7 +193,7 @@ describe('AreaShowQuery', function () {
             $area = Area::factory()->create([
                 'garden_id' => $this->garden->id,
                 'is_active' => true,
-                'size_sqm' => 25.5
+                'size_sqm' => 25.5,
             ]);
 
             $result = $this->query->execute($area->id);

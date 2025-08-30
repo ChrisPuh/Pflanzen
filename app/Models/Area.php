@@ -89,7 +89,7 @@ final class Area extends Model
             return 'Größe nicht angegeben';
         }
 
-        return number_format((float)$this->size_sqm, 2, ',', '.') . ' m²';
+        return number_format((float) $this->size_sqm, 2, ',', '.').' m²';
     }
 
     public function hasCoordinates(): bool
@@ -101,12 +101,12 @@ final class Area extends Model
 
     public function getXCoordinate(): ?float
     {
-        return $this->hasCoordinates() ? (float)$this->coordinates['x'] : null;
+        return $this->hasCoordinates() ? (float) $this->coordinates['x'] : null;
     }
 
     public function getYCoordinate(): ?float
     {
-        return $this->hasCoordinates() ? (float)$this->coordinates['y'] : null;
+        return $this->hasCoordinates() ? (float) $this->coordinates['y'] : null;
     }
 
     public function setCoordinates(float $x, float $y): void
@@ -126,21 +126,21 @@ final class Area extends Model
     public function getLength(): ?float
     {
         return $this->hasDimensions() && isset($this->dimensions['length'])
-            ? (float)$this->dimensions['length']
+            ? (float) $this->dimensions['length']
             : null;
     }
 
     public function getWidth(): ?float
     {
         return $this->hasDimensions() && isset($this->dimensions['width'])
-            ? (float)$this->dimensions['width']
+            ? (float) $this->dimensions['width']
             : null;
     }
 
     public function getHeight(): ?float
     {
         return $this->hasDimensions() && isset($this->dimensions['height'])
-            ? (float)$this->dimensions['height']
+            ? (float) $this->dimensions['height']
             : null;
     }
 

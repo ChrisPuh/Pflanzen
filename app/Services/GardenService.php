@@ -21,7 +21,7 @@ final class GardenService
     public function getUserGardensForDropdown(int $user_id, bool $isAdmin = false): Collection
     {
         return Garden::query()
-            ->when(!$isAdmin, function (Builder $query) use ($user_id): void {
+            ->when(! $isAdmin, function (Builder $query) use ($user_id): void {
                 $query->where('user_id', $user_id);
             })
             ->select('id', 'name', 'type')

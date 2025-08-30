@@ -22,25 +22,22 @@ use App\Queries\Area\AreaShowQuery;
 use App\Queries\Area\AreaStatisticsQuery;
 use App\Services\GardenService;
 use App\Services\PlantService;
-use Illuminate\Database\Eloquent\Collection;
 use Throwable;
 
 final readonly class AreaService
 {
     public function __construct(
-        private AreaStoreAction        $storeAction,
-        private AreaUpdateAction       $updateAction,
-        private AreaDeleteAction       $deleteAction,
-        private AreaIndexQuery         $indexQuery,
-        private AreaShowQuery          $showQuery,
-        private AreaEditQuery          $editQuery,
-        private AreaStatisticsQuery    $statisticsQuery,
+        private AreaStoreAction $storeAction,
+        private AreaUpdateAction $updateAction,
+        private AreaDeleteAction $deleteAction,
+        private AreaIndexQuery $indexQuery,
+        private AreaShowQuery $showQuery,
+        private AreaEditQuery $editQuery,
+        private AreaStatisticsQuery $statisticsQuery,
         private AreaFilterOptionsQuery $filterOptionsQuery,
-        private GardenService          $gardenService,
-        private PlantService           $plantService,
-    )
-    {
-    }
+        private GardenService $gardenService,
+        private PlantService $plantService,
+    ) {}
 
     /**
      * Get all data needed for area create form.
@@ -110,7 +107,6 @@ final readonly class AreaService
         // Get filter options
         $filterOptions = $this->filterOptionsQuery
             ->execute(user_id: $userId, isAdmin: $isAdmin);
-
 
         return [
             'areas' => $areas,
@@ -230,13 +226,13 @@ final readonly class AreaService
     /**
      * Add plants to an area.
      *
-     * @param array<string, mixed> $data
+     * @param  array<string, mixed>  $data
      */
     public function addPlantsToArea(Area $area, array $data): void
     {
         foreach ($data['plants'] as $plantData) {
-            $plantId = (int)$plantData['plant_id'];
-            $quantity = (int)$plantData['quantity'];
+            $plantId = (int) $plantData['plant_id'];
+            $quantity = (int) $plantData['quantity'];
             $notes = $plantData['notes'] ?? null;
 
             // Check if plant is already in this area
@@ -277,7 +273,7 @@ final readonly class AreaService
         $plants = $this->plantService->getAvailablePlantsForArea();
 
         // Filter already planted plants in this area
-        $plants = $plants->filter(fn(Plant $plant): bool => !$area->plants()->where('plant_id', $plant->id)->exists());
+        $plants = $plants->filter(fn (Plant $plant): bool => ! $area->plants()->where('plant_id', $plant->id)->exists());
 
         // Apply search filter
         if ($search !== '' && $search !== '0') {
@@ -292,7 +288,7 @@ final readonly class AreaService
 
         // Apply plant type filter
         if ($plantTypeId !== null && $plantTypeId !== 0) {
-            $plants = $plants->filter(fn(Plant $plant): bool => $plant->plant_type_id === $plantTypeId);
+            $plants = $plants->filter(fn (Plant $plant): bool => $plant->plant_type_id === $plantTypeId);
         }
 
         return $plants->sortBy('name')->values();
@@ -307,7 +303,7 @@ final readonly class AreaService
     {
         return PlantType::orderBy('name')
             ->get()
-            ->mapWithKeys(fn(PlantType $type): array => [$type->id => $type->name->getLabel()])
+            ->mapWithKeys(fn (PlantType $type): array => [$type->id => $type->name->getLabel()])
             ->toArray();
     }
 

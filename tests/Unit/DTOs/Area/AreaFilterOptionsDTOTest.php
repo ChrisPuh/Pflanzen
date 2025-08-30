@@ -161,7 +161,7 @@ describe('AreaFilterOptionsDTO', function () {
                 ->and($dto->getCategories())->toBe($categories);
 
             $result = $dto->toArray();
-            
+
             expect($result['gardens'])->toBe([1 => 'Numeric Key', 'string_key' => 'String Key'])
                 ->and($result['areaTypes'])->toBe(['mixed' => 'Mixed', 0 => 'Zero'])
                 ->and($result['categories'])->toBe(['cat' => 'Category', 5 => 'Five']);

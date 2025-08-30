@@ -15,7 +15,7 @@ final class AreaDeleteController extends AreaController
     /**
      * Soft delete the specified area.
      *
-     * @param AreaDeleteRequest $request holds the validated request data for deleting an area
+     * @param  AreaDeleteRequest  $request  holds the validated request data for deleting an area
      */
     public function __invoke(AreaDeleteRequest $request, Area $area): RedirectResponse
     {
@@ -30,7 +30,7 @@ final class AreaDeleteController extends AreaController
             return redirect()
                 ->back()
                 ->withInput()
-                ->with('error', "Fehler beim Löschen des Bereichs '$dto->name': " . $exception->getMessage());
+                ->with('error', "Fehler beim Löschen des Bereichs '$dto->name': ".$exception->getMessage());
         }
     }
 }

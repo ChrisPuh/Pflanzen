@@ -68,7 +68,7 @@ it('can scope by active status', function (): void {
     $activeAreas = Area::active()->get();
 
     expect($activeAreas)->toHaveCount(3)
-        ->and($activeAreas->every(fn(Area $area) => $area->is_active))->toBeTrue();
+        ->and($activeAreas->every(fn (Area $area) => $area->is_active))->toBeTrue();
 });
 
 it('can scope by type', function (): void {
@@ -78,7 +78,7 @@ it('can scope by type', function (): void {
     $flowerBeds = Area::byType(AreaTypeEnum::FlowerBed)->get();
 
     expect($flowerBeds)->toHaveCount(2)
-        ->and($flowerBeds->every(fn(Area $area) => $area->type === AreaTypeEnum::FlowerBed))->toBeTrue();
+        ->and($flowerBeds->every(fn (Area $area) => $area->type === AreaTypeEnum::FlowerBed))->toBeTrue();
 });
 
 it('can scope by category', function (): void {
@@ -102,7 +102,7 @@ it('can scope for a specific garden', function (): void {
     $garden1Areas = Area::forGarden($garden1->id)->get();
 
     expect($garden1Areas)->toHaveCount(3)
-        ->and($garden1Areas->every(fn(Area $area) => $area->garden_id === $garden1->id))->toBeTrue();
+        ->and($garden1Areas->every(fn (Area $area) => $area->garden_id === $garden1->id))->toBeTrue();
 });
 
 it('formats size correctly', function (): void {

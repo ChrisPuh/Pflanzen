@@ -9,9 +9,7 @@ use App\Repositories\Area\Contracts\AreaRepositoryInterface;
 
 final readonly class AreaShowQuery
 {
-    public function __construct(private AreaRepositoryInterface $repository)
-    {
-    }
+    public function __construct(private AreaRepositoryInterface $repository) {}
 
     public function execute(int $areaId): Area
     {

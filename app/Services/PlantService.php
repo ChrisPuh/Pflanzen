@@ -79,9 +79,9 @@ final class PlantService
     /**
      * Get related plants based on the given plant's type and categories.
      *
-     * @return \Illuminate\Database\Eloquent\Collection<int, Plant>
+     * @return Collection<int, Plant>
      */
-    public function getRelatedPlants(Plant $plant, int $limit = 4): \Illuminate\Database\Eloquent\Collection
+    public function getRelatedPlants(Plant $plant, int $limit = 4): Collection
     {
         return Plant::query()
             ->with(['plantType', 'categories'])

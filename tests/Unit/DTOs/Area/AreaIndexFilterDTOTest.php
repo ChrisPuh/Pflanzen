@@ -5,7 +5,6 @@ declare(strict_types=1);
 use App\DTOs\Area\AreaIndexFilterDTO;
 use App\Enums\Area\AreaTypeEnum;
 use App\Http\Requests\Area\AreaIndexRequest;
-use Illuminate\Foundation\Http\FormRequest;
 
 describe('AreaIndexFilterDTO', function () {
     it('creates instance with all parameters', function () {

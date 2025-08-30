@@ -13,12 +13,12 @@ use Illuminate\Support\Collection;
 describe('AreaFilterOptionsQuery', function () {
     beforeEach(function () {
         // Setup roles for tests
-        \Spatie\Permission\Models\Role::query()->firstOrCreate(['name' => 'admin']);
-        \Spatie\Permission\Models\Role::query()->firstOrCreate(['name' => 'user']);
+        Spatie\Permission\Models\Role::query()->firstOrCreate(['name' => 'admin']);
+        Spatie\Permission\Models\Role::query()->firstOrCreate(['name' => 'user']);
 
         $this->gardenRepository = new GardenRepository();
         $this->query = new AreaFilterOptionsQuery($this->gardenRepository);
-        
+
         $this->user = User::factory()->user()->create();
     });
 
@@ -37,7 +37,7 @@ describe('AreaFilterOptionsQuery', function () {
 
         it('returns AreaFilterOptionsDTO with all filter options for admin user', function () {
             $admin = User::factory()->admin()->create();
-            
+
             // Create gardens for multiple users that admin can see
             $otherUser = User::factory()->user()->create();
             Garden::factory()->create(['user_id' => $this->user->id, 'name' => 'User Garden']);
@@ -69,7 +69,7 @@ describe('AreaFilterOptionsQuery', function () {
 
             expect($result->areaTypes)->toBeInstanceOf(Collection::class)
                 ->and($result->areaTypes)->not->toBeEmpty();
-            
+
             // Verify it's the same collection returned by the enum
             expect($result->areaTypes->toArray())->toBe(AreaTypeEnum::getFilterOptions()->toArray());
         });
@@ -79,7 +79,7 @@ describe('AreaFilterOptionsQuery', function () {
 
             expect($result->categories)->toBeInstanceOf(Collection::class)
                 ->and($result->categories)->not->toBeEmpty();
-            
+
             // Verify it's the same collection returned by the enum
             expect($result->categories->toArray())->toBe(AreaTypeEnum::getCategoryFilterOptions()->toArray());
         });

@@ -41,14 +41,14 @@ final class UserFactory extends Factory
      */
     public function unverified(): self
     {
-        return $this->state(fn(array $attributes): array => [
+        return $this->state(fn (array $attributes): array => [
             'email_verified_at' => null,
         ]);
     }
 
     public function admin(): self
     {
-        return $this->afterCreating(function ($user) {
+        return $this->afterCreating(function ($user): void {
             // Ensure admin role exists
             $adminRole = Role::query()->firstOrCreate(['name' => 'admin']);
             $user->assignRole($adminRole);
@@ -57,7 +57,7 @@ final class UserFactory extends Factory
 
     public function user(): self
     {
-        return $this->afterCreating(function ($user) {
+        return $this->afterCreating(function ($user): void {
             // Ensure user role exists
             $userRole = Role::query()->firstOrCreate(['name' => 'user']);
             $user->assignRole($userRole);

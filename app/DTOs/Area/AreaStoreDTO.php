@@ -8,42 +8,38 @@ use App\DTOs\Shared\Contracts\WritableDTOInterface;
 use App\Enums\Area\AreaTypeEnum;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Enum;
-use OpenSpout\Common\Exception\InvalidArgumentException;
 
 final readonly class AreaStoreDTO implements WritableDTOInterface
 {
     public function __construct(
-        public string       $name,
-        public int          $gardenId,
+        public string $name,
+        public int $gardenId,
         public AreaTypeEnum $type,
-        public bool         $isActive = true,
+        public bool $isActive = true,
 
-        public ?string      $description = null,
-        public ?float       $sizeSqm = null,
-        public ?array       $coordinates = null,
-        public ?string      $color = null,
-    )
-    {
-    }
-
+        public ?string $description = null,
+        public ?float $sizeSqm = null,
+        public ?array $coordinates = null,
+        public ?string $color = null,
+    ) {}
 
     public static function fromValidatedRequest(array $validated): self
     {
         return new self(
-            name: (string)$validated['name'],
-            gardenId: (int)$validated['garden_id'],
+            name: (string) $validated['name'],
+            gardenId: (int) $validated['garden_id'],
             type: AreaTypeEnum::tryFrom($validated['type']),
-            isActive: (bool)$validated['is_active'],
+            isActive: (bool) $validated['is_active'],
 
             description: isset($validated['description'])
-                ? (string)$validated['description']
+                ? (string) $validated['description']
                 : null,
             sizeSqm: isset($validated['size_sqm'])
-                ? (float)$validated['size_sqm']
+                ? (float) $validated['size_sqm']
                 : null,
             coordinates: self::prepareCoordinates($validated),
             color: isset($validated['color'])
-                ? (string)$validated['color']
+                ? (string) $validated['color']
                 : null,
         );
     }
@@ -136,12 +132,12 @@ final readonly class AreaStoreDTO implements WritableDTOInterface
     /**
      * Prepare coordinates array from request data.
      *
-     * @param array<string, mixed> $data
+     * @param  array<string, mixed>  $data
      * @return array<string, float|int|null>|null
      */
     private static function prepareCoordinates(array $data): ?array
     {
-        if (!isset($data['coordinates_x']) && !isset($data['coordinates_y'])) {
+        if (! isset($data['coordinates_x']) && ! isset($data['coordinates_y'])) {
             return null;
         }
 

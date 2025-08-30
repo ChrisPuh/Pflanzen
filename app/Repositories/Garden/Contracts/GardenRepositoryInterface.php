@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Repositories\Garden\Contracts;
 
 use App\Models\Garden;
@@ -21,6 +23,4 @@ interface GardenRepositoryInterface
      * @return SupportCollection<int, string>
      */
     public function getFilterOptions(int $userId, bool $isAdmin): SupportCollection;
-
-
 }

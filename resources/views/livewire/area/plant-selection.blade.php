@@ -177,7 +177,7 @@
                     Ausgewählte Pflanzen
                     <span class="text-sm font-normal text-muted">({{ $this->selectedPlantsCount }})</span>
                 </h3>
-                
+
                 <div class="space-y-4">
                     @foreach($this->selectedPlantsData as $plant)
                             <div class="p-4 bg-surface rounded-lg border border-default">
@@ -192,7 +192,7 @@
                                             </p>
                                         @endif
                                     </div>
-                                    <button 
+                                    <button
                                         wire:click="togglePlant({{ $plant->id }})"
                                         class="text-red-600 hover:text-red-700 p-1"
                                         title="Entfernen"
@@ -202,7 +202,7 @@
                                         </svg>
                                     </button>
                                 </div>
-                                
+
                                 <div class="space-y-3">
                                     <x-forms.input
                                         label="Anzahl"
@@ -215,7 +215,7 @@
                                         min="1"
                                         max="9999"
                                     />
-                                    
+
                                     <x-forms.input
                                         label="Notizen (optional)"
                                         name="sidebar_notes_{{ $plant->id }}"

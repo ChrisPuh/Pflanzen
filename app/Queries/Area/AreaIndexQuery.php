@@ -10,9 +10,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 
 final readonly class AreaIndexQuery
 {
-    public function __construct(private AreaRepositoryInterface $repository)
-    {
-    }
+    public function __construct(private AreaRepositoryInterface $repository) {}
 
     public function execute(int $user_id, AreaIndexFilterDTO $filter, bool $isAdmin): LengthAwarePaginator
     {

@@ -26,7 +26,7 @@ final class AreaStoreController extends AreaController
             return redirect()
                 ->back()
                 ->withInput()
-                ->with('error', 'Fehler beim Erstellen des Bereichs: ' . $exception->getMessage());
+                ->with('error', 'Fehler beim Erstellen des Bereichs: '.$exception->getMessage());
         }
     }
 }

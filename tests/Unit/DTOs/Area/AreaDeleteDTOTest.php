@@ -114,7 +114,7 @@ describe('AreaDeleteDTO', function () {
         expect($dto->isActive)->toBeFalse()
             ->and($dto->toModelData())->toBe([
                 'id' => 1,
-                'is_active' => false
+                'is_active' => false,
             ]);
     });
 });

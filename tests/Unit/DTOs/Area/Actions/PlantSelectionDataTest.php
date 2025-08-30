@@ -8,7 +8,7 @@ use Illuminate\Support\Carbon;
 describe('PlantSelectionData', function () {
     it('creates instance with all parameters', function () {
         $plantedAt = now();
-        
+
         $dto = new PlantSelectionData(
             plantId: 42,
             quantity: 10,
@@ -24,7 +24,7 @@ describe('PlantSelectionData', function () {
 
     it('creates instance with null notes', function () {
         $plantedAt = now();
-        
+
         $dto = new PlantSelectionData(
             plantId: 1,
             quantity: 5,
@@ -113,7 +113,7 @@ describe('PlantSelectionData', function () {
 
         it('enforces Carbon or null type for plantedAt', function () {
             $date = now();
-            
+
             $dtoWithCarbon = new PlantSelectionData(
                 plantId: 1,
                 quantity: 5,
@@ -149,7 +149,7 @@ describe('PlantSelectionData', function () {
 
         it('handles large plant ID', function () {
             $largeId = PHP_INT_MAX;
-            
+
             $dto = new PlantSelectionData(
                 plantId: $largeId,
                 quantity: 1,
@@ -163,7 +163,7 @@ describe('PlantSelectionData', function () {
 
         it('handles large quantity', function () {
             $largeQuantity = 999999;
-            
+
             $dto = new PlantSelectionData(
                 plantId: 1,
                 quantity: $largeQuantity,
@@ -189,7 +189,7 @@ describe('PlantSelectionData', function () {
 
         it('handles long notes string', function () {
             $longNotes = str_repeat('This is a very long note. ', 100);
-            
+
             $dto = new PlantSelectionData(
                 plantId: 1,
                 quantity: 5,
@@ -199,12 +199,12 @@ describe('PlantSelectionData', function () {
 
             expect($dto->notes)->toBe($longNotes)
                 ->and($dto->notes)->toBeString()
-                ->and(strlen($dto->notes))->toBeGreaterThan(1000);
+                ->and(mb_strlen($dto->notes))->toBeGreaterThan(1000);
         });
 
         it('handles whitespace-only notes', function () {
             $whitespaceNotes = "   \n\t\r   ";
-            
+
             $dto = new PlantSelectionData(
                 plantId: 1,
                 quantity: 5,
@@ -220,7 +220,7 @@ describe('PlantSelectionData', function () {
     describe('date handling', function () {
         it('preserves exact Carbon instance', function () {
             $specificDate = Carbon::create(2023, 12, 25, 14, 30, 45);
-            
+
             $dto = new PlantSelectionData(
                 plantId: 1,
                 quantity: 5,
@@ -240,7 +240,7 @@ describe('PlantSelectionData', function () {
         it('handles different Carbon timezone', function () {
             $utcDate = Carbon::now('UTC');
             $berlinDate = Carbon::now('Europe/Berlin');
-            
+
             $dtoUtc = new PlantSelectionData(
                 plantId: 1,
                 quantity: 5,
@@ -262,7 +262,7 @@ describe('PlantSelectionData', function () {
         it('handles past and future dates', function () {
             $pastDate = Carbon::now()->subYears(5);
             $futureDate = Carbon::now()->addYears(2);
-            
+
             $dtoPast = new PlantSelectionData(
                 plantId: 1,
                 quantity: 5,
@@ -292,7 +292,7 @@ describe('PlantSelectionData', function () {
                 notes: 'test',
                 plantedAt: now()
             );
-            
+
             $reflection = new ReflectionClass($dto);
 
             expect($reflection->isReadOnly())->toBeTrue();
@@ -305,7 +305,7 @@ describe('PlantSelectionData', function () {
                 notes: 'test',
                 plantedAt: now()
             );
-            
+
             $reflection = new ReflectionClass($dto);
 
             foreach ($reflection->getProperties() as $property) {
@@ -352,7 +352,7 @@ describe('PlantSelectionData', function () {
 
         it('handles unicode characters in notes', function () {
             $unicodeNotes = 'Тест 🌱 Prüfung ñoño 中文';
-            
+
             $dto = new PlantSelectionData(
                 plantId: 1,
                 quantity: 5,
@@ -365,7 +365,7 @@ describe('PlantSelectionData', function () {
 
         it('preserves original Carbon object reference', function () {
             $originalCarbon = now();
-            
+
             $dto = new PlantSelectionData(
                 plantId: 1,
                 quantity: 5,

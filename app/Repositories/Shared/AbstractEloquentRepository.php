@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Repositories\Shared;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 
 /**
  * @template-covariant TModel of Model
@@ -27,6 +27,7 @@ abstract class AbstractEloquentRepository
     protected function baseQuery(): Builder
     {
         $modelClass = $this->getModelClass();
+
         return $modelClass::query();
     }
 
@@ -39,6 +40,6 @@ abstract class AbstractEloquentRepository
     protected function queryForUserBase(int $user_id, bool $isAdmin): Builder
     {
         return $this->baseQuery()
-            ->when(!$isAdmin, fn($q) => $q->whereHas('garden', fn($q2) => $q2->where('user_id', $user_id)));
+            ->when(! $isAdmin, fn ($q) => $q->whereHas('garden', fn ($q2) => $q2->where('user_id', $user_id)));
     }
 }

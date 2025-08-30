@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\DTOs\Area;
 
 final readonly class AreaStatisticsDTO
@@ -11,14 +13,12 @@ final readonly class AreaStatisticsDTO
         public int $archived = 0,
         public int $buildings = 0,
         public int $waterFeatures = 0,
-    )
-    {
-    }
+    ) {}
 
     /**
      * Create from array data.
      *
-     * @param array<string, int> $data
+     * @param  array<string, int>  $data
      */
     public static function fromArray(array $data): self
     {

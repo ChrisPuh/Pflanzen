@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 // tests/Integration/Queries/Area/AreaIndexQueryTest.php
 
 use App\DTOs\Area\AreaIndexFilterDTO;
@@ -12,8 +14,8 @@ describe('AreaIndexQuery Integration', function () {
 
     beforeEach(function () {
         // Rollen erstellen für Tests
-        \Spatie\Permission\Models\Role::query()->firstOrCreate(['name' => 'admin']);
-        \Spatie\Permission\Models\Role::query()->firstOrCreate(['name' => 'user']);
+        Spatie\Permission\Models\Role::query()->firstOrCreate(['name' => 'admin']);
+        Spatie\Permission\Models\Role::query()->firstOrCreate(['name' => 'user']);
 
         $this->query = new AreaIndexQuery(new AreaRepository());
 
