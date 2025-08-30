@@ -35,6 +35,7 @@ final readonly class AreaService
         private AreaDeleteAction       $deleteAction,
         private AreaIndexQuery         $indexQuery,
         private AreaShowQuery          $showQuery,
+        private AreaEditQuery          $editQuery,
         private AreaStatisticsQuery    $statisticsQuery,
         private AreaFilterOptionsQuery $filterOptionsQuery,
     )
@@ -104,14 +105,7 @@ final readonly class AreaService
      */
     public function getEditData(User $user, Area $area, bool $isAdmin = false): array
     {
-        $userGardens = $this->getUserGardens($user, $isAdmin);
-
-        return [
-            'area' => $area,
-            'userGardens' => $userGardens,
-            'areaTypes' => $this->getAvailableAreaTypes(),
-            'isAdmin' => $isAdmin,
-        ];
+        return $this->editQuery->execute($user->id, $area->id, $isAdmin);
     }
 
     /**

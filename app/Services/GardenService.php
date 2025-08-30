@@ -9,9 +9,26 @@ use App\Models\Garden;
 use App\Models\User;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 
 final class GardenService
 {
+    /**
+     * Get user's gardens for dropdown selections.
+     *
+     * @return Collection<int, Garden>
+     */
+    public function getUserGardensForDropdown(User $user, bool $isAdmin = false): Collection
+    {
+        return Garden::query()
+            ->when(!$isAdmin, function (Builder $query) use ($user): void {
+                $query->where('user_id', $user->id);
+            })
+            ->select('id', 'name', 'type')
+            ->orderBy('name')
+            ->get();
+    }
+
     /**
      * Get filtered and paginated gardens for a user.
      */
@@ -290,9 +307,9 @@ final class GardenService
     /**
      * Get recently active gardens for a user.
      *
-     * @return \Illuminate\Database\Eloquent\Collection<int, Garden>
+     * @return Collection<int, Garden>
      */
-    public function getRecentlyActiveGardens(User $user, int $limit = 5): \Illuminate\Database\Eloquent\Collection
+    public function getRecentlyActiveGardens(User $user, int $limit = 5): Collection
     {
         return Garden::query()
             ->forUser($user)
@@ -306,9 +323,9 @@ final class GardenService
     /**
      * Get gardens by location for a user.
      *
-     * @return \Illuminate\Database\Eloquent\Collection<int, Garden>
+     * @return Collection<int, Garden>
      */
-    public function getGardensByLocation(User $user, string $city): \Illuminate\Database\Eloquent\Collection
+    public function getGardensByLocation(User $user, string $city): Collection
     {
         return Garden::query()
             ->forUser($user)
@@ -381,9 +398,9 @@ final class GardenService
     /**
      * Get archived gardens for a user.
      *
-     * @return \Illuminate\Database\Eloquent\Collection<int, Garden>
+     * @return Collection<int, Garden>
      */
-    public function getArchivedGardensForUser(User $user, bool $isAdmin = false): \Illuminate\Database\Eloquent\Collection
+    public function getArchivedGardensForUser(User $user, bool $isAdmin = false): Collection
     {
         return Garden::onlyTrashed()
             ->when(! $isAdmin, function (Builder $query) use ($user): void {
@@ -397,9 +414,9 @@ final class GardenService
     /**
      * Search gardens by name or description.
      *
-     * @return \Illuminate\Database\Eloquent\Collection<int, Garden>
+     * @return Collection<int, Garden>
      */
-    public function searchGardens(User $user, string $search, bool $isAdmin = false): \Illuminate\Database\Eloquent\Collection
+    public function searchGardens(User $user, string $search, bool $isAdmin = false): Collection
     {
         return Garden::query()
             ->when(! $isAdmin, function (Builder $query) use ($user): void {
